@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TAS.Application\TAS.Application.csproj" />
     <ProjectReference Include="..\TAS.Data.EF\TAS.Data.EF.csproj" />
     <ProjectReference Include="..\TAS.Infrastructure\TAS.Infrastructure.csproj" />

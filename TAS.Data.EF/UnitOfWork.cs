@@ -1,5 +1,6 @@
 ﻿using TAS.Data.EF.Repositories;
 using TAS.Data.EF.Repositories.Interfaces;
+using TAS.Data.Entities;
 
 namespace TAS.Data.EF
 {
@@ -7,12 +8,27 @@ namespace TAS.Data.EF
     {
         private bool disposed = false;
 
-        private readonly AppDbContext _context;
+        private readonly TASContext _context;
+
+        private IAccountRepository _accountRepository;
 
 
-        public UnitOfWork(AppDbContext context)
+
+        public UnitOfWork(TASContext context)
         {
             _context = context;
+        }
+
+        public IAccountRepository AccountRepository
+        {
+            get
+            {
+                if (this._accountRepository is null)
+                {
+                    this._accountRepository = new AccountRepository(_context);
+                }
+                return _accountRepository;
+            }
         }
 
         protected virtual void Dispose(bool disposing)
