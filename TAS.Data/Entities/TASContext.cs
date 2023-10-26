@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
+using TAS.Data.Entities.Interfaces;
 
 namespace TAS.Data.Entities
 {
@@ -38,7 +40,6 @@ namespace TAS.Data.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("server=(local);uid=sa;pwd=123;database=TAS;Encrypt=False");
             }
         }
@@ -668,5 +669,46 @@ namespace TAS.Data.Entities
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public override int SaveChanges()
+        {
+            var modified = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified || e.State == EntityState.Added);
+
+            foreach (EntityEntry item in modified)
+            {
+                var changedOrAddedItem = item.Entity as IDateTracking;
+                if (changedOrAddedItem != null)
+                {
+                    if (item.State == EntityState.Added)
+                    {
+                        changedOrAddedItem.CreateDate = DateTime.UtcNow;
+                        changedOrAddedItem.CreateUser = "TAS-System";
+                    }
+                    changedOrAddedItem.UpdateDate = DateTime.UtcNow;
+                    changedOrAddedItem.UpdateUser = "TAS-System";
+                }
+            }
+            return base.SaveChanges();
+        }
+
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            var modified = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified || e.State == EntityState.Added || e.State == EntityState.Deleted);
+            foreach (EntityEntry item in modified)
+            {
+                var changedOrAddedItem = item.Entity as IDateTracking;
+                if (changedOrAddedItem != null)
+                {
+                    if (item.State == EntityState.Added)
+                    {
+                        changedOrAddedItem.CreateDate = DateTime.UtcNow;
+                        changedOrAddedItem.CreateUser = "TAS-System";
+                    }
+                    changedOrAddedItem.UpdateDate = DateTime.UtcNow;
+                    changedOrAddedItem.UpdateUser = "TAS-System";
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
     }
 }

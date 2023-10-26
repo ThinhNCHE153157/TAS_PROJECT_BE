@@ -1,20 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using TAS.Data.Entities;
 
 namespace TAS.Data.EF
 {
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<TASContext>
     {
-        public AppDbContext CreateDbContext(string[] args)
+        public TASContext CreateDbContext(string[] args)
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings_Migrate.json").Build();
+                .AddJsonFile("appsettings.json").Build();
             var connectionString = configuration.GetConnectionString("Default");
-            var builder = new DbContextOptionsBuilder<AppDbContext>();
+            var builder = new DbContextOptionsBuilder<TASContext>();
             builder.UseSqlServer(connectionString);
-            return new AppDbContext(builder.Options);
+            return new TASContext(builder.Options);
         }
     }
 }

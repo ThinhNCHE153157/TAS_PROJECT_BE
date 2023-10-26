@@ -15,6 +15,7 @@ using TAS.Data.EF;
 using TAS.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using TAS.Infrastructure.Helpers;
+using TAS.Data.Entities;
 
 namespace TAS.API.DependencyConfig
 {
@@ -25,7 +26,7 @@ namespace TAS.API.DependencyConfig
             //HttpContextAcessor
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddDbContext<AppDbContext>(option => option.UseSqlServer(configuration.GetConnectionString("Default"),
+            services.AddDbContext<TASContext>(option => option.UseSqlServer(configuration.GetConnectionString("Default"),
                                                             o => o.MigrationsAssembly("TAS.Data.EF")), ServiceLifetime.Scoped);
 
             //Config CORS
@@ -169,8 +170,8 @@ namespace TAS.API.DependencyConfig
         public static IServiceCollection ApplicationService(this IServiceCollection services)
         {
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             return services;
         }
 
@@ -184,16 +185,16 @@ namespace TAS.API.DependencyConfig
             return services;
         }
 
-        public static IServiceCollection HttpClientService(this IServiceCollection services)
-        {
-            services.AddHttpClient(AppSettings.OmdbName, client =>
-            {
-                client.BaseAddress = new Uri(AppSettings.OmdbUrl);
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
-            });
+        //public static IServiceCollection HttpClientService(this IServiceCollection services)
+        //{
+        //    services.AddHttpClient(AppSettings.OmdbName, client =>
+        //    {
+        //        client.BaseAddress = new Uri(AppSettings.OmdbUrl);
+        //        client.DefaultRequestHeaders.Accept.Add(
+        //            new MediaTypeWithQualityHeaderValue("application/json"));
+        //    });
 
-            return services;
-        }
+        //    return services;
+        //}
     }
 }
