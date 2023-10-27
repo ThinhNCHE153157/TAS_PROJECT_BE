@@ -11,6 +11,7 @@ namespace TAS.Data.EF
         private readonly TASContext _context;
 
         private IAccountRepository _accountRepository;
+        private ICourseRepository _courseRepository;
 
 
 
@@ -28,6 +29,18 @@ namespace TAS.Data.EF
                     this._accountRepository = new AccountRepository(_context);
                 }
                 return _accountRepository;
+            }
+        }
+
+        public ICourseRepository CourseRepository
+        {
+            get
+            {
+                if (this._courseRepository is null)
+                {
+                    this._courseRepository = new CourseRepository(_context);
+                }
+                return _courseRepository;
             }
         }
 
