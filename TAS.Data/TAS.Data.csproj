@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Responses\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TAS.Infrastructure\TAS.Infrastructure.csproj" />
   </ItemGroup>
 
