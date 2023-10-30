@@ -4,6 +4,7 @@ using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using TAS.Infrastructure.Constants;
 using TAS.Infrastructure.Helpers;
 
 namespace TAS.Application.Services
@@ -45,6 +46,22 @@ namespace TAS.Application.Services
             {
             }
             return false;
+        }
+
+        public async Task<Account> UserLogin(UserLoginRequestDto userLogin)
+        {
+            try
+            {
+                var user =  _unitOfWork.AccountRepository.Getuser(userLogin);
+                if (user is not null && HashingHelper.VerifyPassword(userLogin.Password,user.Password))
+                {
+                    return user;
+                }
+            }catch (Exception ex)
+            {
+
+            }
+            return null;
         }
     }
 }
