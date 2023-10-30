@@ -10,6 +10,7 @@ namespace TAS.Application.Services.Interfaces
 {
     public interface IAccountService
     {
+        public Task<Account> UserLogin(UserLoginRequestDto userLogin);
         public Task<List<Account>> GetAccounts();
         public Task<bool> UserRegister(UserRegisterRequestDto request);
     }

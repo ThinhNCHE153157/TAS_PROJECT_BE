@@ -1,9 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
+using TAS.Data.Dtos.Responses;
 using TAS.Data.Entities;
+using static TAS.Infrastructure.Enums.SystemEnum;
 
 namespace TAS.API.Controllers
 {
@@ -12,9 +18,11 @@ namespace TAS.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        public AccountController( IAccountService accountService)
+        private readonly ITokenService _tokenService;
+        public AccountController( IAccountService accountService, ITokenService tokenService)
         {
             _accountService = accountService;
+            _tokenService = tokenService;
         }
         /// <summary>
         /// Get all user
@@ -36,6 +44,26 @@ namespace TAS.API.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> UserLogin([FromBody] UserLoginRequestDto userLogin)
+        {
+            var  UserAccount = await _accountService.UserLogin(userLogin).ConfigureAwait(false);
+            if (UserAccount is null)
+            {
+                return Unauthorized("Wrong user name or password!");
+            }
+            var userRole = (UserRoles)UserAccount.Roles.FirstOrDefault().RoleId;
+            var authClaims = new Collection<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Name,userLogin.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role,userRole.ToString())
+            };
+            var accessToken = _tokenService.GenerateAccessToken(authClaims);
+            return Ok(new UserLoginResponseDto(accessToken));
         }
     }
 }
