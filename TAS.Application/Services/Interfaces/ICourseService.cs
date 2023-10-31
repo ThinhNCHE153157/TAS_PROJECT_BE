@@ -7,5 +7,6 @@ namespace TAS.Application.Services.Interfaces
     {
         public Task<List<CourseHomepageResponeDto>> getCourseHomepage();
         public Task<List<CourseDashboardResponseDto>> GetAllCourse();
+        public Task<GetCourseByIdResponseDto> GetCourseById(int id);
     }
 }

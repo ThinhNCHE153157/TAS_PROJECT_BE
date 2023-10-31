@@ -1,4 +1,6 @@
-﻿using TAS.Data.EF.Repositories.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using TAS.Data.Dtos.Responses;
+using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
 
 namespace TAS.Data.EF.Repositories
@@ -12,6 +14,11 @@ namespace TAS.Data.EF.Repositories
         public IQueryable<Course> GetAllCourses()
         {
            return _context.Set<Course>();
+        }
+
+        public IQueryable<Course> GetCourseById(int courseId)
+        {
+            return _context.Courses.Include(x => x.Tests);
         }
     }
 }

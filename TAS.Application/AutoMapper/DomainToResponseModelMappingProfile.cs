@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TAS.Data.Dtos.Domains;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.Entities;
 
@@ -15,6 +16,9 @@ namespace TAS.Application.AutoMapper
         {
             CreateMap<Course,CourseHomepageResponeDto>();
             CreateMap<Course,CourseDashboardResponseDto>();
+            CreateMap<Course, GetCourseByIdResponseDto>()
+                .ForMember(d => d.Tests, dt => dt.MapFrom(src => src.Tests));
+            CreateMap<Test, TestDto>();
         }
     }
 }
