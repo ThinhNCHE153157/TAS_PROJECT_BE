@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;

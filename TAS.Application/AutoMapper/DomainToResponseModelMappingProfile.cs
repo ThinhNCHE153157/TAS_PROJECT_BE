@@ -16,6 +16,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<Course,CourseHomepageResponeDto>();
             CreateMap<Course,CourseDashboardResponseDto>();
             CreateMap<Account, AccountHomepageResponeDTO>(); 
+
         }
     }
 }

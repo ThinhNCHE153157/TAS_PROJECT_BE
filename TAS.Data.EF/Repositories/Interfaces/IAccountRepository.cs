@@ -10,9 +10,11 @@ namespace TAS.Data.EF.Repositories.Interfaces
 {
     public interface IAccountRepository : IBaseRepository<Account>
     {
-        //public IQueryable<Account> GetAll();
+        public IQueryable<Account> GetAll();
         public Account Getuser(UserLoginRequestDto requestDto);
         public IQueryable<Account> GetAllAccount();
         public IQueryable<Account> GetAccountManagement();
+        public Account Getuser(UserLoginRequestDto requestDto);
+
     }
 }
