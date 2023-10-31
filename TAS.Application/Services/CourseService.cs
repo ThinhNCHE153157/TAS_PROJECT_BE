@@ -37,6 +37,20 @@ namespace TAS.Application.Services
             }
         }
 
+        public async Task<GetCourseByIdResponseDto> GetCourseById(int id)
+        {
+            try
+            {
+            var course = await _unitOfWork.CourseRepository.GetCourseById(id).Include(x=>x.Tests).FirstOrDefaultAsync().ConfigureAwait(false);
+            var result = _mapper.Map<GetCourseByIdResponseDto>(course);
+            return result;
+            }catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return null;
+        }
+
         public async Task<List<CourseHomepageResponeDto>> getCourseHomepage()
         {
             try
