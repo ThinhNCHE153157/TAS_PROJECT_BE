@@ -28,5 +28,12 @@ namespace TAS.API.Controllers
             var result = await _courseService.GetAllCourse();
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCourseById([FromQuery] int id)
+        {
+            var result = await _courseService.GetCourseById(id);
+            return Ok(result);
+        }
     }
 }
