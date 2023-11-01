@@ -9,7 +9,7 @@ using TAS.Infrastructure.Constants;
 using TAS.Infrastructure.Helpers;
 
 namespace TAS.Application.Services
-{
+{ 
     public class AccountService : IAccountService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -77,6 +77,19 @@ namespace TAS.Application.Services
 
             }
             return null;
+        }
+
+        public async Task<List<Account>> GetAccounts()
+        {
+            try
+            {
+                var result = await _unitOfWork.AccountRepository.GetAll().ToListAsync().ConfigureAwait(false);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }
