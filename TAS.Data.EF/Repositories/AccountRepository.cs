@@ -18,7 +18,12 @@ namespace TAS.Data.EF.Repositories
 
         }
 
-		public IQueryable<Account> GetAccountManagement()
+        public IQueryable<Account> GetAll()
+        {
+            return _context.Set<Account>().Where(a => a.IsDeleted.Equals(Common.IsNotDelete));
+        }
+
+        public IQueryable<Account> GetAccountManagement()
 		{
 			return _context.Set<Account>().Where(a => a.IsDeleted.Equals(Common.IsNotDelete));
 

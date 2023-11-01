@@ -35,6 +35,7 @@ namespace TAS.API.Controllers
             var data = await _accountService.GetAccountManagement();
             return Ok(data);
         }
+        [HttpGet]
         public async Task<IActionResult> getUser()
         {
             var data = await _accountService.GetAccounts();
