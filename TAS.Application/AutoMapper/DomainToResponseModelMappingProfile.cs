@@ -16,6 +16,7 @@ namespace TAS.Application.AutoMapper
         {
             CreateMap<Course,CourseHomepageResponeDto>();
             CreateMap<Course,CourseDashboardResponseDto>();
+            CreateMap<Account, AccountHomepageResponeDTO>();
             CreateMap<Course, GetCourseByIdResponseDto>()
                 .ForMember(d => d.Tests, dt => dt.MapFrom(src => src.Tests));
             CreateMap<Test, TestDto>();

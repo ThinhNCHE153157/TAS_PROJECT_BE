@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TAS.Data.Dtos.Requests;
+using TAS.Data.Dtos.Responses;
 using TAS.Data.Entities;
 
 namespace TAS.Application.Services.Interfaces
 {
-    public interface IAccountService
-    {
-        public Task<Account> UserLogin(UserLoginRequestDto userLogin);
-        public Task<List<Account>> GetAccounts();
-        public Task<bool> UserRegister(UserRegisterRequestDto request);
-    }
+	public interface IAccountService
+	{
+		public Task<List<AccountHomepageResponeDTO>> GetAccountManagement();
+		public Task<List<Account>> GetAllAccounts();
+		public Task<bool> UserRegister(UserRegisterRequestDto request);
+		public Task<Account> UserLogin(UserLoginRequestDto userLogin);
+	}
 }
