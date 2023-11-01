@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,13 @@ namespace TAS.Data.EF.Repositories
 
         }
 
-        public IQueryable<Account> GetAll()
+		public IQueryable<Account> GetAccountManagement()
+		{
+			return _context.Set<Account>().Where(a => a.IsDeleted.Equals(Common.IsNotDelete));
+
+		}
+
+		public IQueryable<Account> GetAllAccount()
         {
             return _context.Set<Account>().Where(a => a.IsDeleted.Equals(Common.IsNotDelete));
         }

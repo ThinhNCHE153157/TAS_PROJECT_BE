@@ -1,7 +1,8 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
+using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
 using TAS.Infrastructure.Constants;
@@ -19,11 +20,12 @@ namespace TAS.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<Account>> GetAccounts()
+        public async Task<List<AccountHomepageResponeDTO>> GetAccountManagement()
         {
             try
             {
-                var result = await _unitOfWork.AccountRepository.GetAll().ToListAsync().ConfigureAwait(false);
+				var listAccount = await _unitOfWork.AccountRepository.GetAccountManagement().ToListAsync().ConfigureAwait(false);
+				var result = _mapper.Map<List<AccountHomepageResponeDTO>>(listAccount).ToList();
                 return result;
             }
             catch (Exception ex)
@@ -32,7 +34,20 @@ namespace TAS.Application.Services
             }
         }
 
-        public async Task<bool> UserRegister(UserRegisterRequestDto request)
+		public async Task<List<Account>> GetAllAccounts()
+		{
+			try
+			{
+				var listAccount = await _unitOfWork.AccountRepository.GetAllAccount().ToListAsync().ConfigureAwait(false);
+				return listAccount;
+			}
+			catch (Exception ex)
+			{
+				return null;
+			}
+		}
+
+		public async Task<bool> UserRegister(UserRegisterRequestDto request)
         {
             try
             {
