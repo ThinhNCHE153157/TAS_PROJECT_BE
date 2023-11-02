@@ -9,8 +9,12 @@ namespace TAS.Data.EF
 {
     public interface IUnitOfWork
     {
+
         public IAccountRepository AccountRepository { get; }
         public ICourseRepository CourseRepository { get; }
+
+        public IQuestionRepository QuestionRepository { get; }
+
 
         public Task CommitAsync();
 
