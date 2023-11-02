@@ -12,7 +12,7 @@ namespace TAS.Data.EF
 
         private IAccountRepository _accountRepository;
         private ICourseRepository _courseRepository;
-
+        private IQuestionRepository _questionRepository;
 
 
         public UnitOfWork(TASContext context)
@@ -43,7 +43,17 @@ namespace TAS.Data.EF
                 return _courseRepository;
             }
         }
-
+        public IQuestionRepository QuestionRepository
+        {
+            get
+            {
+                if (this._questionRepository is null)
+                {
+                    this._questionRepository = new QuestionRepository(_context);
+                }
+                return _questionRepository;
+            }
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
