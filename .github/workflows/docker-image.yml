@@ -22,6 +22,6 @@ jobs:
       run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
     - name: Build the Docker image
       run: |
-            docker build ./TAS.API/Dockerfile --tag ghcr.io/thinhnche153157/tas_project_be:latest --tag ghcr.io/thinhnche153157/tas_project_be:${{ steps.vars.outputs.sha_short }}
+            docker build ./ -f ./TAS.API/Dockerfile --tag ghcr.io/thinhnche153157/tas_project_be:latest --tag ghcr.io/thinhnche153157/tas_project_be:${{ steps.vars.outputs.sha_short }}
             docker push ghcr.io/thinhnche153157/tas_project_be:latest  
             docker push ghcr.io/thinhnche153157/tas_project_be:${{ steps.vars.outputs.sha_short }}
