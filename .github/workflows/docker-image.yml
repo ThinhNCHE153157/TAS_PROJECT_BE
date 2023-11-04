@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  pull_request:
+    branches: [ "build" ]
+jobs:
+
+  build:
+  
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+            registry: ghcr.io
+            username: ${{github.actor}}
+            password: ${{secrets.TAS_FE_TOKEN}}
+    - name: Set outputs
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    - name: Build the Docker image
+      run: |
+            docker build . --tag ghcr.io/thinhnche153157/tas_project_be:latest --tag ghcr.io/thinhnche153157/tas_project_be:${{ steps.vars.outputs.sha_short }}
+            docker push ghcr.io/thinhnche153157/tas_project_be:latest  
+            docker push ghcr.io/thinhnche153157/tas_project_be:${{ steps.vars.outputs.sha_short }}
