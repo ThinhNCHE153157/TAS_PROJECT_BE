@@ -16,7 +16,7 @@ jobs:
       with:
             registry: ghcr.io
             username: ${{github.actor}}
-            password: ${{secrets.TAS_FE_TOKEN}}
+            password: ${{secrets.TAS_BE_TOKEN}}
     - name: Set outputs
       id: vars
       run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
