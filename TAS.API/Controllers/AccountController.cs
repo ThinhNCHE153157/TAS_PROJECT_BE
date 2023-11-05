@@ -41,7 +41,15 @@ namespace TAS.API.Controllers
             var data = await _accountService.GetAccounts();
             return Ok(data);
         }
-        [HttpPost]
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountById([FromQuery] int id)
+        {
+            var data = await _accountService.GetAccountById(id);
+            return Ok(data);
+        }
+
+		[HttpPost]
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
