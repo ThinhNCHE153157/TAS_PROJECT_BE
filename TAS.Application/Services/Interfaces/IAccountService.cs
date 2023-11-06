@@ -11,5 +11,6 @@ namespace TAS.Application.Services.Interfaces
 		public Task<List<Account>> GetAllAccounts();
 		public Task<bool> UserRegister(UserRegisterRequestDto request);
 		public Task<Account> UserLogin(UserLoginRequestDto userLogin);
+		public Task<GetAccountByIdResponseDto> GetAccountById(int id);
 	}
 }
