@@ -20,6 +20,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<Course, GetCourseByIdResponseDto>()
                 .ForMember(d => d.Tests, dt => dt.MapFrom(src => src.Tests));
             CreateMap<Test, TestDto>();
+            CreateMap<Account, GetAccountByIdResponseDto>();
         }
     }
 }
