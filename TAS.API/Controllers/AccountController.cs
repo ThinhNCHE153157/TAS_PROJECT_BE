@@ -62,13 +62,22 @@ namespace TAS.API.Controllers
             {
                 return Unauthorized("Wrong user name or password!");
             }
-            var userRole = (UserRoles)UserAccount.Roles.FirstOrDefault().RoleId;
+            var listRole = new List<string>();
+            foreach (var role in UserAccount.Roles)
+            {
+                listRole.Add(role.RoleName);
+            }
+            //var userRole = (UserRoles)UserAccount.Roles.RoleId;
+
             var authClaims = new Collection<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Name,userLogin.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role,userRole.ToString())
             };
+            foreach (var role in listRole)
+            {
+                authClaims.Add( new Claim(ClaimTypes.Role, role));
+            }
             var accessToken = _tokenService.GenerateAccessToken(authClaims);
             return Ok(new UserLoginResponseDto(accessToken));
         }
