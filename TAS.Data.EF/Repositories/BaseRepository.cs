@@ -24,6 +24,7 @@ namespace TAS.Data.EF.Repositories
             await _context.Set<T>().AddAsync(entity).ConfigureAwait(false);
         }
 
+
         public virtual void Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
