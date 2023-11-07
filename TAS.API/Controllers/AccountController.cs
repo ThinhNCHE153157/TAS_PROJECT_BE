@@ -42,7 +42,15 @@ namespace TAS.API.Controllers
             var data = await _accountService.GetAccounts();
             return Ok(data);
         }
-        [HttpPost]
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountById([FromQuery] int id)
+        {
+            var data = await _accountService.GetAccountById(id);
+            return Ok(data);
+        }
+
+		[HttpPost]
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
@@ -63,15 +71,24 @@ namespace TAS.API.Controllers
             {
                 return Unauthorized("Wrong user name or password!");
             }
-            var userRole = (UserRoles)UserAccount.Roles.FirstOrDefault().RoleId;
+            var listRole = new List<string>();
+            foreach (var role in UserAccount.Roles)
+            {
+                listRole.Add(role.RoleName);
+            }
+            //var userRole = (UserRoles)UserAccount.Roles.RoleId;
+
             var authClaims = new Collection<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Name,userLogin.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role,userRole.ToString())
             };
+            foreach (var role in listRole)
+            {
+                authClaims.Add( new Claim(ClaimTypes.Role, role));
+            }
             var accessToken = _tokenService.GenerateAccessToken(authClaims);
-            return Ok(new UserLoginResponseDto(accessToken));
+            return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
 
         [HttpGet]

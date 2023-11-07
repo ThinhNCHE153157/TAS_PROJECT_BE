@@ -178,11 +178,11 @@ namespace TAS.Application.Services
             return false;
         }
 
-        public async Task<Account> GetAccountById(int id)
+        public async Task<Account> GetAccountByIdReturnAcc(int id)
         {
             try
             {
-                Account value =  _unitOfWork.AccountRepository.GetAccountById(id);
+                Account value =  _unitOfWork.AccountRepository.GetAccountByIdReturnAcc(id);
                 if (value != null)
                 {
                     return value;
@@ -195,5 +195,28 @@ namespace TAS.Application.Services
             }
             return null;
         }
-    }
+
+		public async Task<GetAccountByIdResponseDto> GetAccountById(int id)
+		{
+			try
+			{
+				var account = await _unitOfWork.AccountRepository.GetAccountById(id)
+					.Where(x => x.IsDeleted == Common.IsNotDelete)
+					.FirstOrDefaultAsync().ConfigureAwait(false);
+
+				if (account != null)
+				{
+					var result = _mapper.Map<GetAccountByIdResponseDto>(account);
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				throw new Exception(e.Message);
+			}
+
+			return null;
+		}
+
+	}
 }
