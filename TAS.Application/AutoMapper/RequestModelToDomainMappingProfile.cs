@@ -14,6 +14,7 @@ namespace TAS.Application.AutoMapper
         public RequestModelToDomainMappingProfile()
         {
             CreateMap<UserRegisterRequestDto, Account>();
+            CreateMap<AddCourseRequestDto, Course>();
         }
     }
 }
