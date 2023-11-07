@@ -13,12 +13,13 @@ namespace TAS.Data.EF
         private IAccountRepository _accountRepository;
         private ICourseRepository _courseRepository;
         private IQuestionRepository _questionRepository;
-
+        private IRoleRepository _roleRepositery;
 
         public UnitOfWork(TASContext context)
         {
             _context = context;
         }
+
 
         public IAccountRepository AccountRepository
         {
@@ -54,6 +55,19 @@ namespace TAS.Data.EF
                 return _questionRepository;
             }
         }
+
+        public IRoleRepository RoleRepositery
+        {
+            get
+            {
+                if (this._roleRepositery is null)
+                {
+                    this._roleRepositery = new RoleRepository(_context);
+                }
+                return _roleRepositery;
+            }
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
