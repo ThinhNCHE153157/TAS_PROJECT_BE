@@ -87,7 +87,7 @@ namespace TAS.API.Controllers
                 authClaims.Add( new Claim(ClaimTypes.Role, role));
             }
             var accessToken = _tokenService.GenerateAccessToken(authClaims);
-            return Ok(new UserLoginResponseDto(accessToken));
+            return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
     }
 }
