@@ -20,6 +20,15 @@ namespace TAS.Application.AutoMapper
             CreateMap<Course, GetCourseByIdResponseDto>()
                 .ForMember(d => d.Tests, dt => dt.MapFrom(src => src.Tests));
             CreateMap<Test, TestDto>();
+
+            CreateMap<Account, AccountManageResponseDto>()
+                .ForMember(_dto => _dto.RoleNames, dt => dt.MapFrom(src => src.Roles.Select(role => role.RoleName).ToList()));
+            CreateMap<Class, ClassManagementDto>()
+                .ForMember(_dto => _dto.Teacher,
+                    dt => dt.MapFrom(src =>
+                        src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)) != null ?
+                            (src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)).LastName + " " +
+                             src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)).FirstName) : null));
         }
     }
 }
