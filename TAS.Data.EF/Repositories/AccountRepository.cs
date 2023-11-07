@@ -55,10 +55,7 @@ namespace TAS.Data.EF.Repositories
             return _context.Set<Account>().Where(a => a.AccountId == accountId && a.IsDeleted == Common.IsNotDelete);
         }
 
-		public IQueryable<Account> GetAccountById(int accountId)
-		{
-			return _context.Set<Account>().Where(a => a.AccountId == accountId && a.IsDeleted == Common.IsNotDelete);
-		}
+
 
 	}
 }
