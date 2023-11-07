@@ -21,6 +21,7 @@ namespace TAS.Application.AutoMapper
                 .ForMember(d => d.Tests, dt => dt.MapFrom(src => src.Tests));
             CreateMap<Test, TestDto>();
             CreateMap<Account, GetAccountByIdResponseDto>();
+
             CreateMap<Account, AccountManageResponseDto>()
                 .ForMember(_dto => _dto.RoleNames, dt => dt.MapFrom(src => src.Roles.Select(role => role.RoleName).ToList()));
             CreateMap<Class, ClassManagementDto>()
@@ -29,6 +30,9 @@ namespace TAS.Application.AutoMapper
                         src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)) != null ?
                             (src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)).LastName + " " +
                              src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)).FirstName) : null));
+            CreateMap<Test,CourseResultResponseDto>();
+            CreateMap<TestResult,TestResultDto>();
+
         }
     }
 }

@@ -19,6 +19,8 @@ namespace TAS.Application.AutoMapper
             CreateMap<AccountAddRequestDto, Account>();
             CreateMap<RoleRequestDto, Role>()
                 .ForMember(d => d.RoleName, opt => opt.MapFrom(src =>(UserRoles)src.RoleId));
+            CreateMap<AddCourseRequestDto, Course>();
+
         }
     }
 }
