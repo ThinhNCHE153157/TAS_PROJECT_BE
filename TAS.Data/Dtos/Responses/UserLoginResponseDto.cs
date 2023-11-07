@@ -8,10 +8,12 @@ namespace TAS.Data.Dtos.Responses
 {
     public class UserLoginResponseDto
     {
+        public int Id { get; set; }
         public string AccessToken { get; set; }
         
-        public UserLoginResponseDto(string accessToken)
+        public UserLoginResponseDto(int id,string accessToken)
         {
+            Id = id;
             AccessToken = accessToken;
         }
     }
