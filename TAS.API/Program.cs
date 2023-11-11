@@ -30,7 +30,7 @@ try
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
+    if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
     {
         logger.Info("Development environment loaded!");
         app.UseSwagger();
@@ -38,30 +38,11 @@ try
         app.UseMiniProfiler();
     }
 
-    using (var serviceScope = app.Services.GetService<IServiceScopeFactory>()!.CreateScope())
-    {
-        var context = serviceScope.ServiceProvider.GetRequiredService<TASContext>();
-        //try
-        //{
-        //    context.Database
-        //        .ExecuteSqlRaw("select exists(\r\n SELECT datname FROM pg_catalog.pg_database WHERE lower(datname) = lower('postgres')\r\n);");
-        //}
-        //catch (Exception e)
-        //{
-        //    if (e.Message.Contains("3D000"))
-        //    {
-        //        context.Database.Migrate();
-        //    }
-        //}
-    }
-
     logger.Error(app.Environment.IsDevelopment().ToString());
 
     app.ConfigureExceptionHandler(logger);
 
     app.UseCors("TasPolicy");
-
-    app.UseHttpsRedirection();
 
     app.UseRouting();
 
