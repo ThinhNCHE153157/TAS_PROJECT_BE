@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Data.Dtos.Requests;
+using TAS.Data.Dtos.Responses;
 using TAS.Data.Entities;
 
 namespace TAS.Data.EF.Repositories.Interfaces
@@ -14,6 +15,8 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public Account Getuser(UserLoginRequestDto requestDto);
         public IQueryable<Account> GetAllAccount();
         public IQueryable<Account> GetAccountManagement();
-
+        public IQueryable<Account> GetAccountById(int AccountId);
+        public IQueryable<Account> GetAllAccounts_Manage();
+        public Account GetAccountByIdReturnAcc(int id);
     }
 }

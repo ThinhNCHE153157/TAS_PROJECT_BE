@@ -1,7 +1,12 @@
-﻿using System;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Data.EF.Repositories.Interfaces;
@@ -25,5 +30,9 @@ namespace TAS.Data.EF.Repositories
             throw new NotImplementedException();
         }
 
+        public IQueryable<Test> GetTestResultById(int testId)
+        {
+            return _context.Set<Test>().Include(x => x.TestResults).Where(x => x.TestId == testId);
+        }
     }
 }
