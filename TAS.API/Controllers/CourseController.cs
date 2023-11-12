@@ -20,7 +20,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddCourse(AddCourseRequestDto request)
         {
             var result = await _courseService.AddCourse(request);
@@ -35,7 +35,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetAllCourse()
         {
             var result = await _courseService.GetAllCourse();
@@ -43,7 +43,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetCourseById([FromQuery] int id)
         {
             var result = await _courseService.GetCourseById(id);
@@ -51,7 +51,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> CourseResult([FromQuery] int id)
         {
             var result = await _testService.CourseResult(id);
