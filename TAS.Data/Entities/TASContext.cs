@@ -77,7 +77,7 @@ namespace TAS.Data.Entities
                     .HasMaxLength(255)
                     .HasColumnName("first_name");
 
-                entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+                entity.Property(e => e.IsDeleted).HasColumnName("isDeleted").HasDefaultValue(false);
 
                 entity.Property(e => e.IsVerified).HasColumnName("is_verified");
 
