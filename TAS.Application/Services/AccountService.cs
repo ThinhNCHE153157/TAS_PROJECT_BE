@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using TAS.API.Controllers;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
@@ -220,5 +221,22 @@ namespace TAS.Application.Services
             return null;
         }
 
+        public async Task<Account> GetUserByEmail(string email)
+        {
+            try
+            {
+                Account value = _unitOfWork.AccountRepository.GetUserByEmail(email);
+                if (value != null)
+                {
+                    return value;
+                }
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            return null;
+        }
     }
 }

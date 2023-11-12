@@ -31,6 +31,8 @@ namespace TAS.Data.Entities
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool? IsDeleted { get; set; }
+        public string VerificationToken { get; set; }
+        public DateTime? VerificationTokenExpiry { get; set; }
 
         public virtual ICollection<TestResult> TestResults { get; set; }
         public virtual ICollection<Token> Tokens { get; set; }

@@ -5,10 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
+using TAS.Data.EF.Repositories;
 using TAS.Data.Entities;
 using static TAS.Infrastructure.Enums.SystemEnum;
 
@@ -129,5 +132,55 @@ namespace TAS.API.Controllers
                 return Ok();
             }
         }
+
+        private string GenerateRandomVerificationCode()
+        {
+            Random random = new Random();
+            int code = random.Next(1000, 10000);
+            return code.ToString();
+        }
+
+
+        private void SendVerificationEmail(string recipient, string verificationCode)
+        {
+            var smtpClient = new SmtpClient("your-smtp-server.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("your-email@example.com", "your-email-password"),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("your-email@example.com"),
+                Subject = "The password reset verification code.",
+                Body = $"Your verification code is: {verificationCode}",
+            };
+
+            mailMessage.To.Add(recipient);
+
+            smtpClient.Send(mailMessage);
+        }
+
+
+        [HttpPost("forgotpassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+
+            var account = await _accountService.GetUserByEmail(request.Email);
+            if (account == null)
+            {
+                return BadRequest("The email does not exist in the system.");
+            }
+
+            var token = GenerateRandomVerificationCode();
+            account.VerificationToken = token;
+            account.VerificationTokenExpiry = DateTime.UtcNow.AddHours(1);
+
+            SendVerificationEmail(account.Email, token);
+
+            return Ok("Please check your email to receive the verification code.");
+        }
+
     }
 }

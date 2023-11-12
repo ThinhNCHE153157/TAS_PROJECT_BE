@@ -55,7 +55,15 @@ namespace TAS.Data.EF.Repositories
             return _context.Set<Account>().Where(a => a.AccountId == accountId && a.IsDeleted == Common.IsNotDelete);
         }
 
+        public Account GetUserByEmail(string email)
+        {
+            return _context.Accounts.FirstOrDefault(x => x.Email == email);
+        }
 
-
-	}
+        public void UpdateAccount(Account account)
+        {
+            _context.Accounts.Update(account);
+            _context.SaveChanges();
+        }
+    }
 }
