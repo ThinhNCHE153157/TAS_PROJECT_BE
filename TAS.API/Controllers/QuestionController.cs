@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TAS.Application.Services.Interfaces;
-
+using TAS.Data.Dtos.Requests;
 
 namespace TAS.API.Controllers
 {
@@ -34,6 +35,13 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> GetQuestionById([FromQuery] int id)
         {
             var result = await _questionService.GetQuestionById(id);
+            return Ok(result);
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetQuestionByTestId([FromQuery] GetQuestionByTestIdRequestDto request)
+        {
+            var result = await _questionService.GetQuestionByTestId(request);
             return Ok(result);
         }
     }

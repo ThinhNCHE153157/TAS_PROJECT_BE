@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TAS.Data.Dtos.Requests;
 using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
 
@@ -23,6 +24,11 @@ namespace TAS.Data.EF.Repositories
         public IQueryable<Question> GetQuestionById(int questionId)
         {
             return _context.Questions.Include(x => x.Test);
+        }
+
+        public IQueryable<Question> GetQuestionByTestId(GetQuestionByTestIdRequestDto request)
+        {
+            return _context.Questions.Include(x=>x.QuestionNavigation).Where(x => x.TestId == request.TestId);
         }
     }
 }
