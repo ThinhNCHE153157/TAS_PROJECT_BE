@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Application.Services.Interfaces;
+using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
+using TAS.Data.Entities;
 
 namespace TAS.Application.Services
 {
@@ -52,6 +54,23 @@ namespace TAS.Application.Services
             return null;
         }
 
+        public async Task<List<GetQuestionByTestIdResponseDto>> GetQuestionByTestId(GetQuestionByTestIdRequestDto request)
+        {
+            try
+            {
+                var question = await _unitOfWork.QuestionRepository.GetQuestionByTestId(request).ToListAsync().ConfigureAwait(false);
+                var result = new List<GetQuestionByTestIdResponseDto>();
+                foreach (var item in question)
+                {
+                    result.Add(new GetQuestionByTestIdResponseDto(item.QuestionId, item.Description, item.Image, item.Type, item.Note, item.QuestionNavigation.ResultA, item.QuestionNavigation.ResultB, item.QuestionNavigation.ResultC, item.QuestionNavigation.ResultD, item.QuestionNavigation.CorrectResult));
+                }
+                return result;
+
+            }catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
 
         public async Task<List<QuestionHomepageResponeDto>> getQuestionHomepage()
         {
