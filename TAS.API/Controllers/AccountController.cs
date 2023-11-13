@@ -85,18 +85,12 @@ namespace TAS.API.Controllers
             };
             foreach (var role in listRole)
             {
-                authClaims.Add( new Claim(ClaimTypes.Role, role));
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
             }
             var accessToken = _tokenService.GenerateAccessToken(authClaims);
             return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAccounts_Manage()
-        {
-            var data = await _accountService.GetAllAccounts_Manage();
-            return Ok(data);
-        }
 
         [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountAddRequestDto request)
@@ -104,7 +98,7 @@ namespace TAS.API.Controllers
             var isSuccess = await _accountService.AddUser(request).ConfigureAwait(false);
             if (!isSuccess)
             {
-                return BadRequest("Something wrong when register");
+                return BadRequest("Something wrong when add account");
             }
 
             return Ok();
@@ -123,7 +117,7 @@ namespace TAS.API.Controllers
                 var isSuccess = await _accountService.UpdateUser(request, accountId).ConfigureAwait(false);
                 if (!isSuccess)
                 {
-                    return BadRequest("Something wrong when register");
+                    return BadRequest("Something wrong when edit account");
                 }
 
                 return Ok();

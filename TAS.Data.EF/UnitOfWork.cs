@@ -14,6 +14,7 @@ namespace TAS.Data.EF
         private ICourseRepository _courseRepository;
         private IQuestionRepository _questionRepository;
         private IRoleRepository _roleRepositery;
+        private IClassRepository _classRepository;
 
         public UnitOfWork(TASContext context)
         {
@@ -65,6 +66,18 @@ namespace TAS.Data.EF
                     this._roleRepositery = new RoleRepository(_context);
                 }
                 return _roleRepositery;
+            }
+        }
+
+        public IClassRepository ClassRepository
+        {
+            get
+            {
+                if (this._classRepository is null)
+                {
+                    this._classRepository = new ClassRepository(_context);
+                }
+                return _classRepository;
             }
         }
 

@@ -24,12 +24,12 @@ namespace TAS.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<AccountHomepageResponeDTO>> GetAccountManagement()
+        public async Task<List<AccountManageResponseDto>> GetAccountManagement()
         {
             try
             {
-                var listAccount = await _unitOfWork.AccountRepository.GetAccountManagement().ToListAsync().ConfigureAwait(false);
-                var result = _mapper.Map<List<AccountHomepageResponeDTO>>(listAccount).ToList();
+                var accounts = await _unitOfWork.AccountRepository.GetAccountManagement().ToListAsync().ConfigureAwait(false);
+                var result = _mapper.Map<List<AccountManageResponseDto>>(accounts);
                 return result;
             }
             catch (Exception ex)
@@ -120,19 +120,6 @@ namespace TAS.Application.Services
             return null;
         }
 
-        public async Task<List<AccountManageResponseDto>> GetAllAccounts_Manage()
-        {
-            try
-            {
-                var accounts = await _unitOfWork.AccountRepository.GetAllAccounts_Manage().ToListAsync().ConfigureAwait(false);
-                var result = _mapper.Map<List<AccountManageResponseDto>>(accounts);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
 
         public async Task<bool> AddUser(AccountAddRequestDto acc_request)
         {

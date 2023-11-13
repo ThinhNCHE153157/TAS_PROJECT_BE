@@ -26,9 +26,9 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Account> GetAccountManagement()
 		{
-			return _context.Set<Account>().Where(a => a.IsDeleted == Common.IsNotDelete);
+			return _context.Accounts.Include(a => a.Roles);
 
-		}
+        }
 
 		public IQueryable<Account> GetAllAccount()
         {
@@ -41,10 +41,6 @@ namespace TAS.Data.EF.Repositories
             return user;
 
         }
-        public IQueryable<Account> GetAllAccounts_Manage()
-        {
-            return _context.Accounts.Include(a => a.Roles);
-        }
 
         public Account GetAccountByIdReturnAcc(int id)
         {
@@ -54,8 +50,6 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Set<Account>().Where(a => a.AccountId == accountId && a.IsDeleted == Common.IsNotDelete);
         }
-
-
 
 	}
 }

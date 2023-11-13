@@ -14,6 +14,7 @@ namespace TAS.Data.Dtos.Responses
         public DateTime? EndTime { get; set; }
         public string? Description { get; set; }
         public string? ClassCode { get; set; }
+        public string? Subject { get; set; }
         public string? Teacher { get; }
     }
 }

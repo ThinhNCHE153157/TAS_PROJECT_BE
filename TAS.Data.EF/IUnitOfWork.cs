@@ -16,6 +16,7 @@ namespace TAS.Data.EF
         public IQuestionRepository QuestionRepository { get; }
 
         public IRoleRepository RoleRepositery { get; }
+        public IClassRepository ClassRepository { get; }
 
         public Task CommitAsync();
 
