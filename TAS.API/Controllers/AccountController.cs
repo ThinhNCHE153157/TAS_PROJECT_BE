@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web.LayoutRenderers;
 using System.Collections.ObjectModel;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -60,6 +61,7 @@ namespace TAS.API.Controllers
 
             return Ok();
         }
+
 
         [HttpPost]
         [AllowAnonymous]
