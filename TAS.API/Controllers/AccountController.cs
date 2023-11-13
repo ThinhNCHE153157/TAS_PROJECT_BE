@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NLog.Web.LayoutRenderers;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TAS.Application.Services.Interfaces;
@@ -20,7 +21,7 @@ namespace TAS.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
-        public AccountController( IAccountService accountService, ITokenService tokenService)
+        public AccountController(IAccountService accountService, ITokenService tokenService)
         {
             _accountService = accountService;
             _tokenService = tokenService;
@@ -67,20 +68,68 @@ namespace TAS.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> UserLogin([FromBody] UserLoginRequestDto userLogin)
         {
-            var  UserAccount = await _accountService.UserLogin(userLogin).ConfigureAwait(false);
+            var UserAccount = await _accountService.UserLogin(userLogin).ConfigureAwait(false);
             if (UserAccount is null)
             {
                 return Unauthorized("Wrong user name or password!");
             }
-            var userRole = (UserRoles)UserAccount.Roles.FirstOrDefault().RoleId;
+            var listRole = new List<string>();
+            foreach (var role in UserAccount.Roles)
+            {
+                listRole.Add(role.RoleName);
+            }
+            //var userRole = (UserRoles)UserAccount.Roles.RoleId;
+
             var authClaims = new Collection<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Name,userLogin.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role,userRole.ToString())
             };
+            foreach (var role in listRole)
+            {
+                authClaims.Add( new Claim(ClaimTypes.Role, role));
+            }
             var accessToken = _tokenService.GenerateAccessToken(authClaims);
-            return Ok(new UserLoginResponseDto(accessToken));
+            return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAccounts_Manage()
+        {
+            var data = await _accountService.GetAllAccounts_Manage();
+            return Ok(data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAccount([FromBody] AccountAddRequestDto request)
+        {
+            var isSuccess = await _accountService.AddUser(request).ConfigureAwait(false);
+            if (!isSuccess)
+            {
+                return BadRequest("Something wrong when register");
+            }
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EditAccount(int accountId, [FromBody] AccountAddRequestDto request)
+        {
+            var account = await _accountService.GetAccountById(accountId);
+            if (account == null)
+            {
+                return NotFound($"Account with ID {accountId} not found.");
+            }
+            else
+            {
+                var isSuccess = await _accountService.UpdateUser(request, accountId).ConfigureAwait(false);
+                if (!isSuccess)
+                {
+                    return BadRequest("Something wrong when register");
+                }
+
+                return Ok();
+            }
         }
     }
 }
