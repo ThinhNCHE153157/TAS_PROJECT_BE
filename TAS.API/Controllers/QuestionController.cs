@@ -44,5 +44,20 @@ namespace TAS.API.Controllers
             var result = await _questionService.GetQuestionByTestId(request);
             return Ok(result);
         }
+
+        [HttpPut]
+        //[Authorize]
+        public async Task<IActionResult> UpdateQuestion([FromBody] UpdateQuestionRequestDto request)
+        {
+            var result = await _questionService.UpdateQuestion(request);
+            return Ok(result);
+        }
+        [HttpDelete]
+        //[Authorize]
+        public async Task<IActionResult> DeleteQuestion([FromQuery] int questionId)
+        {
+            var result = await _questionService.DeleteQuestion(questionId);
+            return Ok(result);
+        }
     }
 }
