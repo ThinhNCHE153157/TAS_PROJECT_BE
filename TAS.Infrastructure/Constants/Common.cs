@@ -13,7 +13,19 @@
         public const int PageSize = 15;
         public const bool IsNotDelete = false;
         public const bool IsDelete = true;
-    }
+
+		public static bool checkStringsIsNullOrEmpty(string[] strings)
+		{
+			foreach (string s in strings)
+			{
+				if (string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
     public static class Regex
     {
@@ -37,4 +49,6 @@
     {
         public const string S3MainPath = "";
     }
+
+	
 }
