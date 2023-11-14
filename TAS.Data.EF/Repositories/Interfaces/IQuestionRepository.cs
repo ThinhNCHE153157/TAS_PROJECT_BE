@@ -13,5 +13,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public IQueryable<Question> GetAllQuestion();
         public IQueryable<Question> GetQuestionById(int questionId);
         public IQueryable<Question> GetQuestionByTestId(GetQuestionByTestIdRequestDto request);
+        public bool UpdateQuestion(UpdateQuestionRequestDto request);
+        public bool DeleteQuestion(int questionId);
     }
 }

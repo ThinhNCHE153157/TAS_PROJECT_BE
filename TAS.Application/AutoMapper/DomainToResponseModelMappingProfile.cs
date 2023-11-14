@@ -32,7 +32,8 @@ namespace TAS.Application.AutoMapper
                              src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)).FirstName) : null));
             CreateMap<Test,CourseResultResponseDto>();
             CreateMap<TestResult,TestResultDto>();
-
+            CreateMap<QuestionAnswer, QuestionAnswerDto>();
+            CreateMap<Test,GetTestByIdResponseDto>();
         }
     }
 }

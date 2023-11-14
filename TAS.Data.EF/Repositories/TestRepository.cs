@@ -15,6 +15,11 @@ namespace TAS.Data.EF.Repositories
         {
         }
 
+        public IQueryable<Test> GetTestById(int testId)
+        {
+            return _context.Set<Test>().Where(x => x.TestId == testId);
+        }
+
         public IQueryable<Test> GetTestResultById(int testId)
         {
             return _context.Set<Test>().Include(x => x.TestResults).Where(x => x.TestId == testId);

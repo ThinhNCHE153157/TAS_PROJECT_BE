@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using TAS.Infrastructure.Helpers;
 
 namespace TAS.Application.Services
 {
@@ -22,6 +24,22 @@ namespace TAS.Application.Services
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<bool> DeleteQuestion(int questionId)
+        {
+            try
+            {
+                if (StringHelper.IsIntNumber(questionId.ToString()))
+                {
+                    var result =  _unitOfWork.QuestionRepository.DeleteQuestion(questionId);
+                    return result;
+                }
+                return false;
+            }catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public async Task<List<QuestionDashboardResponseDto>> GetAllQuestion()
@@ -66,7 +84,8 @@ namespace TAS.Application.Services
                 }
                 return result;
 
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
@@ -84,6 +103,24 @@ namespace TAS.Application.Services
             {
                 return null;
             }
+        }
+
+        public async Task<bool> UpdateQuestion(UpdateQuestionRequestDto request)
+        {
+            try
+            {
+                if (request != null)
+                {
+                    var result = _unitOfWork.QuestionRepository.UpdateQuestion(request);
+                    return result;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+                return false;
         }
     }
 }

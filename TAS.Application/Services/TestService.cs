@@ -26,9 +26,40 @@ namespace TAS.Application.Services
 
         public async Task<CourseResultResponseDto> CourseResult(int id)
         {
-            var test = await _unitOfWork.TestRepository.GetTestResultById(id).FirstOrDefaultAsync().ConfigureAwait(false);
-            var result =  _mapper.Map<CourseResultResponseDto>(test);
-            return result;
+            try
+            {
+                var test = await _unitOfWork.TestRepository.GetTestResultById(id).FirstOrDefaultAsync().ConfigureAwait(false);
+                if (test != null)
+                {
+                    var result = _mapper.Map<CourseResultResponseDto>(test);
+                    return result;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
+
+        public async Task<GetTestByIdResponseDto> GetTestById(int id)
+        {
+            try
+            {
+                var test = await _unitOfWork.TestRepository.GetTestById(id).FirstOrDefaultAsync().ConfigureAwait(false);
+                if (test != null)
+                {
+                    var result = _mapper.Map<GetTestByIdResponseDto>(test);
+                    return result;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
         }
     }
 }
