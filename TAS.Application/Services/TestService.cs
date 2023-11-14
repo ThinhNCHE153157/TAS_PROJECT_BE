@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Application.Services.Interfaces;
+using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
+using TAS.Data.Entities;
 
 namespace TAS.Application.Services
 {
@@ -59,6 +61,57 @@ namespace TAS.Application.Services
             {
                 _logger.LogError(e.Message);
                 return null;
+            }
+        }
+
+        public async Task<bool> UpdateTest(UpdateTestRequestDto request)
+        {
+            try
+            {
+                var test = _unitOfWork.TestRepository.GetTestById(request.TestId).FirstOrDefault();
+                if (test != null)
+                {
+
+                    test.TestName = request.TestName;
+                    test.TestTotalScore = request.TestTotalScore;
+                    test.TestDuration = request.TestDuration;
+                    test.TestDescription = request.TestDescription;
+                    var result = _unitOfWork.TestRepository.UpdateTest(test);
+                    return result;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateStatusTest(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.TestRepository.UpdateStatusTest(id);
+                return result;
+            }catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request)
+        {
+            try
+            {
+                var test = _mapper.Map<Test>(request.Tests);
+                var result = _unitOfWork.TestRepository.CreateTestForCourse(request.CourseId,test);
+                return result;
+            }catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
             }
         }
     }

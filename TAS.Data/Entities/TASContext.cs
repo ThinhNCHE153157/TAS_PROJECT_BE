@@ -370,7 +370,7 @@ namespace TAS.Data.Entities
                     .HasMaxLength(255)
                     .HasColumnName("image");
 
-                entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+                entity.Property(e => e.IsDeleted).HasColumnName("isDeleted").HasDefaultValue(false);
 
                 entity.Property(e => e.Note)
                     .HasColumnType("text")

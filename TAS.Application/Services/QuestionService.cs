@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,32 @@ namespace TAS.Application.Services
     public class QuestionService : IQuestionService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<QuestionService> _logger;
         private readonly IMapper _mapper;
 
-        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<QuestionService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
+        }
+
+        public async Task<bool> AddQuestion(CreateQuestionRequestDto request)
+        {
+            try
+            {
+                if (request != null)
+                {
+                    var question =  _mapper.Map<Question>(request);
+                    var result =  _unitOfWork.QuestionRepository.CreateQuestion(question,question.QuestionNavigation);
+                    return result;
+                }
+                return false;
+            }catch(Exception e)
+            {
+                _logger.LogError(e.Message);    
+                return false;
+            }
         }
 
         public async Task<bool> DeleteQuestion(int questionId)

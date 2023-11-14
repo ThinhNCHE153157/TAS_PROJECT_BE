@@ -52,7 +52,6 @@ namespace TAS.Data.EF.Repositories
             return false;
         }
 
-
         public bool DeleteQuestion(int questionId)
         {
             var question = GetQuestionById(questionId).FirstOrDefault();
@@ -65,6 +64,24 @@ namespace TAS.Data.EF.Repositories
                 return true;
             }
             return false;
+        }
+
+        public bool CreateQuestion(Question question, QuestionAnswer questionAnswer)
+        {
+            try
+            {
+                _context.QuestionAnswers.Add(questionAnswer);
+                _context.SaveChanges();
+                var QA=  _context.QuestionAnswers.OrderBy(x=>x.QuestionId).LastOrDefault();
+                question.QuestionId = QA.QuestionId;
+                _context.Questions.Add(question);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
     }
 }
