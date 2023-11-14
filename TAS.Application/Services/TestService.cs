@@ -101,9 +101,18 @@ namespace TAS.Application.Services
             }
         }
 
-        public Task<bool> CreateTest(CreateTestRequestDto request)
+        public async Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var test = _mapper.Map<Test>(request.Tests);
+                var result = _unitOfWork.TestRepository.CreateTestForCourse(request.CourseId,test);
+                return result;
+            }catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
         }
     }
 }

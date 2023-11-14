@@ -37,5 +37,12 @@ namespace TAS.API.Controllers
             var result = await _testService.UpdateStatusTest(request.TestId);
             return Ok(result);
         }
+        [HttpPost]
+        //[Authorize]
+        public async Task<IActionResult> CreateTestForCourse([FromBody] CreateTestForCourseRequestDto request)
+        {
+            var result = await _testService.CreateTestForCourse(request);
+            return Ok(result);
+        }
     }
 }

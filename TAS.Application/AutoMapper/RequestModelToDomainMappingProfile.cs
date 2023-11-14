@@ -24,6 +24,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<UpdateQuestionRequestDto, Question>();
             CreateMap<QuestionAnswerDto, QuestionAnswer>();
             CreateMap<CreateQuestionRequestDto, Question>();
+            CreateMap<CreateTestRequestDto, Test>();
         }
     }
 }

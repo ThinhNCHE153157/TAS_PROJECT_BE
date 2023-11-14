@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TAS.Data.Dtos.Requests;
 using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
 
@@ -15,18 +16,23 @@ namespace TAS.Data.EF.Repositories
         {
         }
 
-        public bool CreateTest(Test test)
+        public bool CreateTestForCourse(int courseId, Test test)
         {
-            _context.Set<Test>().Add(test);
-            int n = _context.SaveChanges();
-            if (n > 0)
+            var course = _context.Courses.Where(x => x.CourseId == courseId).FirstOrDefault();
+            if (course != null)
             {
-                return true;
+                course.Tests.Add(test);
+                int n = _context.SaveChanges();
+                if (n > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public bool UpdateStatusTest(int testId)
