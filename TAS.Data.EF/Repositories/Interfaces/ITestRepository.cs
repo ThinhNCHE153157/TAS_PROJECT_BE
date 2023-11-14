@@ -6,5 +6,9 @@ namespace TAS.Data.EF.Repositories.Interfaces
     {
         public IQueryable<Test> GetTestResultById(int testId);
         public IQueryable<Test> GetTestById(int testId);
+        public bool CreateTest(Test test);
+        public bool UpdateTest(Test test);
+        public bool UpdateStatusTest(int testId);
+
     }
 }

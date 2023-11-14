@@ -22,5 +22,20 @@ namespace TAS.API.Controllers
             var result = await _testService.GetTestById(request.TestId);
             return Ok(result);
         }
+
+        [HttpPut]
+        //[Authorize]
+        public async Task<IActionResult> UpdateTest([FromBody] UpdateTestRequestDto request)
+        {
+            var result = await _testService.UpdateTest(request);
+            return Ok(result);
+        }
+        [HttpDelete]
+        //[Authorize]
+        public async Task<IActionResult> UpdateStatus([FromQuery] UpdateStatusTestDto request)
+        {
+            var result = await _testService.UpdateStatusTest(request.TestId);
+            return Ok(result);
+        }
     }
 }
