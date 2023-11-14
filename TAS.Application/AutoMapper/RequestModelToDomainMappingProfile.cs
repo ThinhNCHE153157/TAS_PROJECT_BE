@@ -23,7 +23,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<AddCourseRequestDto, Course>();
             CreateMap<UpdateQuestionRequestDto, Question>();
             CreateMap<QuestionAnswerDto, QuestionAnswer>();
-
+            CreateMap<CreateQuestionRequestDto, Question>();
         }
     }
 }
