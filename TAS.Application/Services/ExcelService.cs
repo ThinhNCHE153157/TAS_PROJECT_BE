@@ -51,25 +51,25 @@ namespace TAS.Application.Services
 			return dt;
 		}
 
-		/*public static DataTable sampleTemplateAccount()
+		public static DataTable sampleTemplateAccount()
 		{
 			DataTable dt = new DataTable(sheetName);
 			dt.Columns.AddRange(new DataColumn[9]{
 				new DataColumn("First name"),
-				new DataColumn("Mid name"),
 				new DataColumn("Last name"),
-				new DataColumn("Date of birth"),
-				new DataColumn("Gender"),
+				new DataColumn("Email"),
+				new DataColumn("CreateDate"),
+				new DataColumn("UpdateDate"),
 				new DataColumn("Address"),
 				new DataColumn("Phone"),
-				new DataColumn("Major"),
+				new DataColumn("Roles"),
 				new DataColumn("Note"),
 			});
 			return dt;
-		}*/
+		}
 
 
-		public static List<Account> readData(IFormFile file)
+		public static List<Account> readDataAccount(IFormFile file)
 		{
 			try
 			{
