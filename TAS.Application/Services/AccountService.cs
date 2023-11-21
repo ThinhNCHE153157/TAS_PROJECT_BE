@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using MimeKit;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -218,6 +219,23 @@ namespace TAS.Application.Services
 
             }
             return null;
+        }
+
+        public async Task SendEmailAsync(MailRequestDto mailRequest)
+        {
+            MailRequestDto mail = new MailRequestDto();
+            var email = new MimeMessage();
+            email.Sender = MailboxAddress.Parse("toeicsystem@gmail.com");
+            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+            email.Subject = mailRequest.Subject;
+            var builder = new BodyBuilder();
+            builder.HtmlBody = mailRequest.Body;
+            email.Body = builder.ToMessageBody();
+            using var smtp = new MailKit.Net.Smtp.SmtpClient();
+            smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+            smtp.Authenticate("toeicsystem@gmail.com", "bnqu mosz dyne cehr");
+            smtp.Send(email);
+            smtp.Disconnect(true);
         }
 
     }
