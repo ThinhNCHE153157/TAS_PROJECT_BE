@@ -1,17 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NLog.Web.LayoutRenderers;
 using System.Collections.ObjectModel;
-using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
-using TAS.Data.Entities;
-using static TAS.Infrastructure.Enums.SystemEnum;
 
 namespace TAS.API.Controllers
 {
@@ -51,7 +45,7 @@ namespace TAS.API.Controllers
             return Ok(data);
         }
 
-		[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
@@ -87,7 +81,7 @@ namespace TAS.API.Controllers
             };
             foreach (var role in listRole)
             {
-                authClaims.Add( new Claim(ClaimTypes.Role, role));
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
             }
             var accessToken = _tokenService.GenerateAccessToken(authClaims);
             return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
@@ -129,6 +123,24 @@ namespace TAS.API.Controllers
                 }
 
                 return Ok();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            try
+            {
+                MailRequestDto mail = new MailRequestDto();
+                mail.ToEmail = email;
+                mail.Subject = "Reset Password";
+                mail.Body = "Mã reset password của bạn là: 1234";
+                await _accountService.SendEmailAsync(mail);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
