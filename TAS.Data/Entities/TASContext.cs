@@ -172,6 +172,11 @@ namespace TAS.Data.Entities
                 entity.Property(e => e.ClassCode)
                     .HasMaxLength(255)
                     .HasColumnName("class_code");
+                entity.Property(e => e.MaxStudentInClass).HasColumnName("MaxStudentInClass");
+
+                entity.Property(e => e.Teacher)
+                    .HasMaxLength(255)
+                    .HasColumnName("Teacher");
 
                 entity.Property(e => e.ClassName)
                     .HasMaxLength(255)

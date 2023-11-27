@@ -7,6 +7,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Application.Services.Interfaces;
+using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
@@ -23,11 +24,11 @@ namespace TAS.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<ClassManagementDto>> GetAllClasses()
+        public async Task<List<ClassManagementDto>> GetAllClassesManage()
         {
             try
             {
-                var listClass = await _unitOfWork.ClassRepository.GetAllClasses().ToListAsync().ConfigureAwait(false);
+                var listClass = await _unitOfWork.ClassRepository.GetAllClassesManage().ToListAsync().ConfigureAwait(false);
                 var result = _mapper.Map<List<ClassManagementDto>>(listClass).ToList();
                 return result;
             }catch (Exception ex)
@@ -36,9 +37,20 @@ namespace TAS.Application.Services
             }
         }
 
-        public Task<bool> AddClass(ClassManagementDto classManagementDto)
+        public async Task<bool> AddClass(ClassAddNewClassDto classAddNewClassDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var newClass = _mapper.Map<Class>(classAddNewClassDto);
+                await _unitOfWork.ClassRepository.AddAsync(newClass).ConfigureAwait(false);
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return false;
         }
 
         public Task<bool> EditClass(int id, ClassManagementDto classManagementDto)

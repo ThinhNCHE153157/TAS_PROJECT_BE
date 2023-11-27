@@ -25,7 +25,9 @@ namespace TAS.Data.Entities
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
 
-        public virtual ICollection<Account> Accounts { get; set; }
+        public string? Teacher { get; set; }
+        public int? MaxStudentInClass { get; set; }
+        public virtual ICollection<Account> ? Accounts { get; set; }
         public virtual ICollection<Account> AccountsNavigation { get; set; }
         public virtual ICollection<Test> Tests { get; set; }
     }

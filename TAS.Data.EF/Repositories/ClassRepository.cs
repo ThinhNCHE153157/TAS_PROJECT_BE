@@ -25,10 +25,37 @@ namespace TAS.Data.EF.Repositories
             }).AsQueryable();
         }
 
-        public IQueryable<Class> GetAllClasses()
+        public IQueryable<Class> GetAllClassesManage()
         {
-            return _context.Classes.AsQueryable();
+            return _context.Classes
+                .Include(c => c.Accounts)
+                    .ThenInclude(a => a.Roles)
+                .Where(c => c.Accounts.Any(a => a.Roles.Any(r => r.RoleId == 3)))
+                .AsQueryable();
         }
+
+        //public IQueryable<Class> GetAllClassesManage()
+        //{
+        //    return _context.Classes
+        //        .Where(c => c.Accounts.Any(a => a.Roles.Any(r => r.RoleId == 3)))
+        //        .Select(c => new Class
+        //        {
+        //            ClassId = c.ClassId,
+        //            ClassName = c.ClassName,
+        //            // ... Chọn các trường khác nếu cần
+        //            Accounts = c.Accounts
+        //                .Where(a => a.Roles.Any(r => r.RoleId == 3))
+        //                .Select(a => new Account
+        //                {
+        //                    AccountId = a.AccountId,
+        //                    Username = a.Username,
+        //                    // ... Chọn các trường khác nếu cần
+        //                    Roles = a.Roles.Where(r => r.RoleId == 3).ToList()
+        //                })
+        //                .ToList()
+        //        })
+        //        .AsQueryable();
+        //}
 
         public IQueryable<Class> GetClassByStudentId(int studentId)
         {

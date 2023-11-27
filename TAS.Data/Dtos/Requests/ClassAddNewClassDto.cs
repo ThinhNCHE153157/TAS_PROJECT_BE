@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TAS.Data.Dtos.Responses
+namespace TAS.Data.Dtos.Requests
 {
-    public class ClassManagementDto
+    public class ClassAddNewClassDto
     {
         public int ClassId { get; set; }
         public string? ClassName { get; set; }
@@ -16,7 +16,6 @@ namespace TAS.Data.Dtos.Responses
         public string? ClassCode { get; set; }
 
         public int? MaxStudentInClass { get; set; }
-        public string? Subject { get; set; }
         public string? Teacher { get; set; }
     }
 }

@@ -139,8 +139,8 @@ namespace TAS.Application.Services
                     var role = _unitOfWork.RoleRepositery.GetRoleById(roleDto.RoleId);
                     account.Roles.Add(role);
                 }
-                await _unitOfWork.AccountRepository.AddAsync(account).ConfigureAwait(false);
-                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    await _unitOfWork.AccountRepository.AddAsync(account).ConfigureAwait(false);
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 return true;
             }
             catch (Exception e)
@@ -177,7 +177,7 @@ namespace TAS.Application.Services
                         }
                         existingAccount.Roles.Add(role);
                     }
-                    _unitOfWork.Commit();
+                     await _unitOfWork.CommitAsync().ConfigureAwait(false);
                     return true;
 
                 }
@@ -206,6 +206,36 @@ namespace TAS.Application.Services
             }
             return null;
         }
+
+        public async Task<List<AccountManageResponseDto>> GetAccountInClass(int classId)
+        {
+            try
+            {
+                var accounts = await _unitOfWork.AccountRepository.GetAccountInClass(classId).ToListAsync().ConfigureAwait(false);
+                var  result  = _mapper.Map<List<AccountManageResponseDto>>(accounts);
+                return result;
+            }catch (Exception e)
+            {
+
+            }
+            return null;
+        }
+
+        public async Task<List<AccountTeacherName>> GetAllTeacher()
+        {
+            try
+            {
+                var temp = await _unitOfWork.AccountRepository.GetAllTeacher().ToListAsync().ConfigureAwait(false);
+                var result = _mapper.Map<List<AccountTeacherName>>(temp);
+                return result;
+            }
+            catch (Exception e)
+            {
+
+            }
+            return null;
+        }
+
 
     }
 }

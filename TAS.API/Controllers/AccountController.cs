@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
@@ -107,7 +108,7 @@ namespace TAS.API.Controllers
         [HttpPut]
         public async Task<IActionResult> EditAccount(int accountId, [FromBody] AccountAddRequestDto request)
         {
-            var account = await _accountService.GetAccountById(accountId);
+            var account = await _accountService.GetAccountByIdReturnAcc(accountId);
             if (account == null)
             {
                 return NotFound($"Account with ID {accountId} not found.");
@@ -122,6 +123,13 @@ namespace TAS.API.Controllers
 
                 return Ok();
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllTeacher()
+        {
+            var data = await _accountService.GetAllTeacher();
+            return Ok(data);
         }
     }
 }

@@ -60,5 +60,33 @@ namespace TAS.API.Controllers
                 return Ok();
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClass([FromBody] ClassAddNewClassDto response)
+        {
+
+                var isSuccess = await _classService.AddClass(response);
+                if (!isSuccess)
+                {
+                    return BadRequest("Something wrong when add new class");
+                }
+
+                return Ok();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllClassesManage()
+        {
+            var result = await _classService.GetAllClassesManage();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAccountInClass(int classId)
+        {
+            var result = await _accountService.GetAccountInClass(classId);
+            return Ok(result);
+        }
     }
 }
