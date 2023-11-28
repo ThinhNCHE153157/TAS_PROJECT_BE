@@ -49,6 +49,8 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
+            var isSuccess2 =  _accountService.UserRegister(request).Result;
+
             if (!isSuccess)
             {
                 return BadRequest("Something wrong when register");
