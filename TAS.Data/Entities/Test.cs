@@ -7,10 +7,9 @@ namespace TAS.Data.Entities
     {
         public Test()
         {
-            Questions = new HashSet<Question>();
+            Parts = new HashSet<Part>();
             TestResults = new HashSet<TestResult>();
             Classes = new HashSet<Class>();
-            Courses = new HashSet<Course>();
         }
 
         public int TestId { get; set; }
@@ -23,11 +22,12 @@ namespace TAS.Data.Entities
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool? IsDeleted { get; set; }
+        public int? TopicId { get; set; }
 
-        public virtual ICollection<Question> Questions { get; set; }
+        public virtual Topic? Topic { get; set; }
+        public virtual ICollection<Part> Parts { get; set; }
         public virtual ICollection<TestResult> TestResults { get; set; }
 
         public virtual ICollection<Class> Classes { get; set; }
-        public virtual ICollection<Course> Courses { get; set; }
     }
 }

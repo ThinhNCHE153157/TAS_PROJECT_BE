@@ -9,5 +9,14 @@ namespace TAS.Data.Dtos.Requests
     public class GetQuestionByTestIdRequestDto
     {
         public int TestId { get; set; }
+
+        public GetQuestionByTestIdRequestDto()
+        {
+        }
+
+        public GetQuestionByTestIdRequestDto(int testId)
+        {
+            TestId = testId;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,11 +20,13 @@ namespace TAS.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         public readonly IMapper _mapper;
         public readonly ILogger<TestService> _logger;
-        public TestService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TestService> logger)
+        public readonly IQuestionService _questionService;
+        public TestService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TestService> logger, IQuestionService questionService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _questionService = questionService;
         }
 
         public async Task<CourseResultResponseDto> CourseResult(int id)
@@ -103,15 +106,46 @@ namespace TAS.Application.Services
 
         public async Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request)
         {
+            //try
+            //{
+            //    var test = _mapper.Map<Test>(request.Tests);
+            //    var result = _unitOfWork.TestRepository.CreateTestForCourse(request.CourseId,test);
+            //    return result;
+            //}catch(Exception e)
+            //{
+            //    _logger.LogError(e.Message);
+            //    return false;
+            //}
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<GetListTestFreeResponseDto>> getListTestFreeResponseDtos()
+        {
             try
             {
-                var test = _mapper.Map<Test>(request.Tests);
-                var result = _unitOfWork.TestRepository.CreateTestForCourse(request.CourseId,test);
-                return result;
-            }catch(Exception e)
+                var test = await _unitOfWork.TestRepository.GetListTestFree().ToListAsync().ConfigureAwait(false);
+                if (test != null)
+                {
+                    var result = _mapper.Map<List<GetListTestFreeResponseDto>>(test);
+
+                    foreach(var item in result)
+                    {
+                        if (item!=null)
+                        {
+                            GetQuestionByTestIdRequestDto request = new GetQuestionByTestIdRequestDto(item.TestId);
+                            var question = await _questionService.GetQuestionByTestId(request).ConfigureAwait(false);
+                            item.TestTotalQuestion = question.Count;
+                        }
+                    }
+                    
+                    return result;
+                }
+                return null;
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e.Message);
-                return false;
+                return null;
             }
         }
     }

@@ -31,20 +31,21 @@ namespace TAS.Application.Services
 
         public async Task<bool> AddQuestion(CreateQuestionRequestDto request)
         {
-            try
-            {
-                if (request != null)
-                {
-                    var question =  _mapper.Map<Question>(request);
-                    var result =  _unitOfWork.QuestionRepository.CreateQuestion(question,question.QuestionNavigation);
-                    return result;
-                }
-                return false;
-            }catch(Exception e)
-            {
-                _logger.LogError(e.Message);    
-                return false;
-            }
+            //try
+            //{
+            //    if (request != null)
+            //    {
+            //        var question =  _mapper.Map<Question>(request);
+            //        var result =  _unitOfWork.QuestionRepository.CreateQuestion(question,question.QuestionNavigation);
+            //        return result;
+            //    }
+            //    return false;
+            //}catch(Exception e)
+            //{
+            //    _logger.LogError(e.Message);    
+            //    return false;
+            //}
+            throw new NotImplementedException();
         }
 
         public async Task<bool> DeleteQuestion(int questionId)
@@ -82,7 +83,7 @@ namespace TAS.Application.Services
         {
             try
             {
-                var question = await _unitOfWork.QuestionRepository.GetQuestionById(id).Include(x => x.Test).FirstOrDefaultAsync().ConfigureAwait(false);
+                var question = await _unitOfWork.QuestionRepository.GetQuestionById(id).FirstOrDefaultAsync().ConfigureAwait(false);
                 var result = _mapper.Map<GetQuestionByIdResponseDto>(question);
                 return result;
             }
@@ -95,21 +96,22 @@ namespace TAS.Application.Services
 
         public async Task<List<GetQuestionByTestIdResponseDto>> GetQuestionByTestId(GetQuestionByTestIdRequestDto request)
         {
-            try
-            {
-                var question = await _unitOfWork.QuestionRepository.GetQuestionByTestId(request).ToListAsync().ConfigureAwait(false);
-                var result = new List<GetQuestionByTestIdResponseDto>();
-                foreach (var item in question)
-                {
-                    result.Add(new GetQuestionByTestIdResponseDto(item.QuestionId, item.Description, item.Image, item.Type, item.Note, item.QuestionNavigation.ResultA, item.QuestionNavigation.ResultB, item.QuestionNavigation.ResultC, item.QuestionNavigation.ResultD, item.QuestionNavigation.CorrectResult));
-                }
-                return result;
+            //try
+            //{
+            //    var question = await _unitOfWork.QuestionRepository.GetQuestionByTestId(request).ToListAsync().ConfigureAwait(false);
+            //    var result = new List<GetQuestionByTestIdResponseDto>();
+            //    foreach (var item in question)
+            //    {
+            //        result.Add(new GetQuestionByTestIdResponseDto(item.QuestionId, item.Description, item.Image, item.Type, item.Note, item.QuestionNavigation.ResultA, item.QuestionNavigation.ResultB, item.QuestionNavigation.ResultC, item.QuestionNavigation.ResultD, item.QuestionNavigation.CorrectResult));
+            //    }
+            //    return result;
 
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    throw new Exception(e.Message);
+            //}
+            throw new NotImplementedException();
         }
 
         public async Task<List<QuestionHomepageResponeDto>> getQuestionHomepage()

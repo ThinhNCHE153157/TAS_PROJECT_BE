@@ -5,7 +5,12 @@ namespace TAS.Data.Entities
 {
     public partial class Question
     {
-        public int? TestId { get; set; }
+        public Question()
+        {
+            QuestionAnswers = new HashSet<QuestionAnswer>();
+        }
+
+        public int PartId { get; set; }
         public int QuestionId { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
@@ -17,7 +22,7 @@ namespace TAS.Data.Entities
         public DateTime? UpdateDate { get; set; }
         public bool? IsDeleted { get; set; }
 
-        public virtual QuestionAnswer QuestionNavigation { get; set; } = null!;
-        public virtual Test? Test { get; set; }
+        public virtual Part Part { get; set; } = null!;
+        public virtual ICollection<QuestionAnswer> QuestionAnswers { get; set; }
     }
 }

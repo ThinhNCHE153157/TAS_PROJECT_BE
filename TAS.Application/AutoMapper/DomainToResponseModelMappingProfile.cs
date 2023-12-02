@@ -18,7 +18,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<Course,CourseDashboardResponseDto>();
             CreateMap<Account, AccountHomepageResponeDTO>();
             CreateMap<Course, GetCourseByIdResponseDto>()
-                .ForMember(d => d.Tests, dt => dt.MapFrom(src => src.Tests));
+                .ForMember(d => d.Topics, dt => dt.MapFrom(src => src.Topics));
             CreateMap<Test, TestDto>();
             CreateMap<Account, GetAccountByIdResponseDto>();
 
@@ -34,6 +34,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<TestResult,TestResultDto>();
             CreateMap<QuestionAnswer, QuestionAnswerDto>();
             CreateMap<Test,GetTestByIdResponseDto>();
+            CreateMap<Test,GetListTestFreeResponseDto>();
         }
     }
 }

@@ -10,5 +10,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> UpdateTest(UpdateTestRequestDto request);
         public Task<bool> UpdateStatusTest(int id);
         public Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request);
+        public Task<List<GetListTestFreeResponseDto>> getListTestFreeResponseDtos();
     }
 }

@@ -44,5 +44,13 @@ namespace TAS.API.Controllers
             var result = await _testService.CreateTestForCourse(request);
             return Ok(result);
         }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> getListTestFree()
+        {
+            var result = await _testService.getListTestFreeResponseDtos();
+            return Ok(result);
+        }
     }
 }

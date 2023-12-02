@@ -38,7 +38,7 @@ namespace TAS.API.Controllers
             return Ok(result);
         }
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetQuestionByTestId([FromQuery] GetQuestionByTestIdRequestDto request)
         {
             var result = await _questionService.GetQuestionByTestId(request);
