@@ -16,24 +16,6 @@ namespace TAS.Data.EF.Repositories
         {
         }
 
-        public bool CreateTestForCourse(int courseId, Test test)
-        {
-            var course = _context.Courses.Where(x => x.CourseId == courseId).FirstOrDefault();
-            if (course != null)
-            {
-                course.Tests.Add(test);
-                int n = _context.SaveChanges();
-                if (n > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return false;
-        }
 
         public bool UpdateStatusTest(int testId)
         {
@@ -85,6 +67,11 @@ namespace TAS.Data.EF.Repositories
             {
                 return false;
             }
+        }
+
+        public IQueryable<Test> GetListTestFree()
+        {
+            return _context.Set<Test>().Where(x => x.IsDeleted == false);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Question> GetQuestionByTestId(GetQuestionByTestIdRequestDto request)
         {
-            return _context.Questions.Include(x => x.QuestionNavigation).Where(x => x.TestId == request.TestId);
+            return _context.Questions.Include(x => x.Part).ThenInclude(x => x.Test).Where(x => x.Part.TestId == request.TestId);
         }
 
         public bool UpdateQuestion(UpdateQuestionRequestDto request)
@@ -70,12 +70,6 @@ namespace TAS.Data.EF.Repositories
         {
             try
             {
-                _context.QuestionAnswers.Add(questionAnswer);
-                _context.SaveChanges();
-                var QA=  _context.QuestionAnswers.OrderBy(x=>x.QuestionId).LastOrDefault();
-                question.QuestionId = QA.QuestionId;
-                _context.Questions.Add(question);
-                _context.SaveChanges();
                 return true;
             }
             catch (Exception e)
