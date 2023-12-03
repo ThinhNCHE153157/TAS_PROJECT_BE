@@ -1,17 +1,10 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
-using TAS.Data.Entities;
 
 namespace TAS.Application.Services
 {
@@ -97,7 +90,8 @@ namespace TAS.Application.Services
             {
                 var result = _unitOfWork.TestRepository.UpdateStatusTest(id);
                 return result;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 _logger.LogError(e.Message);
                 return false;
@@ -123,21 +117,29 @@ namespace TAS.Application.Services
         {
             try
             {
-                var test = await _unitOfWork.TestRepository.GetListTestFree().ToListAsync().ConfigureAwait(false);
+                var test = await _unitOfWork.TestRepository.GetListTestFree().Include(x => x.Parts).ToListAsync().ConfigureAwait(false);
                 if (test != null)
                 {
                     var result = _mapper.Map<List<GetListTestFreeResponseDto>>(test);
 
-                    foreach(var item in result)
+                    foreach (var item in result)
                     {
-                        if (item!=null)
+                        if (item != null)
                         {
-                            GetQuestionByTestIdRequestDto request = new GetQuestionByTestIdRequestDto(item.TestId);
-                            var question = await _questionService.GetQuestionByTestId(request).ConfigureAwait(false);
-                            item.TestTotalQuestion = question.Count;
+                            List<int> listPart = _unitOfWork.TestRepository.GetPartsByTestId(item.TestId).ToList();
+                            item.TotalPart = listPart.Count;
+                            item.TestTotalQuestion = 0;
+                            if (item.TotalPart != 0)
+                            {
+                                foreach (var part in listPart)
+                                {
+                                    var listQuestion = _unitOfWork.QuestionRepository.GetQuestionByPartId(part).ToList();
+                                    item.TestTotalQuestion += listQuestion.Count;
+                                }
+                            }
                         }
                     }
-                    
+
                     return result;
                 }
                 return null;

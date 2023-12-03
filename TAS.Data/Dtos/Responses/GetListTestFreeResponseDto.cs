@@ -13,6 +13,7 @@ namespace TAS.Data.Dtos.Responses
         public double? TestDuration { get; set; }
         public double? TestTotalScore { get; set; }
         public string? TestDescription { get; set; }
+        public int? TotalPart { get; set; }
         public int ? TestTotalQuestion { get; set; }
     }
 }

@@ -71,7 +71,17 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Test> GetListTestFree()
         {
-            return _context.Set<Test>().Where(x => x.IsDeleted == false);
+            return _context.Set<Test>().Where(x => x.IsDeleted == false && x.TopicId==null);
+        }
+
+        public int TotalPartOfTest(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId).Count();
+        }
+
+        public IEnumerable<int> GetPartsByTestId(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId).Select(x => x.PartId);
         }
     }
 }

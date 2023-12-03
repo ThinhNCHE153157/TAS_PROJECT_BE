@@ -260,7 +260,7 @@ namespace TAS.Data.Entities
                 entity.Property(e => e.CourseCost).HasColumnName("course_cost");
 
                 entity.Property(e => e.CourseDescription)
-                    .HasColumnType("text")
+                    .HasMaxLength(4000)
                     .HasColumnName("course_description");
 
                 entity.Property(e => e.CourseLevel).HasColumnName("course_level");
