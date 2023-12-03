@@ -16,6 +16,7 @@ using TAS.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using TAS.Infrastructure.Helpers;
 using TAS.Data.Entities;
+using Amazon.S3;
 
 namespace TAS.API.DependencyConfig
 {
@@ -174,6 +175,7 @@ namespace TAS.API.DependencyConfig
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ITestService, TestService>();
+            services.AddScoped<IS3StorageService,S3StorageService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

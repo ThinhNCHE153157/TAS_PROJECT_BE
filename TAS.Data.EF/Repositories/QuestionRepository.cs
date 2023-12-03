@@ -26,9 +26,9 @@ namespace TAS.Data.EF.Repositories
             return _context.Questions.Where(x => x.QuestionId == questionId);
         }
 
-        public IQueryable<Question> GetQuestionByTestId(GetQuestionByTestIdRequestDto request)
+        public IQueryable<Question> GetQuestionByPartId(int id)
         {
-            return _context.Questions.Include(x => x.Part).ThenInclude(x => x.Test).Where(x => x.Part.TestId == request.TestId);
+            return _context.Questions.Include(x => x.Part).Where(x => x.Part.TestId == id);
         }
 
         public bool UpdateQuestion(UpdateQuestionRequestDto request)
