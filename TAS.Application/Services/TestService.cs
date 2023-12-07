@@ -5,6 +5,7 @@ using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
+using TAS.Data.Entities;
 
 namespace TAS.Application.Services
 {
@@ -143,6 +144,38 @@ namespace TAS.Application.Services
                     return result;
                 }
                 return null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
+
+        public async Task<GetListPartOfTestResponseDto> getListPartOfTest(int testId)
+        {
+            GetListPartOfTestResponseDto result = new GetListPartOfTestResponseDto();
+            try
+            {
+                var partAu = _unitOfWork.TestRepository.GetPartsAudioByTestId(testId).ToList();
+                var partRe = _unitOfWork.TestRepository.GetPartsReadByTestId(testId).ToList();
+                if (partAu != null)
+                {
+                    foreach (var item in partAu)
+                    {
+                        var listQuestion = _unitOfWork.QuestionRepository.GetQuestionByPartId(item).ToList();
+                        result.PartAudio.Add(new PartOfTestResponseDto(item,listQuestion.Count));
+                    }
+                }
+                if (partRe != null)
+                {
+                    foreach (var item in partRe)
+                    {
+                        var listQuestion = _unitOfWork.QuestionRepository.GetQuestionByPartId(item).ToList();
+                        result.PartReading.Add(new PartOfTestResponseDto(item, listQuestion.Count));
+                    }
+                }
+                return result;
             }
             catch (Exception e)
             {

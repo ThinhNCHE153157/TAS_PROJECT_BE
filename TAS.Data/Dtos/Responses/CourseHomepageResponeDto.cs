@@ -12,5 +12,8 @@ namespace TAS.Data.Dtos.Responses
         public string CourseName { get; set; }
         public string? CourseDescription { get; set; }
         public int? CourseLevel { get; set; }
+        public double CourseCost { get; set; }
+        public double Discount { get; set; }
+
     }
 }

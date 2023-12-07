@@ -15,6 +15,7 @@ namespace TAS.Data.Entities
 
         public int PartId { get; set; }
         public int? TestId { get; set; }
+        public bool? Type { get; set; }
 
         public virtual Test? Test { get; set; }
         public virtual ICollection<Question> Questions { get; set; }

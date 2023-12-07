@@ -83,5 +83,13 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Set<Part>().Where(x => x.TestId == testId).Select(x => x.PartId);
         }
+        public IEnumerable<int> GetPartsAudioByTestId(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId && x.Type==false).Select(x => x.PartId);
+        }
+        public IEnumerable<int> GetPartsReadByTestId(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId && x.Type==true).Select(x => x.PartId);
+        }
     }
 }

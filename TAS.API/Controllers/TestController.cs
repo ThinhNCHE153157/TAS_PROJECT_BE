@@ -52,5 +52,12 @@ namespace TAS.API.Controllers
             var result = await _testService.getListTestFreeResponseDtos();
             return Ok(result);
         }
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> getListPartOfTest([FromQuery] int request)
+        {
+            var result = await _testService.getListPartOfTest(request).ConfigureAwait(false);
+            return Ok(result);
+        }
     }
 }
