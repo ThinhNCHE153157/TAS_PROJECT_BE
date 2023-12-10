@@ -11,8 +11,9 @@ namespace TAS.Data.Dtos.Responses
     public class GetCourseByIdResponseDto
     {
         public int CourseId { get; set; }
+        public string CourseName { get; set; } 
         public string? CourseDescription { get; set; }
         public int? CourseLevel { get; set; }
-        public virtual ICollection<TestDto> Tests { get; set; }
+        public virtual ICollection<TopicDto> Topics { get; set; }
     }
 }

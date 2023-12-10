@@ -12,8 +12,8 @@ namespace TAS.Data.EF
 
         public IAccountRepository AccountRepository { get; }
         public ICourseRepository CourseRepository { get; }
-
         public IQuestionRepository QuestionRepository { get; }
+        public ITestRepository TestRepository { get; }
 
         public IRoleRepository RoleRepositery { get; }
         public IClassRepository ClassRepository { get; }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
@@ -51,10 +50,12 @@ namespace TAS.API.Controllers
             return Ok(data);
         }
 
-		[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
+            var isSuccess2 =  _accountService.UserRegister(request).Result;
+
             if (!isSuccess)
             {
                 return BadRequest("Something wrong when register");
@@ -62,6 +63,7 @@ namespace TAS.API.Controllers
 
             return Ok();
         }
+
 
         [HttpPost]
         [AllowAnonymous]
@@ -92,6 +94,12 @@ namespace TAS.API.Controllers
             return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllAccounts_Manage()
+        {
+            var data = await _accountService.GetAllAccounts_Manage();
+            return Ok(data);
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountAddRequestDto request)
@@ -125,11 +133,33 @@ namespace TAS.API.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllTeacher()
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
         {
-            var data = await _accountService.GetAllTeacher();
+            try
+            {
+                MailRequestDto mail = new MailRequestDto();
+                mail.ToEmail = email;
+                mail.Subject = "Reset Password";
+                mail.Body = "Mã reset password của bạn là: 1234";
+                await _accountService.SendEmailAsync(mail);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(data);
-        }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetAllTeacher()
+    {
+        var data = await _accountService.GetAllTeacher();
+        return Ok(data);
     }
 }

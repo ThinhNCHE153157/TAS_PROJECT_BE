@@ -15,6 +15,7 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> AddUser(AccountAddRequestDto acc_request);
         public Task<bool> UpdateUser(AccountAddRequestDto user_request, int id);
         public Task<GetAccountByIdResponseDto> GetAccountById(int id);
+        public Task SendEmailAsync(MailRequestDto mailRequest);
         public Task<List<AccountManageResponseDto>> GetAccountInClass(int classId);
         public Task<List<AccountTeacherName>> GetAllTeacher();
     }

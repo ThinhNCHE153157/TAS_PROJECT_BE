@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Application.Services.Interfaces;
+using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
@@ -21,6 +22,21 @@ namespace TAS.Application.Services
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<bool> AddCourse(AddCourseRequestDto request)
+        {
+            try
+            {
+                var course = _mapper.Map<Course>(request);
+                await _unitOfWork.CourseRepository.AddAsync(course).ConfigureAwait(false);
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<List<CourseDashboardResponseDto>> GetAllCourse()
@@ -41,7 +57,7 @@ namespace TAS.Application.Services
         {
             try
             {
-            var course = await _unitOfWork.CourseRepository.GetCourseById(id).Include(x=>x.Tests).FirstOrDefaultAsync().ConfigureAwait(false);
+            var course = await _unitOfWork.CourseRepository.GetCourseById(id).FirstOrDefaultAsync().ConfigureAwait(false);
             var result = _mapper.Map<GetCourseByIdResponseDto>(course);
             return result;
             }catch(Exception e)

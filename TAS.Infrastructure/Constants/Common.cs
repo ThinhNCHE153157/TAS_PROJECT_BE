@@ -5,15 +5,25 @@
         /// <summary>
         /// Get author name
         /// </summary>
-        public const string Author = "fearofgods";
+        public const string Author = "TAS";
         public const string Version = "1.0 - alpha";
         public const string Description = "Description";
-        public const int NumberHotMovieDisplayHomePage = 20;
-        public const int NumberMovieDisplayHomePage = 12;
         public const int PageSize = 15;
         public const bool IsNotDelete = false;
         public const bool IsDelete = true;
-    }
+
+		public static bool checkStringsIsNullOrEmpty(string[] strings)
+		{
+			foreach (string s in strings)
+			{
+				if (string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
     public static class Regex
     {
@@ -37,4 +47,6 @@
     {
         public const string S3MainPath = "";
     }
+
+	
 }

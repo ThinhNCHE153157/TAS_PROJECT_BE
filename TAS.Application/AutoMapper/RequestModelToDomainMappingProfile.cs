@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TAS.Data.Dtos.Domains;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Entities;
 using static TAS.Infrastructure.Enums.SystemEnum;
@@ -20,6 +21,11 @@ namespace TAS.Application.AutoMapper
             CreateMap<ClassAddNewClassDto, Class>();
             CreateMap<RoleRequestDto, Role>()
                 .ForMember(d => d.RoleName, opt => opt.MapFrom(src =>(UserRoles)src.RoleId));
+            CreateMap<AddCourseRequestDto, Course>();
+            CreateMap<UpdateQuestionRequestDto, Question>();
+            CreateMap<QuestionAnswerDto, QuestionAnswer>();
+            CreateMap<CreateQuestionRequestDto, Question>();
+            CreateMap<CreateTestRequestDto, Test>();
         }
     }
 }

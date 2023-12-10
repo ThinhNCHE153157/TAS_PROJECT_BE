@@ -9,6 +9,7 @@ namespace TAS.Data.Dtos.Responses
     public class CourseDashboardResponseDto
     {
         public int CourseId { get; set; }
+        public string CourseName { get; set; }
         public string? CourseDescription { get; set; }
         public int? CourseLevel { get; set; }
         public string? CreateUser { get; set; }
