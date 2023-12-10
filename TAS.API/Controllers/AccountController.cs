@@ -54,7 +54,7 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
-            var isSuccess2 =  _accountService.UserRegister(request).Result;
+            var isSuccess2 = _accountService.UserRegister(request).Result;
 
             if (!isSuccess)
             {
@@ -94,12 +94,12 @@ namespace TAS.API.Controllers
             return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAccounts_Manage()
-        {
-            var data = await _accountService.GetAllAccounts_Manage();
-            return Ok(data);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllAccounts_Manage()
+        //{
+        //    var data = await _accountService.GetAllAccounts_Manage();
+        //    return Ok(data);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountAddRequestDto request)
@@ -149,17 +149,13 @@ namespace TAS.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            return Ok(data);
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
 
-    }
-    [HttpGet]
-    public async Task<IActionResult> GetAllTeacher()
-    {
-        var data = await _accountService.GetAllTeacher();
-        return Ok(data);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllTeacher()
+        {
+            var data = await _accountService.GetAllTeacher();
+            return Ok(data);
+        }
     }
 }
