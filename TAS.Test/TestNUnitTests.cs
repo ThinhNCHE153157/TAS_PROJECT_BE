@@ -4,18 +4,23 @@ using TAS.Application.Services;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.EF;
+using TAS.Test.Mock;
 
 namespace TAS.Test
 {
     public class TestNUnitTests
     {
         private UserRegisterRequestDto UserRegister;
+        private UserLoginRequestDto UserLogin;
         private IAccountService accountService;
         private IMapper mapper;
         private IUnitOfWork unitOfWork;
         [SetUp]
         public void Setup()
         {
+            unitOfWork = MockUnitOfWork.GetUnitOfWork();
+            mapper = MockAutoMapper.GetMapper();
+            accountService = new AccountService(unitOfWork, mapper);
             UserRegister = new UserRegisterRequestDto
             {
                 Username = "thinh",
@@ -24,6 +29,11 @@ namespace TAS.Test
                 Phone = "0328299716",
                 FirstName = "thinh",
                 LastName = "nguyen"
+            };
+             UserLogin = new UserLoginRequestDto
+            {
+                UserName = "thinh",
+                Password = "thinh1601"
             };
 
         }
@@ -55,8 +65,29 @@ namespace TAS.Test
             // Arrange
             // Act
             var result = accountService.UserRegister(UserRegister).Result;
+
             // Assert
             Assert.IsTrue(result);
+
+        }
+        [Test]
+        public void LoginService()
+        {
+            // Arrange
+            // Act
+            var resultLogin = accountService.UserLogin(UserLogin).Result;
+            // Assert
+            Assert.NotNull(resultLogin);
+
+        }
+        [Test]
+        public void ListUser()
+        {
+            // Arrange
+            // Act
+            var result = accountService.GetAccounts().Result;
+            // Assert
+            Assert.NotNull(result);
 
         }
     }
