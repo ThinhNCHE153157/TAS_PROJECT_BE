@@ -14,7 +14,11 @@ namespace TAS.Data.Entities
         public int CourseId { get; set; }
         public string CourseName { get; set; } = null!;
         public string? CourseDescription { get; set; }
+        public string? Image { get; set; }
+        public string? ShortDescription { get; set; }
+        public string? CourseGoal { get; set; }
         public int? CourseLevel { get; set; }
+        public int? Status { get; set; }
         public double CourseCost { get; set; }
         public double Discount { get; set; }
         public string? CreateUser { get; set; }

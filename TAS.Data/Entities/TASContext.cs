@@ -263,7 +263,20 @@ namespace TAS.Data.Entities
                     .HasMaxLength(4000)
                     .HasColumnName("course_description");
 
+                entity.Property(e => e.ShortDescription)
+                    .HasMaxLength(200)
+                    .HasColumnName("short_description");
+
+                entity.Property(e => e.CourseGoal)
+                    .HasMaxLength(4000)
+                    .HasColumnName("course_goal");
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(255)
+                    .HasColumnName("image");
+
                 entity.Property(e => e.CourseLevel).HasColumnName("course_level");
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.CourseName)
                     .HasMaxLength(255)

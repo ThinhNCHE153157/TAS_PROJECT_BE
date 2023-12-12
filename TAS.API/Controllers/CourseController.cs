@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
+using TAS.Infrastructure.Helpers;
 
 namespace TAS.API.Controllers
 {
@@ -20,10 +21,20 @@ namespace TAS.API.Controllers
         }
 
         [HttpPost]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
         //[Authorize]
-        public async Task<IActionResult> AddCourse(AddCourseRequestDto request)
+        public async Task<IActionResult> AddCourse([FromForm]AddCourseRequestDto request)
         {
             var result = await _courseService.AddCourse(request);
+            return Ok(result);
+        }
+        [HttpPut]
+        public async Task<IActionResult> RequestCourse(int courseId,int status)
+        {
+            var result = await _courseService.UpdateStatus(courseId,status).ConfigureAwait(false);
             return Ok(result);
         }
 

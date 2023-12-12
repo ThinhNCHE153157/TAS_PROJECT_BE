@@ -44,6 +44,7 @@ namespace TAS.Application.Services
                 var uploadRequest = new TransferUtilityUploadRequest()
                 {
                     InputStream = obj.InputStream,
+                    FilePath = obj.filePath,
                     Key = obj.Name,
                     BucketName = obj.BucketName,
                     CannedACL = S3CannedACL.PublicRead,

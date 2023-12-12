@@ -60,10 +60,10 @@ namespace TAS.API.DependencyConfig
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminRole",
-                    policy => policy.RequireRole(UserRoles.Admin.ToString(), UserRoles.Manager.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
+                    policy => policy.RequireRole(UserRoles.Admin.ToString(), UserRoles.Enterprise.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
 
-                options.AddPolicy("ManagerRole",
-                    policy => policy.RequireRole(UserRoles.Manager.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
+                options.AddPolicy("EnterpriseRole",
+                    policy => policy.RequireRole(UserRoles.Enterprise.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
 
                 options.AddPolicy("TeacherRole",
                     policy => policy.RequireRole(UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
