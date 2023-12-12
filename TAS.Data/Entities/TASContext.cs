@@ -376,6 +376,8 @@ namespace TAS.Data.Entities
 
                 entity.Property(e => e.TestId).HasColumnName("test_id");
 
+                entity.Property(e => e.Type).HasColumnName("type").HasDefaultValueSql("((0))");
+
                 entity.HasOne(d => d.Test)
                     .WithMany(p => p.Parts)
                     .HasForeignKey(d => d.TestId)

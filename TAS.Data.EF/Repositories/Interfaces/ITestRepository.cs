@@ -11,6 +11,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public bool UpdateStatusTest(int testId);
         public IQueryable<Test> GetListTestFree();
         public IEnumerable<int> GetPartsByTestId(int testId);
-
+        public IEnumerable<int> GetPartsAudioByTestId(int testId);
+        public IEnumerable<int> GetPartsReadByTestId(int testId);
     }
 }
