@@ -26,15 +26,15 @@ namespace TAS.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [DisableRequestSizeLimit]
         //[Authorize]
-        public async Task<IActionResult> AddCourse([FromForm]AddCourseRequestDto request)
+        public async Task<IActionResult> AddCourse([FromForm] AddCourseRequestDto request)
         {
             var result = await _courseService.AddCourse(request);
             return Ok(result);
         }
         [HttpPut]
-        public async Task<IActionResult> RequestCourse(int courseId,int status)
+        public async Task<IActionResult> RequestCourse([FromBody] UpdateStatusRequestDto request)
         {
-            var result = await _courseService.UpdateStatus(courseId,status).ConfigureAwait(false);
+            var result = await _courseService.UpdateStatus(request.CourseId, request.Status).ConfigureAwait(false);
             return Ok(result);
         }
 
@@ -66,7 +66,38 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> CourseResult([FromQuery] int id)
         {
             var result = await _testService.CourseResult(id);
-            return Ok(result);
+            if (result!=null)
+            {
+                return Ok(result);
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        //[Authorize]
+        public async Task<IActionResult> UpdateCost([FromBody] UpdateCostRequestDto request)
+        {
+            var result = await _courseService.UpdateCost(request).ConfigureAwait(false);
+            if (result == true)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetCourseIdByName([FromQuery] string name)
+        {
+            var result = await _courseService.GetCourseIdByName(name);
+            if (result != 0)
+            {
+                return Ok(result);
+            }
+            return NotFound();
         }
     }
 }

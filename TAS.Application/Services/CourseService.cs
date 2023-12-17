@@ -102,6 +102,46 @@ namespace TAS.Application.Services
             }
         }
 
+        public async Task<int> GetCourseIdByName(string name)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    var result = await _unitOfWork.CourseRepository.GetCourseIdByName(name).FirstOrDefaultAsync().ConfigureAwait(false);
+                    if (result!=null)
+                    {
+                        return result.CourseId;
+                    }
+                    return 0;
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateCost(UpdateCostRequestDto request)
+        {
+            try
+            {
+                var course = _unitOfWork.CourseRepository.GetCourseById(request.CourseId).FirstOrDefault();
+                if (course != null)
+                {
+                    course.CourseCost = request.Price;
+                    await _unitOfWork.CommitAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task<bool> UpdateStatus(int courseId, int status)
         {
             try
@@ -115,7 +155,7 @@ namespace TAS.Application.Services
                 }
                 return false;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception(e.Message);
             }

@@ -145,5 +145,56 @@ namespace TAS.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut] 
+        public async Task<IActionResult> ChangePassword( [FromBody] ChangePasswordRequestDto request)
+        {
+            var account = await _accountService.GetAccountById(request.AccountId);
+            if (account == null)
+            {
+                return NotFound($"Account with ID {request.AccountId} not found.");
+            }
+            else
+            {
+                var isSuccess = await _accountService.ChangePassword(request).ConfigureAwait(false);
+                if (!isSuccess)
+                {
+                    return BadRequest("Something wrong when register");
+                }
+
+                return Ok();
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAvatar([FromForm] UpdateAvatarRequestDto request)
+        {
+            var isSuccess = await _accountService.UpdateAvatar(request).ConfigureAwait(false);
+            if (!isSuccess)
+            {
+                return BadRequest("Something wrong when Upload Avatar");
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAvatar([FromQuery]int accountId)
+        {
+            var account = await _accountService.GetAccountById(accountId);
+            if (account == null)
+            {
+                return NotFound($"Account with ID {accountId} not found.");
+            }
+            else
+            {
+                var isSuccess = await _accountService.DeleteAvatar(accountId).ConfigureAwait(false);
+                if (!isSuccess)
+                {
+                    return BadRequest("Something wrong when Delete Avatar");
+                }
+
+                return Ok(isSuccess);
+            }
+        }
     }
 }

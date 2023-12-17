@@ -11,5 +11,7 @@ namespace TAS.Application.Services.Interfaces
         public Task<GetCourseByIdResponseDto> GetCourseById(int id);
         public Task<bool> AddCourse(AddCourseRequestDto request);
         public Task<bool> UpdateStatus(int courseId, int status);
+        public Task<bool> UpdateCost(UpdateCostRequestDto request);
+        public Task<int> GetCourseIdByName(string name);
     }
 }

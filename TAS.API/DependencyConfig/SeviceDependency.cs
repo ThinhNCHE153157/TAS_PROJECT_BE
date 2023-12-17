@@ -177,6 +177,8 @@ namespace TAS.API.DependencyConfig
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IS3StorageService,S3StorageService>();
             services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
