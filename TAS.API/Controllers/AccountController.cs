@@ -49,8 +49,6 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
-            var isSuccess2 =  _accountService.UserRegister(request).Result;
-
             if (!isSuccess)
             {
                 return BadRequest("Something wrong when register");
@@ -109,7 +107,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditAccount(int accountId, [FromBody] AccountAddRequestDto request)
+        public async Task<IActionResult> UpdateAccount(int accountId, [FromBody] AccountAddRequestDto request)
         {
             var account = await _accountService.GetAccountById(accountId);
             if (account == null)
@@ -146,8 +144,8 @@ namespace TAS.API.Controllers
             }
         }
 
-        [HttpPut] 
-        public async Task<IActionResult> ChangePassword( [FromBody] ChangePasswordRequestDto request)
+        [HttpPut]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto request)
         {
             var account = await _accountService.GetAccountById(request.AccountId);
             if (account == null)
@@ -178,7 +176,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAvatar([FromQuery]int accountId)
+        public async Task<IActionResult> DeleteAvatar([FromQuery] int accountId)
         {
             var account = await _accountService.GetAccountById(accountId);
             if (account == null)

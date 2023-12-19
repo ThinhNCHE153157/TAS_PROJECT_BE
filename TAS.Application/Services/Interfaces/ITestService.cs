@@ -7,6 +7,7 @@ namespace TAS.Application.Services.Interfaces
     {
         public Task<CourseResultResponseDto> CourseResult(int id);
         public Task<GetTestByIdResponseDto> GetTestById(int id);
+        public Task<List<GetAllTestResponseDto>> GetAllTest();
         public Task<bool> UpdateTest(UpdateTestRequestDto request);
         public Task<bool> UpdateStatusTest(int id);
         public Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request);

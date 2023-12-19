@@ -35,6 +35,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<QuestionAnswer, QuestionAnswerDto>();
             CreateMap<Test,GetTestByIdResponseDto>();
             CreateMap<Test,GetListTestFreeResponseDto>();
+            CreateMap<Test, GetAllTestResponseDto>();
         }
     }
 }

@@ -16,6 +16,15 @@ namespace TAS.API.Controllers
             _testService = testService;
         }
 
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetAllTest()
+        {
+            var result = await _testService.GetAllTest().ConfigureAwait(false);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetTestById([FromQuery] GetTestByIdRequestDto request)
         {

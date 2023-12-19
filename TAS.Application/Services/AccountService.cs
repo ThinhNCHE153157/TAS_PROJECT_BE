@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 using System.Data;
 using TAS.Application.Services.Interfaces;
@@ -18,12 +19,14 @@ namespace TAS.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         public readonly IMapper _mapper;
+        public readonly ILogger<AccountService> _logger;
         public readonly IS3StorageService _s3StorageService;
-        public AccountService(IUnitOfWork unitOfWork, IMapper mapper, IS3StorageService s3StorageService)
+        public AccountService(IUnitOfWork unitOfWork, IMapper mapper, IS3StorageService s3StorageService, ILogger<AccountService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _s3StorageService = s3StorageService;
+            _logger = logger;
         }
 
         public async Task<List<AccountHomepageResponeDTO>> GetAccountManagement()
@@ -36,6 +39,7 @@ namespace TAS.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -49,6 +53,7 @@ namespace TAS.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -66,6 +71,7 @@ namespace TAS.Application.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
             }
             return false;
         }
@@ -82,7 +88,7 @@ namespace TAS.Application.Services
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.Message);
             }
             return null;
         }
@@ -96,6 +102,7 @@ namespace TAS.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -117,6 +124,7 @@ namespace TAS.Application.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 throw new Exception(e.Message);
             }
 
@@ -133,6 +141,7 @@ namespace TAS.Application.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -161,6 +170,7 @@ namespace TAS.Application.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
             }
             return false;
         }
@@ -199,6 +209,7 @@ namespace TAS.Application.Services
                 }
                 catch (Exception e)
                 {
+                    _logger.LogError(e.Message);
                 }
             }
 
@@ -218,7 +229,7 @@ namespace TAS.Application.Services
             }
             catch (Exception e)
             {
-
+                _logger.LogError(e.Message);
             }
             return null;
         }
@@ -272,6 +283,7 @@ namespace TAS.Application.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
         }
@@ -313,6 +325,7 @@ namespace TAS.Application.Services
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 return false;
             }
         }

@@ -183,5 +183,24 @@ namespace TAS.Application.Services
                 return null;
             }
         }
+
+        public async Task<List<GetAllTestResponseDto>> GetAllTest()
+        {
+            try
+            {
+                var result = _unitOfWork.TestRepository.GetAllTest().ToList();
+                if (result != null)
+                {
+                    var response = _mapper.Map<List<GetAllTestResponseDto>>(result);
+                    return response;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
     }
 }
