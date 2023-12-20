@@ -8,6 +8,7 @@ namespace TAS.Data.Dtos.Domains
 {
     public class VideoDto
     {
+        public int VideoId { get; set; }
         public string VideoTitle { get; set; }
     }
 }
