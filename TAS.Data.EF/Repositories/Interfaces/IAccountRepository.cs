@@ -16,7 +16,8 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public IQueryable<Account> GetAllAccount();
         public IQueryable<Account> GetAccountManagement();
         public IQueryable<Account> GetAccountById(int AccountId);
-        public IQueryable<Account> GetAllAccounts_Manage();
         public Account GetAccountByIdReturnAcc(int id);
+        public IQueryable<Account> GetAccountInClass(int classId);
+        public IQueryable<Account> GetAllTeacher();
     }
 }

@@ -24,12 +24,11 @@ namespace TAS.Application.AutoMapper
 
             CreateMap<Account, AccountManageResponseDto>()
                 .ForMember(_dto => _dto.RoleNames, dt => dt.MapFrom(src => src.Roles.Select(role => role.RoleName).ToList()));
-            CreateMap<Class, ClassManagementDto>()
-                .ForMember(_dto => _dto.Teacher,
-                    dt => dt.MapFrom(src =>
-                        src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)) != null ?
-                            (src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)).LastName + " " +
-                             src.Accounts.FirstOrDefault(a => a.Roles.Any(r => r.RoleId == 3)).FirstName) : null));
+
+
+            CreateMap<Class, ClassManagementDto>();
+            CreateMap<Account, AccountTeacherName>().ForMember(_dto => _dto.Teacher, dt => dt.MapFrom(src => src.FirstName + ' ' + src.LastName));
+
             CreateMap<Test,CourseResultResponseDto>();
             CreateMap<TestResult,TestResultDto>();
             CreateMap<QuestionAnswer, QuestionAnswerDto>();

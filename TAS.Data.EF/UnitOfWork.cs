@@ -17,7 +17,7 @@ namespace TAS.Data.EF
         private ITestRepository _testRepository;
         private ITopicRepository _topicRepository;
         private IVideoRepository _videoRepository;
-
+        private IClassRepository _classRepository;
 
         public UnitOfWork(TASContext context)
         {
@@ -82,6 +82,17 @@ namespace TAS.Data.EF
                     this._testRepository = new TestRepository(_context);
                 }
                 return _testRepository;
+            }
+        }
+        public IClassRepository ClassRepository
+        {
+            get
+            {
+                if (this._classRepository is null)
+                {
+                    this._classRepository = new ClassRepository(_context);
+                }
+                return _classRepository;
             }
         }
 
