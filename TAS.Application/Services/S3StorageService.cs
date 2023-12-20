@@ -44,6 +44,7 @@ namespace TAS.Application.Services
                 var uploadRequest = new TransferUtilityUploadRequest()
                 {
                     InputStream = obj.InputStream,
+                    FilePath = obj.filePath,
                     Key = obj.Name,
                     BucketName = obj.BucketName,
                     CannedACL = S3CannedACL.PublicRead,
@@ -226,6 +227,38 @@ namespace TAS.Application.Services
             }
 
             return false;
+        }
+
+        public string GetFileUrlDontExpires(S3RequestData obj)
+        {
+            AmazonS3Client client = null;
+            try
+            {
+                client = CreateConnection();
+
+                var fileRequest = new GetPreSignedUrlRequest()
+                {
+                    Key = obj.Name,
+                    BucketName = obj.BucketName,
+                    Protocol = Protocol.HTTPS,
+                    Expires = DateTime.Now.AddYears(10),
+                };
+
+                string url = client.GetPreSignedURL(fileRequest);
+                return url;
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e.Message);
+            }
+            finally
+            {
+                if (client != null)
+                {
+                    client.Dispose();
+                }
+            }
+            return string.Empty;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,9 @@ using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using TAS.Data.S3Object;
+using TAS.Infrastructure.Constants;
+using static TAS.Infrastructure.Enums.SystemEnum;
 
 namespace TAS.Application.Services
 {
@@ -17,18 +21,34 @@ namespace TAS.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IS3StorageService _s3StorageService;
 
-        public CourseService (IUnitOfWork unitOfWork, IMapper mapper)
+        public CourseService(IUnitOfWork unitOfWork, IMapper mapper, IS3StorageService s3StorageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _s3StorageService = s3StorageService;
         }
 
         public async Task<bool> AddCourse(AddCourseRequestDto request)
         {
+            string image = "";
             try
             {
+                if (request.Image != null)
+                {
+                    S3RequestData s3RequestData = new S3RequestData
+                    {
+                        BucketName = "tas",
+                        InputStream = request.Image.OpenReadStream(),
+                        Name = request.Image.FileName,
+                    };
+                    await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                    image = _s3StorageService.GetFileUrl(s3RequestData);
+                }
                 var course = _mapper.Map<Course>(request);
+                course.Status = (int)CourseStatus.Rejected;
+                course.Image = image;
                 await _unitOfWork.CourseRepository.AddAsync(course).ConfigureAwait(false);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 return true;
@@ -47,7 +67,7 @@ namespace TAS.Application.Services
                 var result = _mapper.Map<List<CourseDashboardResponseDto>>(listCourse);
                 return result;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return null;
             }
@@ -57,10 +77,11 @@ namespace TAS.Application.Services
         {
             try
             {
-            var course = await _unitOfWork.CourseRepository.GetCourseById(id).FirstOrDefaultAsync().ConfigureAwait(false);
-            var result = _mapper.Map<GetCourseByIdResponseDto>(course);
-            return result;
-            }catch(Exception e)
+                var course = await _unitOfWork.CourseRepository.GetCourseById(id).FirstOrDefaultAsync().ConfigureAwait(false);
+                var result = _mapper.Map<GetCourseByIdResponseDto>(course);
+                return result;
+            }
+            catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
@@ -71,13 +92,72 @@ namespace TAS.Application.Services
         {
             try
             {
-            var listCourse = await _unitOfWork.CourseRepository.GetAllCourses().ToListAsync().ConfigureAwait(false);
-            var result = _mapper.Map<List<CourseHomepageResponeDto>>(listCourse);
-            return result;
+                var listCourse = await _unitOfWork.CourseRepository.GetAllCourses().Where(x => x.Status == (int)CourseStatus.Approved && x.IsDeleted == Common.IsNotDelete).ToListAsync().ConfigureAwait(false);
+                var result = _mapper.Map<List<CourseHomepageResponeDto>>(listCourse);
+                return result;
             }
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public async Task<int> GetCourseIdByName(string name)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    var result = await _unitOfWork.CourseRepository.GetCourseIdByName(name).FirstOrDefaultAsync().ConfigureAwait(false);
+                    if (result!=null)
+                    {
+                        return result.CourseId;
+                    }
+                    return 0;
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateCost(UpdateCostRequestDto request)
+        {
+            try
+            {
+                var course = _unitOfWork.CourseRepository.GetCourseById(request.CourseId).FirstOrDefault();
+                if (course != null)
+                {
+                    course.CourseCost = request.Price;
+                    await _unitOfWork.CommitAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> UpdateStatus(int courseId, int status)
+        {
+            try
+            {
+                var course = _unitOfWork.CourseRepository.GetCourseById(courseId).FirstOrDefault();
+                if (course != null)
+                {
+                    course.Status = status;
+                    await _unitOfWork.CommitAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
         }
     }

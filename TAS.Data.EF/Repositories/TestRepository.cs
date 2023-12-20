@@ -91,5 +91,10 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Set<Part>().Where(x => x.TestId == testId && x.Type==true).Select(x => x.PartId);
         }
+
+        public IEnumerable<Test> GetAllTest()
+        {
+            return _context.Set<Test>();
+        }
     }
 }

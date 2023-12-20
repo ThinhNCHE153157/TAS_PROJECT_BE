@@ -6,6 +6,7 @@ using TAS.Application.Services.Interfaces;
 using static TAS.Infrastructure.Constants.ApiRouter;
 using TAS.Data.S3Object;
 using TAS.Infrastructure.Configurations;
+using TAS.Data.Dtos.Requests;
 
 namespace TAS.API.Controllers
 {
@@ -14,9 +15,11 @@ namespace TAS.API.Controllers
     public class VideoController : ControllerBase
     {
         private readonly IS3StorageService _s3StorageService;
-        public VideoController(IS3StorageService s3StorageService)
+        private readonly IVideoService _videoService;
+        public VideoController(IS3StorageService s3StorageService, IVideoService videoService)
         {
             _s3StorageService = s3StorageService;
+            _videoService = videoService;
         }
 
         [HttpPost]
@@ -49,6 +52,7 @@ namespace TAS.API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
         [HttpGet]
         public IActionResult GetVideoUrl(string fileName)
         {
@@ -109,6 +113,29 @@ namespace TAS.API.Controllers
             }
 
             return File(fileStream, "video/mp4");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddVideo(AddVideoToTopicRequestDto request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                var result = await _videoService.CreateVideo(request);
+                if (result)
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
     }
 }

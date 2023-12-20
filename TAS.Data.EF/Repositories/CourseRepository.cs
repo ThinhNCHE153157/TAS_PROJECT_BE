@@ -20,5 +20,10 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Courses.Include(x => x.Topics).Where(x => x.CourseId == courseId);
         }
+
+        public IQueryable<Course> GetCourseIdByName(string name)
+        {
+            return _context.Courses.Where(x => x.CourseName == name);
+        }
     }
 }
