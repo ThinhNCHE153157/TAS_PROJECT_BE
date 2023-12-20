@@ -32,6 +32,7 @@ namespace TAS.Application.Services
                 var video = _mapper.Map<Video>(request);
                 if (video != null)
                 {
+                    video.VideoUrl="";
                     await _unitOfWork.VideoRepository.AddAsync(video).ConfigureAwait(false);
                     await _unitOfWork.CommitAsync().ConfigureAwait(false);
                     return true;

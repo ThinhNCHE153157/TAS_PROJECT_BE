@@ -14,8 +14,7 @@ namespace TAS.Data.Dtos.Requests
         [Range(1, int.MaxValue)]
         public int TopicId { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(200)]
         public string VideoTitle { get; set; }
-        public IFormFile VideoPath { get; set; }
     }
 }

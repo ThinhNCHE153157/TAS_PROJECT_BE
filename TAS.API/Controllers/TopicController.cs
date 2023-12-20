@@ -26,6 +26,14 @@ namespace TAS.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetTopicByCourseId([FromQuery]int courseid)
+        {
+            var result = await _topicService.getListTopicByCourseId(courseid);
+            return Ok(result);
+        }
+
 
         //[HttpGet]
         ////[Authorize]

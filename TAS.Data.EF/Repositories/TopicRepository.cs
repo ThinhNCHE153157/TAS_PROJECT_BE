@@ -32,7 +32,7 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Topic> GetTopicByCourseId(int courseId)
         {
-            throw new NotImplementedException();
+            return _context.Set<Topic>().Where(x => x.CourseId == courseId);
         }
 
         public IQueryable<Topic> UpdateTopic(Topic topic)
