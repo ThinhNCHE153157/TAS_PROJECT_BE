@@ -7,7 +7,7 @@ namespace TAS.Application.Services.Interfaces
     public interface IAccountService
     {
         public Task<List<Account>> GetAccounts();
-        public Task<List<AccountHomepageResponeDTO>> GetAccountManagement();
+        public Task<List<AccountManageResponseDto>> GetAccountManagement();
         public Task<List<Account>> GetAllAccounts();
         public Task<bool> UserRegister(UserRegisterRequestDto request);
         public Task<Account> UserLogin(UserLoginRequestDto userLogin);
@@ -20,5 +20,7 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> ChangePassword(ChangePasswordRequestDto request);
         public Task<bool> UpdateAvatar(UpdateAvatarRequestDto request);
         public Task<bool> DeleteAvatar(int id);
+        public Task<List<AccountManageResponseDto>> GetAccountInClass(int classId);
+        public Task<List<AccountTeacherName>> GetAllTeacher();
     }
 }
