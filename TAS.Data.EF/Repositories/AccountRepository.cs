@@ -62,5 +62,9 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 3 ));
         }
+        public IQueryable<Account> GetAllAccounts_Manage()
+        {
+            return _context.Accounts.Include(a => a.Roles);
+        }
     }
 }
