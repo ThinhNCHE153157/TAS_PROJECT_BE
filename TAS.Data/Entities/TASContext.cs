@@ -268,7 +268,20 @@ namespace TAS.Data.Entities
                     .HasMaxLength(4000)
                     .HasColumnName("course_description");
 
+                entity.Property(e => e.ShortDescription)
+                    .HasMaxLength(200)
+                    .HasColumnName("short_description");
+
+                entity.Property(e => e.CourseGoal)
+                    .HasMaxLength(4000)
+                    .HasColumnName("course_goal");
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(255)
+                    .HasColumnName("image");
+
                 entity.Property(e => e.CourseLevel).HasColumnName("course_level");
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.CourseName)
                     .HasMaxLength(255)
@@ -380,6 +393,8 @@ namespace TAS.Data.Entities
                 entity.Property(e => e.PartId).HasColumnName("part_id");
 
                 entity.Property(e => e.TestId).HasColumnName("test_id");
+
+                entity.Property(e => e.Type).HasColumnName("type").HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Test)
                     .WithMany(p => p.Parts)

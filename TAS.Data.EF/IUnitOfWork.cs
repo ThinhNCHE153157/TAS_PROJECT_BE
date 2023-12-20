@@ -14,8 +14,9 @@ namespace TAS.Data.EF
         public ICourseRepository CourseRepository { get; }
         public IQuestionRepository QuestionRepository { get; }
         public ITestRepository TestRepository { get; }
-
         public IRoleRepository RoleRepositery { get; }
+        public ITopicRepository TopicRepository { get; }
+        public IVideoRepository VideoRepository { get; }
         public IClassRepository ClassRepository { get; }
 
         public Task CommitAsync();

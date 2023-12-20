@@ -14,5 +14,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> UploadFolderAsync(S3RquestDirectory obj);
         public Task<Stream> DownloadFileContent(S3RquestDirectory obj);
         public Task<bool> DeleteDirectory(S3RquestDirectory obj);
+        public string GetFileUrlDontExpires(S3RequestData obj);
     }
 }

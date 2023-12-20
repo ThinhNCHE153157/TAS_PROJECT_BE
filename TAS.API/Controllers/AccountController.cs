@@ -54,8 +54,6 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
-            var isSuccess2 = _accountService.UserRegister(request).Result;
-
             if (!isSuccess)
             {
                 return BadRequest("Something wrong when register");
@@ -114,7 +112,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditAccount(int accountId, [FromBody] AccountAddRequestDto request)
+        public async Task<IActionResult> UpdateAccount(int accountId, [FromBody] AccountAddRequestDto request)
         {
             var account = await _accountService.GetAccountByIdReturnAcc(accountId);
             if (account == null)
@@ -156,6 +154,57 @@ namespace TAS.API.Controllers
         {
             var data = await _accountService.GetAllTeacher();
             return Ok(data);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto request)
+        {
+            var account = await _accountService.GetAccountById(request.AccountId);
+            if (account == null)
+            {
+                return NotFound($"Account with ID {request.AccountId} not found.");
+            }
+            else
+            {
+                var isSuccess = await _accountService.ChangePassword(request).ConfigureAwait(false);
+                if (!isSuccess)
+                {
+                    return BadRequest("Something wrong when register");
+                }
+
+                return Ok();
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAvatar([FromForm] UpdateAvatarRequestDto request)
+        {
+            var isSuccess = await _accountService.UpdateAvatar(request).ConfigureAwait(false);
+            if (!isSuccess)
+            {
+                return BadRequest("Something wrong when Upload Avatar");
+            }
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAvatar([FromQuery] int accountId)
+        {
+            var account = await _accountService.GetAccountById(accountId);
+            if (account == null)
+            {
+                return NotFound($"Account with ID {accountId} not found.");
+            }
+            else
+            {
+                var isSuccess = await _accountService.DeleteAvatar(accountId).ConfigureAwait(false);
+                if (!isSuccess)
+                {
+                    return BadRequest("Something wrong when Delete Avatar");
+                }
+
+                return Ok(isSuccess);
+            }
         }
     }
 }

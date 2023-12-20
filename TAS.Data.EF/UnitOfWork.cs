@@ -15,6 +15,8 @@ namespace TAS.Data.EF
         private IQuestionRepository _questionRepository;
         private IRoleRepository _roleRepositery;
         private ITestRepository _testRepository;
+        private ITopicRepository _topicRepository;
+        private IVideoRepository _videoRepository;
         private IClassRepository _classRepository;
 
         public UnitOfWork(TASContext context)
@@ -93,6 +95,32 @@ namespace TAS.Data.EF
                 return _classRepository;
             }
         }
+
+        public ITopicRepository TopicRepository
+        {
+            get
+            {
+                if (this._topicRepository is null)
+                {
+                    this._topicRepository = new TopicRepository(_context);
+                }
+                return _topicRepository;
+            }
+        }
+
+        public IVideoRepository VideoRepository
+        {
+            get
+            {
+                if (this._videoRepository is null)
+                {
+                    this._videoRepository = new VideoRepository(_context);
+                }
+                return _videoRepository;
+            }
+        }
+
+        
 
         protected virtual void Dispose(bool disposing)
         {

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace TAS.Data.Dtos.Requests
 {
     public class AddCourseRequestDto
     {
-        public string CourseName { get; set; } 
+        public string CourseName { get; set; }
         public string? CourseDescription { get; set; }
+        public IFormFile? Image { get; set; }
+        public string? ShortDescription { get; set; }
+        public string? CourseGoal { get; set; }
         public int? CourseLevel { get; set; }
     }
 }

@@ -11,9 +11,15 @@
         public enum UserRoles
         {
             Admin = 1,
-            Manager = 2,
+            Enterprise = 2,
             Teacher = 3,
             Student = 4
+        }
+        public enum CourseStatus
+        {
+            Approved = 1,
+            Pending = 2,
+            Rejected = 3
         }
     }
 }

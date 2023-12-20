@@ -16,6 +16,15 @@ namespace TAS.API.Controllers
             _testService = testService;
         }
 
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetAllTest()
+        {
+            var result = await _testService.GetAllTest().ConfigureAwait(false);
+            return Ok(result);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetTestById([FromQuery] GetTestByIdRequestDto request)
         {
@@ -50,6 +59,13 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> getListTestFree()
         {
             var result = await _testService.getListTestFreeResponseDtos();
+            return Ok(result);
+        }
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> getListPartOfTest([FromQuery] int request)
+        {
+            var result = await _testService.getListPartOfTest(request).ConfigureAwait(false);
             return Ok(result);
         }
     }

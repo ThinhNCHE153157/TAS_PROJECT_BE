@@ -60,10 +60,10 @@ namespace TAS.API.DependencyConfig
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminRole",
-                    policy => policy.RequireRole(UserRoles.Admin.ToString(), UserRoles.Manager.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
+                    policy => policy.RequireRole(UserRoles.Admin.ToString(), UserRoles.Enterprise.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
 
-                options.AddPolicy("ManagerRole",
-                    policy => policy.RequireRole(UserRoles.Manager.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
+                options.AddPolicy("EnterpriseRole",
+                    policy => policy.RequireRole(UserRoles.Enterprise.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
 
                 options.AddPolicy("TeacherRole",
                     policy => policy.RequireRole(UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
@@ -176,6 +176,9 @@ namespace TAS.API.DependencyConfig
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ITestService, TestService>();
             services.AddScoped<IS3StorageService,S3StorageService>();
+            services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<IClassService, ClassService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
