@@ -77,5 +77,17 @@ namespace TAS.Data.EF.Repositories
                 return false;
             }
         }
+
+        public QuestionAnswer GetQuestionAnswerByQuesId(int id)
+        {
+            try
+            {
+                return _context.QuestionAnswers.Where(x => x.QuestionId == id).FirstOrDefault()!;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }

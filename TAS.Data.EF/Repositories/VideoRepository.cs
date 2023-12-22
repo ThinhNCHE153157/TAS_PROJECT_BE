@@ -14,5 +14,31 @@ namespace TAS.Data.EF.Repositories
         {
         }
 
+        public Video GetById(int id)
+        {
+            try
+            {
+                return _context.Videos.FirstOrDefault(x => x.VideoId == id)!;
+            }
+            catch (Exception e)
+            {
+                return null!;
+            }
+        }
+
+        public bool updateVideo(Video video)
+        {
+            try
+            {
+                _context.Videos.Update(video);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
     }
 }
+
