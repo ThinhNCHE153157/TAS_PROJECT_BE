@@ -46,10 +46,40 @@ namespace TAS.Application.Services
         {
             try
             {
-                var test = await _unitOfWork.TestRepository.GetTestById(id).FirstOrDefaultAsync().ConfigureAwait(false);
+                var test = await _unitOfWork.TestRepository.GetTestById(id).Include(x => x.Parts).ThenInclude(x => x.Questions).FirstOrDefaultAsync().ConfigureAwait(false);
                 if (test != null)
                 {
                     var result = _mapper.Map<GetTestByIdResponseDto>(test);
+                    foreach (var item in result.Parts)
+                    {
+                        foreach (var ques in item.Questions)
+                        {
+                            var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
+                            if (questionAnswer != null)
+                            {
+                                if (questionAnswer.ResultA != null)
+                                {
+                                    ques.Answers.Add(questionAnswer.ResultA!);
+                                }
+                                if (questionAnswer.ResultB != null)
+                                {
+                                    ques.Answers.Add(questionAnswer.ResultB!);
+                                }
+                                if (questionAnswer.ResultC != null)
+                                {
+                                    ques.Answers.Add(questionAnswer.ResultC!);
+                                }
+                                if (questionAnswer.ResultD != null)
+                                {
+                                    ques.Answers.Add(questionAnswer.ResultD!);
+                                }
+                                if (questionAnswer.CorrectResult != null)
+                                {
+                                    ques.CorrectAnswer = questionAnswer.CorrectResult!;
+                                }
+                            }   
+                        }
+                    }
                     return result;
                 }
                 return null;
@@ -164,7 +194,7 @@ namespace TAS.Application.Services
                     foreach (var item in partAu)
                     {
                         var listQuestion = _unitOfWork.QuestionRepository.GetQuestionByPartId(item).ToList();
-                        result.PartAudio.Add(new PartOfTestResponseDto(item,listQuestion.Count));
+                        result.PartAudio.Add(new PartOfTestResponseDto(item, listQuestion.Count));
                     }
                 }
                 if (partRe != null)

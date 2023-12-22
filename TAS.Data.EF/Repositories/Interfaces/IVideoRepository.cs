@@ -9,5 +9,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
 {
     public interface IVideoRepository : IBaseRepository<Video>
     {
+       public Video GetById(int id);
+       public bool updateVideo(Video video);
     }
 }

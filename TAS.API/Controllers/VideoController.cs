@@ -137,5 +137,32 @@ namespace TAS.API.Controllers
             }
 
         }
+
+        [HttpPut]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UpdateVideo([FromForm]UpdateVideoRequestDto request)
+        {
+            if (request == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                var result = await _videoService.UpdateVideo(request);
+                if (result)
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
     }
 }

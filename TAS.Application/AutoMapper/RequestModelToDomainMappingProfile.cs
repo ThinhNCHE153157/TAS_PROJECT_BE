@@ -28,6 +28,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<CreateTestRequestDto, Test>();
             CreateMap<AddTopicRequestDto, Topic>();
             CreateMap<AddVideoToTopicRequestDto, Video>();
+            CreateMap<UpdateVideoRequestDto, Video>();
         }
     }
 }

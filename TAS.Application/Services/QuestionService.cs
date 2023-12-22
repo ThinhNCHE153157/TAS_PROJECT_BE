@@ -128,6 +128,19 @@ namespace TAS.Application.Services
             }
         }
 
+        public async Task<QuestionAnswer> questionAnswerById(int id)
+        {
+            try
+            {
+                var result = (QuestionAnswer) _unitOfWork.QuestionRepository.GetQuestionAnswerByQuesId(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task<bool> UpdateQuestion(UpdateQuestionRequestDto request)
         {
             try
