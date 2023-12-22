@@ -10,6 +10,7 @@ namespace TAS.Data.Dtos.Domains
     public class PartDto
     {
         public int PartId { get; set; }
+        public string? Url { get; set; }
         public virtual ICollection<QuestionDto> Questions { get; set; }
     }
 }

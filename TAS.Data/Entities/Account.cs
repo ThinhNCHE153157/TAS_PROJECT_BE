@@ -31,10 +31,15 @@ namespace TAS.Data.Entities
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool? IsDeleted { get; set; }
+        public DateTime? Otpcreatetime { get; set; }
+        public bool? Gender { get; set; }
+        public DateTime? Dob { get; set; }
 
         public virtual ICollection<Enterprise> Enterprises { get; set; }
         public virtual ICollection<TestResult> TestResults { get; set; }
         public virtual ICollection<Token> Tokens { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+
 
         public virtual ICollection<Class> Classes { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
