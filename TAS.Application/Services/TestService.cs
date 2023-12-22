@@ -46,7 +46,7 @@ namespace TAS.Application.Services
         {
             try
             {
-                var test = await _unitOfWork.TestRepository.GetTestById(id).FirstOrDefaultAsync().ConfigureAwait(false);
+                var test = await _unitOfWork.TestRepository.GetTestById(id).Include(x=>x.Parts).ThenInclude(x=>x.Questions).ThenInclude(x=>x.QuestionAnswers).FirstOrDefaultAsync().ConfigureAwait(false);
                 if (test != null)
                 {
                     var result = _mapper.Map<GetTestByIdResponseDto>(test);

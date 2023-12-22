@@ -17,11 +17,8 @@ namespace TAS.Application.AutoMapper
             CreateMap<Course,CourseHomepageResponeDto>();
             CreateMap<Course,CourseDashboardResponseDto>();
             CreateMap<Account, AccountHomepageResponeDTO>();
-            CreateMap<Course, GetCourseByIdResponseDto>()
-                .ForMember(d => d.Topics, dt => dt.MapFrom(src => src.Topics));
             CreateMap<Test, TestDto>();
             CreateMap<Account, GetAccountByIdResponseDto>();
-
             CreateMap<Account, AccountManageResponseDto>()
                 .ForMember(_dto => _dto.RoleNames, dt => dt.MapFrom(src => src.Roles.Select(role => role.RoleName).ToList()));
             CreateMap<Class, ClassManagementDto>()
@@ -38,6 +35,10 @@ namespace TAS.Application.AutoMapper
             CreateMap<Test, GetAllTestResponseDto>();
             CreateMap<Topic,GetTopicByCourseIdResponseDto>();
             CreateMap<Video,VideoDto>();
+            CreateMap<Topic,TopicDto>();
+            CreateMap<Course,GetCourseByIdResponseDto>();
+            CreateMap<Part, PartDto>(); 
+            CreateMap<Question, QuestionDto>();
         }
     }
 }
