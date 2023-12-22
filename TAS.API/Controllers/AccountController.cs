@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
+using TAS.Data.Entities;
+using static TAS.Infrastructure.Enums.SystemEnum;
 
 namespace TAS.API.Controllers
 {
@@ -87,12 +92,12 @@ namespace TAS.API.Controllers
             return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAccounts_Manage()
-        {
-            var data = await _accountService.GetAllAccounts_Manage();
-            return Ok(data);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllAccounts_Manage()
+        //{
+        //    var data = await _accountService.GetAllAccounts_Manage();
+        //    return Ok(data);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountAddRequestDto request)
@@ -100,7 +105,7 @@ namespace TAS.API.Controllers
             var isSuccess = await _accountService.AddUser(request).ConfigureAwait(false);
             if (!isSuccess)
             {
-                return BadRequest("Something wrong when register");
+                return BadRequest("Something wrong when add account");
             }
 
             return Ok();
@@ -109,7 +114,7 @@ namespace TAS.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateAccount(int accountId, [FromBody] AccountAddRequestDto request)
         {
-            var account = await _accountService.GetAccountById(accountId);
+            var account = await _accountService.GetAccountByIdReturnAcc(accountId);
             if (account == null)
             {
                 return NotFound($"Account with ID {accountId} not found.");
@@ -119,7 +124,7 @@ namespace TAS.API.Controllers
                 var isSuccess = await _accountService.UpdateUser(request, accountId).ConfigureAwait(false);
                 if (!isSuccess)
                 {
-                    return BadRequest("Something wrong when register");
+                    return BadRequest("Something wrong when edit account");
                 }
 
                 return Ok();
@@ -142,6 +147,13 @@ namespace TAS.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllTeacher()
+        {
+            var data = await _accountService.GetAllTeacher();
+            return Ok(data);
         }
 
         [HttpPut]
