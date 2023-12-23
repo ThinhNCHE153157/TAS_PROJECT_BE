@@ -17,5 +17,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public bool CreateQuestion(Question question, QuestionAnswer questionAnswer);
         public bool UpdateQuestion(UpdateQuestionRequestDto request);
         public bool DeleteQuestion(int questionId);
+        public bool AddQuestionResult(QuestionResult questionResult);
+        public IEnumerable<QuestionResult> questionResults(int testId, int accountId);
     }
 }

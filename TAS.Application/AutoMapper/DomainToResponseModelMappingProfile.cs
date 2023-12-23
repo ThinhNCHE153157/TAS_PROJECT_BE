@@ -38,6 +38,11 @@ namespace TAS.Application.AutoMapper
             CreateMap<Course,GetCourseByIdResponseDto>();
             CreateMap<Part, PartDto>(); 
             CreateMap<Question, QuestionDto>();
+            CreateMap<QuestionResult, QuestionResultDto>();
+            CreateMap<QuestionResultDto, QuestionResult>();
+            CreateMap<QuestionResult,UserAnswerDto>()
+                .ForMember(_dto => _dto.QuestionId, dt => dt.MapFrom(src => src.Image))
+                .ForMember(_dto => _dto.UserAnswer, dt => dt.MapFrom(src => src.Type));
         }
     }
 }

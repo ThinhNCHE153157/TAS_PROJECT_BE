@@ -96,5 +96,44 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Set<Test>();
         }
+
+        public bool SaveTestResult(TestResult request)
+        {
+            try
+            {
+                _context.Set<TestResult>().Add(request);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public int GetTestResultId(int testId, int accountId)
+        {
+            try
+            {
+                return _context.Set<TestResult>().Where(x => x.TestId == testId && x.AccountId == accountId).OrderByDescending(x=>x.TestResultId).FirstOrDefault().TestResultId;
+            }
+            catch
+            (Exception e)
+            {
+                return 0;
+            }
+        }
+
+        public TestResult GetTestResult(int testResultId)
+        {
+            try
+            {
+                return _context.Set<TestResult>().Where(x => x.TestResultId == testResultId).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -89,5 +89,32 @@ namespace TAS.Data.EF.Repositories
                 throw new Exception(e.Message);
             }
         }
+
+        public bool AddQuestionResult(QuestionResult questionResult)
+        {
+            try
+            {
+                _context.QuestionResults.Add(questionResult);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public IEnumerable<QuestionResult> questionResults(int testId, int accountId)
+        {
+            int testResultId = _context.TestResults.Where(x => x.TestId == testId && x.AccountId == accountId).OrderByDescending(x=>x.TestResultId).FirstOrDefault().TestResultId;
+            if (testResultId != null)
+            {
+                return _context.QuestionResults.Where(x => x.TestResultId == testResultId);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
