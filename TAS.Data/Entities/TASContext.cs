@@ -387,6 +387,7 @@ namespace TAS.Data.Entities
                 entity.Property(e => e.ShortName)
                     .HasMaxLength(255)
                     .HasColumnName("short_name");
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Enterprises)

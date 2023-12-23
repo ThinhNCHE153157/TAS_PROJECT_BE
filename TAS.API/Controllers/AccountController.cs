@@ -206,5 +206,13 @@ namespace TAS.API.Controllers
                 return Ok(isSuccess);
             }
         }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetAllEnterprise()
+        {
+            var data = await _accountService.GetAllEnterprise();
+            return Ok(data);
+        }
     }
 }
