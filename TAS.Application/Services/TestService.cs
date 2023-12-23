@@ -314,5 +314,23 @@ namespace TAS.Application.Services
             }
             return response;
         }
+
+        public int GetPartIdByTopicId(int topicId)
+        {
+            try
+            {
+                if (topicId != 0)
+                {
+                    var result = _unitOfWork.TestRepository.GetPartIdByTopicId(topicId);
+                    return result;
+                }
+                return 0;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return 0;
+            }
+        }
     }
 }

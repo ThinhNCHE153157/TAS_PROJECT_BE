@@ -34,7 +34,6 @@ namespace TAS.API.Controllers
             return Ok(result);
         }
 
-
         //[HttpGet]
         ////[Authorize]
         //public async Task<IActionResult> GetTopicById([FromQuery] int id)

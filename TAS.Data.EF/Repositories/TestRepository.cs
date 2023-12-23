@@ -135,5 +135,16 @@ namespace TAS.Data.EF.Repositories
                 return null;
             }
         }
+
+        public int GetPartIdByTopicId(int topicId)
+        {
+            var result = _context.Set<Test>().Where(x => x.TopicId == topicId).FirstOrDefault();
+            if (result != null)
+            {
+                return _context.Set<Part>().Where(x => x.TestId == result.TestId).FirstOrDefault().PartId;
+            }
+            return 0;
+        }
+
     }
 }

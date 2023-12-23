@@ -10,5 +10,6 @@ namespace TAS.Data.Dtos.Domains
     {
         public int VideoId { get; set; }
         public string VideoTitle { get; set; }
+        public string VideoUrl { get; set; }
     }
 }
