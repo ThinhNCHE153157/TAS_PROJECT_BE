@@ -15,10 +15,12 @@ namespace TAS.Application.Services
     public class VnPayService : IVnPayService
     {
         private readonly IConfiguration _configuration;
+        private readonly IOrderService _orderService;
 
-        public VnPayService(IConfiguration configuration)
+        public VnPayService(IConfiguration configuration, IOrderService orderService)
         {
             _configuration = configuration;
+            _orderService = orderService;
         }
         public string CreatePaymentUrl(PaymentInformationModel model, HttpContext context)
         {
@@ -49,9 +51,10 @@ namespace TAS.Application.Services
 
         public PaymentResponseModel PaymentExecute(IQueryCollection collections)
         {
+            int accountId = 0;
             var pay = new VnPayLibrary();
             var response = pay.GetFullResponseData(collections, _configuration["Vnpay:HashSecret"]);
-
+            _orderService.SaveOrder(response);
             return response;
         }
     }

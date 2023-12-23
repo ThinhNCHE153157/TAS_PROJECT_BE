@@ -399,7 +399,7 @@ namespace TAS.Data.Entities
             {
                 entity.ToTable("Order");
 
-                entity.Property(e => e.OrderId).HasColumnName("order_id");
+                entity.Property(e => e.OrderId).HasMaxLength(50).HasColumnName("order_id");
 
                 entity.Property(e => e.AccountId).HasColumnName("account_id");
 
@@ -827,7 +827,9 @@ namespace TAS.Data.Entities
 
                 entity.Property(e => e.Amount).HasColumnName("amount");
 
-                entity.Property(e => e.OrderId).HasColumnName("order_id");
+                entity.Property(e => e.TransactionId).HasColumnName("TransactionId").HasMaxLength(255);
+
+                entity.Property(e => e.OrderId).HasMaxLength(50).HasColumnName("order_id");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.VnPayHistories)

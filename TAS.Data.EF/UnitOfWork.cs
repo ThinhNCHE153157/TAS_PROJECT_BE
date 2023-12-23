@@ -18,6 +18,7 @@ namespace TAS.Data.EF
         private ITopicRepository _topicRepository;
         private IVideoRepository _videoRepository;
         private IClassRepository _classRepository;
+        private IOrderRepository _orderRepository;
 
         public UnitOfWork(TASContext context)
         {
@@ -117,6 +118,18 @@ namespace TAS.Data.EF
                     this._videoRepository = new VideoRepository(_context);
                 }
                 return _videoRepository;
+            }
+        }
+
+        public IOrderRepository OrderRepository
+        {
+            get
+            {
+                if (this._orderRepository is null)
+                {
+                    this._orderRepository = new OrderRepository(_context);
+                }
+                return _orderRepository;
             }
         }
 
