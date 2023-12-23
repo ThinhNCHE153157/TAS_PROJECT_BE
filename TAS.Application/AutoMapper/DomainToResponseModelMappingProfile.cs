@@ -43,6 +43,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<QuestionResult,UserAnswerDto>()
                 .ForMember(_dto => _dto.QuestionId, dt => dt.MapFrom(src => src.Image))
                 .ForMember(_dto => _dto.UserAnswer, dt => dt.MapFrom(src => src.Type));
+            CreateMap<Test,TestForCourseDto>();
         }
     }
 }
