@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TAS.Data.Entities.Interfaces;
 
 namespace TAS.Data.Entities
 {
-    public partial class Topic
+    public partial class Topic : IDateTracking
     {
         public Topic()
         {

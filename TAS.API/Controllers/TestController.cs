@@ -29,7 +29,11 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> GetTestById([FromQuery] GetTestByIdRequestDto request)
         {
             var result = await _testService.GetTestById(request.TestId);
+            if (request!=null)
+            {
             return Ok(result);
+            }
+            return NotFound();
         }
 
         [HttpPut]

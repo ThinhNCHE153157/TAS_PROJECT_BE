@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
@@ -77,12 +79,17 @@ namespace TAS.API.Controllers
             {
                 listRole.Add(role.RoleName);
             }
+            string name = userLogin.UserName;
+            if (listRole.Contains("Enterprise"))
+            {
+                name = _accountService.GetEnterpriseNameById(UserAccount.AccountId);
+            }
             //var userRole = (UserRoles)UserAccount.Roles.RoleId;
-
             var authClaims = new Collection<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Name,userLogin.UserName),
+                new Claim(JwtRegisteredClaimNames.Name,name),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name,name.ToString()),
             };
             foreach (var role in listRole)
             {

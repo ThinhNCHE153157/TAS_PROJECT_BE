@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using TAS.Data.Entities.Interfaces;
 
 namespace TAS.Data.Entities
 {
-    public partial class Test
+    public partial class Test : IDateTracking
     {
         public Test()
         {

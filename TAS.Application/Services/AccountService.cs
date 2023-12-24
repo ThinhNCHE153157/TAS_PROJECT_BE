@@ -403,5 +403,19 @@ namespace TAS.Application.Services
                 return null;
             }
         }
+
+        public string GetEnterpriseNameById(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetEnterpriseNameById(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
     }
 }

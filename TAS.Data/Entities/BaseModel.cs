@@ -9,11 +9,11 @@ namespace TAS.Data.Entities
         public bool IsDelete { get; set; }
         [Required]
         [MaxLength(20)]
-        public string CreateUser { get; set; }
-        public DateTime CreateDate { get; set; }
+        public string? CreateUser { get; set; }
+        public DateTime? CreateDate { get; set; }
         [Required]
         [MaxLength(20)]
-        public string UpdateUser { get; set; }
-        public DateTime UpdateDate { get; set; }
+        public string? UpdateUser { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

@@ -23,5 +23,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<List<AccountManageResponseDto>> GetAccountInClass(int classId);
         public Task<List<AccountTeacherName>> GetAllTeacher();
         public Task<List<Enterprise>> GetAllEnterprise();
+        public string GetEnterpriseNameById(int id);
     }
 }

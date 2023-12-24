@@ -72,5 +72,10 @@ namespace TAS.Data.EF.Repositories
             //return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 4));
             return _context.Enterprises;
         }
+
+        public string GetEnterpriseNameById(int id)
+        {
+            return _context.Enterprises.Where(e => e.AccountId == id).Select(e => e.EnterpriseName).FirstOrDefault();
+        }
     }
 }

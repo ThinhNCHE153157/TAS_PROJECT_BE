@@ -116,6 +116,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddVideo(AddVideoToTopicRequestDto request)
         {
             if (request == null)

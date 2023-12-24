@@ -58,7 +58,11 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> GetCourseById([FromQuery] int id)
         {
             var result = await _courseService.GetCourseById(id);
+            if (result!=null)
+            {
             return Ok(result);
+            }
+            return NotFound();
         }
 
         [HttpGet]
@@ -94,6 +98,17 @@ namespace TAS.API.Controllers
         {
             var result = await _courseService.GetCourseIdByName(name);
             if (result != 0)
+            {
+                return Ok(result);
+            }
+            return NotFound();
+        }
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetCourseByAccountId([FromQuery] int accountId)
+        {
+            var result = await _courseService.GetCourseByAccountId(accountId);
+            if (result != null)
             {
                 return Ok(result);
             }

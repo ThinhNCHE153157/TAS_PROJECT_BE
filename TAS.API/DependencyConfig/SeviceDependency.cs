@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using TAS.Infrastructure.Helpers;
 using TAS.Data.Entities;
 using Amazon.S3;
+using TAS.Data.Dtos.Domains;
 
 namespace TAS.API.DependencyConfig
 {
@@ -27,8 +28,12 @@ namespace TAS.API.DependencyConfig
             //HttpContextAcessor
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddDbContext<TASContext>(option => option.UseSqlServer(configuration.GetConnectionString("Default"),
-                                                            o => o.MigrationsAssembly("TAS.Data.EF")), ServiceLifetime.Scoped);
+            services.AddDbContext<TASContext>((provider, option) => 
+            {
+                option.UseSqlServer(configuration.GetConnectionString("Default"));
+                option.AddInterceptors(new SoftDateInterceptor(provider.GetService<IHttpContextAccessor>()!));
+             });
+                                                            //o => o.MigrationsAssembly("TAS.Data.EF")).AddInterceptors(new SoftDateInterceptor(provider.GetService<IHttpContextAccessor>()!)), ServiceLifetime.Scoped);
 
             //Config CORS
             services.AddCors(cors => cors.AddPolicy("TasPolicy", builder =>

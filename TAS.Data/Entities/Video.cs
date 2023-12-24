@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TAS.Data.Entities.Interfaces;
 
 namespace TAS.Data.Entities
 {
-    public partial class Video
+    public partial class Video : IDateTracking
     {
         public int VideoId { get; set; }
         public int? TopicId { get; set; }

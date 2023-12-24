@@ -21,5 +21,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public IQueryable<Account> GetAllTeacher();
         public IQueryable<Account> GetAllAccounts_Manage();
         public IQueryable<Enterprise> GetAllEnterprise();
+        public string GetEnterpriseNameById(int id);
     }
 }
