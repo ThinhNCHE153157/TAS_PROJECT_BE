@@ -22,10 +22,14 @@ namespace TAS.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
-        public AccountController(IAccountService accountService, ITokenService tokenService)
+        private readonly IMailService _mailService;
+        private readonly ILogger _logger;
+
+        public AccountController(IAccountService accountService, ITokenService tokenService, IMailService mailService)
         {
             _accountService = accountService;
             _tokenService = tokenService;
+            _mailService = mailService;
         }
         /// <summary>
         /// Get all user
@@ -56,12 +60,17 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
+            if (isSuccess)
+            {
+                await _mailService.SendVerifyCode(request.Email);
+                return Ok();
+            }
             if (!isSuccess)
             {
                 return BadRequest("Something wrong when register");
             }
 
-            return Ok();
+            return BadRequest("Something wrong when register");
         }
 
 
@@ -99,13 +108,6 @@ namespace TAS.API.Controllers
             return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllAccounts_Manage()
-        //{
-        //    var data = await _accountService.GetAllAccounts_Manage();
-        //    return Ok(data);
-        //}
-
         [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountAddRequestDto request)
         {
@@ -114,7 +116,6 @@ namespace TAS.API.Controllers
             {
                 return BadRequest("Something wrong when add account");
             }
-
             return Ok();
         }
 

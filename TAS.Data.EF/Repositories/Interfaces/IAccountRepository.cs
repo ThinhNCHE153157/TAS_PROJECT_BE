@@ -12,6 +12,8 @@ namespace TAS.Data.EF.Repositories.Interfaces
     public interface IAccountRepository : IBaseRepository<Account>
     {
         public IQueryable<Account> GetAll();
+        public Task<Account> GetUserByEmail(string email);
+        public Task<Account> GetUserByUsername(string username);
         public Account Getuser(UserLoginRequestDto requestDto);
         public IQueryable<Account> GetAllAccount();
         public IQueryable<Account> GetAccountManagement();

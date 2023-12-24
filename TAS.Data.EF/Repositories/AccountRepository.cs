@@ -77,5 +77,15 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Enterprises.Where(e => e.AccountId == id).Select(e => e.EnterpriseName).FirstOrDefault();
         }
+
+        public Task<Account> GetUserByEmail(string email)
+        {
+            return _context.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email));
+        }
+
+        public Task<Account> GetUserByUsername(string username)
+        {
+            return _context.Accounts.FirstOrDefaultAsync(x => x.Username.Equals(username));
+        }
     }
 }
