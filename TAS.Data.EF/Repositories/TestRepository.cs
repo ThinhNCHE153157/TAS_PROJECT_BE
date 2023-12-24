@@ -155,5 +155,19 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Set<Test>().Where(x => x.TopicId == topicId).Select(x => x.TestId).ToList();
         }
+
+        public bool AddPart(Part part)
+        {
+            _context.Set<Part>().Add(part);
+            int n = _context.SaveChanges();
+            if (n > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

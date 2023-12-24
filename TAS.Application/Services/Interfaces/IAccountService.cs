@@ -26,6 +26,7 @@ namespace TAS.Application.Services.Interfaces
         public Task<List<AccountTeacherName>> GetAllTeacher();
         public Task<List<Enterprise>> GetAllEnterprise();
         public string GetEnterpriseNameById(int id);
+        public Task<bool> VerifyAccount(string id, string email);
 
     }
 }

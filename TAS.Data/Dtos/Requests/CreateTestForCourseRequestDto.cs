@@ -9,10 +9,9 @@ namespace TAS.Data.Dtos.Requests
 {
     public class CreateTestForCourseRequestDto
     {
-        [Required]
-        public int CourseId { get; set; }
-
-        [Required]
-        public CreateTestRequestDto Tests { get; set; }
+        public int TopicId { get; set; }
+        public string TestName { get; set; }
+        public int Type { get; set; } 
+        public string Url { get; set; }
     }
 }

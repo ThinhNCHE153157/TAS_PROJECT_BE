@@ -20,5 +20,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public int GetPartIdByTopicId(int topicId);
         public List<Part> GetPartByTestId(int testId);
         public List<int> GetTestIdByTopicId (int topicId);
+        public bool AddPart(Part part);
     }
 }

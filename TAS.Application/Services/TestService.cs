@@ -134,17 +134,25 @@ namespace TAS.Application.Services
 
         public async Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request)
         {
-            //try
-            //{
-            //    var test = _mapper.Map<Test>(request.Tests);
-            //    var result = _unitOfWork.TestRepository.CreateTestForCourse(request.CourseId,test);
-            //    return result;
-            //}catch(Exception e)
-            //{
-            //    _logger.LogError(e.Message);
-            //    return false;
-            //}
-            throw new NotImplementedException();
+            try
+            {
+                Test test = new Test();
+                test.TestName = request.TestName;
+                test.TopicId = request.TopicId;
+                await _unitOfWork.TestRepository.AddAsync(test).ConfigureAwait(false);
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                Part part = new Part();
+                part.TestId = test.TestId;
+                part.Url = request.Url;
+                part.Type = (request.Type == 1) ?true:false;
+                var result = _unitOfWork.TestRepository.AddPart(part);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
         }
 
         public async Task<List<GetListTestFreeResponseDto>> getListTestFreeResponseDtos()
