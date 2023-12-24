@@ -56,7 +56,7 @@ namespace TAS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> CreateTestForCourse([FromBody] CreateTestForCourseRequestDto request)
+        public async Task<IActionResult> CreateTestForCourse([FromForm] CreateTestForCourseRequestDto request)
         {
             var result = await _testService.CreateTestForCourse(request);
             return Ok(result);
