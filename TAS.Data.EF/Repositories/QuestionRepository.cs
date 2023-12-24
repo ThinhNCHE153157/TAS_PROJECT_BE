@@ -35,7 +35,7 @@ namespace TAS.Data.EF.Repositories
         {
             var question = GetQuestionById(request.QuestionId).FirstOrDefault();
             var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == request.QuestionId).FirstOrDefault();
-            if (question != null && questionAnswer!=null)
+            if (question != null && questionAnswer != null)
             {
                 question.Description = request.Description;
                 question.Image = request.Image;
@@ -83,6 +83,64 @@ namespace TAS.Data.EF.Repositories
             try
             {
                 return _context.QuestionAnswers.Where(x => x.QuestionId == id).FirstOrDefault()!;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public bool AddQuestionResult(QuestionResult questionResult)
+        {
+            try
+            {
+                _context.QuestionResults.Add(questionResult);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public IEnumerable<QuestionResult> questionResults(int testId, int accountId)
+        {
+            int testResultId = _context.TestResults.Where(x => x.TestId == testId && x.AccountId == accountId).OrderByDescending(x => x.TestResultId).FirstOrDefault().TestResultId;
+            if (testResultId != null)
+            {
+                return _context.QuestionResults.Where(x => x.TestResultId == testResultId);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public IQueryable<Question> GetQuestionByTestId(int id)
+        {
+            try
+            {
+                var partId = _context.Parts.Where(x => x.TestId == id).Select(x => x.PartId).FirstOrDefault();
+                return _context.Questions.Include(x => x.QuestionAnswers).Where(x => x.PartId == partId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public IQueryable<Question> GetQuestionByCourseId(int id)
+        {
+            try
+            {
+                var topicList = _context.Topics.Where(x => x.CourseId == id).Select(x => x.TopicId).ToList();
+                if (topicList != null || topicList.Count != 0)
+                {
+                    var result = _context.Tests.Include(x => x.Parts).ThenInclude(x => x.Questions).ThenInclude(x => x.QuestionAnswers).Where(x => topicList.Contains((int)x.TopicId!)).SelectMany(x => x.Parts).SelectMany(x => x.Questions).Include(x => x.QuestionAnswers);
+                    return result;
+                }
+                return null;
             }
             catch (Exception e)
             {

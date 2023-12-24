@@ -11,10 +11,12 @@ namespace TAS.API.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionService _questionService;
+        private readonly ITestService _testService;
 
-        public QuestionController(IQuestionService questionService)
+        public QuestionController(IQuestionService questionService, ITestService testService)
         {
             _questionService = questionService;
+            _testService = testService;
         }
 
         [HttpGet]
@@ -39,9 +41,29 @@ namespace TAS.API.Controllers
         }
         [HttpGet]
         //[Authorize]
-        public async Task<IActionResult> GetQuestionByTestId([FromQuery] GetQuestionByTestIdRequestDto request)
+        public async Task<IActionResult> GetQuestionByTestId([FromQuery] int request)
         {
             var result = await _questionService.GetQuestionByTestId(request);
+            var part = await _testService.GetPartByTestId(request).ConfigureAwait(false);
+            var url = "";
+            if (part != null)
+            {
+                url = part.FirstOrDefault().Url;
+            }
+            dynamic response = new
+            {
+                testId = request,
+                url = url,                                                                                                                      
+                questions = result
+            };
+            return Ok(response);
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetQuestionByCourseId([FromQuery] int request)
+        {
+            var result = await _questionService.GetQuestionByCourseId(request);
             return Ok(result);
         }
 

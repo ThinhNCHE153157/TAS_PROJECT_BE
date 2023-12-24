@@ -96,5 +96,64 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Set<Test>();
         }
+
+        public bool SaveTestResult(TestResult request)
+        {
+            try
+            {
+                _context.Set<TestResult>().Add(request);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public int GetTestResultId(int testId, int accountId)
+        {
+            try
+            {
+                return _context.Set<TestResult>().Where(x => x.TestId == testId && x.AccountId == accountId).OrderByDescending(x=>x.TestResultId).FirstOrDefault().TestResultId;
+            }
+            catch
+            (Exception e)
+            {
+                return 0;
+            }
+        }
+
+        public TestResult GetTestResult(int testResultId)
+        {
+            try
+            {
+                return _context.Set<TestResult>().Where(x => x.TestResultId == testResultId).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public int GetPartIdByTopicId(int topicId)
+        {
+            var result = _context.Set<Test>().Where(x => x.TopicId == topicId).FirstOrDefault();
+            if (result != null)
+            {
+                return _context.Set<Part>().Where(x => x.TestId == result.TestId).FirstOrDefault().PartId;
+            }
+            return 0;
+        }
+
+        public List<Part> GetPartByTestId(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId).ToList();
+        }
+
+        public List<int> GetTestIdByTopicId(int topicId)
+        {
+            return _context.Set<Test>().Where(x => x.TopicId == topicId).Select(x => x.TestId).ToList();
+        }
     }
 }

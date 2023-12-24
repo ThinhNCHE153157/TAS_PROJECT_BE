@@ -1,5 +1,6 @@
 ﻿using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
+using TAS.Data.Entities;
 
 namespace TAS.Application.Services.Interfaces
 {
@@ -13,5 +14,9 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request);
         public Task<List<GetListTestFreeResponseDto>> getListTestFreeResponseDtos();
         public Task<GetListPartOfTestResponseDto> getListPartOfTest(int testId);
+        public Task<bool> SaveTestResult(SaveTestResultRequestDto request);
+        public Task<SaveTestResultResponseDto> TestDetail(int testId, int accountId);
+        public int GetPartIdByTopicId(int courseId);
+        public Task<List<Part>> GetPartByTestId(int testId);
     }
 }

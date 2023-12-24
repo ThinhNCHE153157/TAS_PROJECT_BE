@@ -385,5 +385,23 @@ namespace TAS.Application.Services
                 return false;
             }
         }
+
+        public async Task<List<Enterprise>> GetAllEnterprise()
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetAllEnterprise().ToList();
+                if (result!=null)
+                {
+                    return result;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
     }
 }

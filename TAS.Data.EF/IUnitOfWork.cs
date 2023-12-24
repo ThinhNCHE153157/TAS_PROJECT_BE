@@ -18,6 +18,7 @@ namespace TAS.Data.EF
         public ITopicRepository TopicRepository { get; }
         public IVideoRepository VideoRepository { get; }
         public IClassRepository ClassRepository { get; }
+        public IOrderRepository OrderRepository { get; }
 
         public Task CommitAsync();
 

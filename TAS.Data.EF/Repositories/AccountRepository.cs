@@ -66,5 +66,11 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Accounts.Include(a => a.Roles);
         }
+
+        public IQueryable<Enterprise> GetAllEnterprise()
+        {
+            //return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 4));
+            return _context.Enterprises;
+        }
     }
 }

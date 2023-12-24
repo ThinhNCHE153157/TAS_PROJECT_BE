@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Topic> GetTopicByCourseId(int courseId)
         {
-            return _context.Set<Topic>().Where(x => x.CourseId == courseId);
+            return _context.Set<Topic>().Include(x=>x.Tests).Where(x => x.CourseId == courseId);
         }
 
         public IQueryable<Topic> UpdateTopic(Topic topic)

@@ -8,6 +8,7 @@
         public string ShortName { get; set; } = null!;
         public string RepresentativeName { get; set; } = null!;
         public string OfficeAddress { get; set; } = null!;
+        public int? Status { get; set; }
         public int? AccountId { get; set; }
 
         public virtual Account? Account { get; set; }

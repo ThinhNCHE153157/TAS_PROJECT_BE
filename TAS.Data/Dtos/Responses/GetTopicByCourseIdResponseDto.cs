@@ -10,8 +10,11 @@ namespace TAS.Data.Dtos.Responses
 {
     public class GetTopicByCourseIdResponseDto
     {
-        public int ? TopicId { get; set; }
-        public string ? TopicName { get; set; }
+        public string CourseName { get; set; }
+        public int  TopicId { get; set; }
+        public string  TopicName { get; set; }
         public virtual ICollection<VideoDto> Videos { get; set; }
+        public virtual ICollection<TestForCourseDto> Tests { get; set; }
+        public int? PartId { get; set; }
     }
 }

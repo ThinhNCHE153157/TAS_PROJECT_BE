@@ -8,5 +8,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public IQueryable<Course> GetAllCourses();
         public IQueryable<Course> GetCourseById(int courseId);
         public IQueryable<Course> GetCourseIdByName(string name);
+        public List<int> GetListTopicIdByCourseId(int courseId);
     }
 }

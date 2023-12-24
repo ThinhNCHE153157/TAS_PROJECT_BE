@@ -68,5 +68,21 @@ namespace TAS.API.Controllers
             var result = await _testService.getListPartOfTest(request).ConfigureAwait(false);
             return Ok(result);
         }
+
+        [HttpPost]
+        //[Authorize]
+        public async Task<IActionResult> SubmitTest([FromBody] SaveTestResultRequestDto request)
+        {
+            var result = await _testService.SaveTestResult(request).ConfigureAwait(false);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> TestResultDetail([FromQuery] int testId, int accountId)
+        {
+            var result = await _testService.TestDetail(testId, accountId).ConfigureAwait(false);
+            return Ok(result);
+        }
     }
 }

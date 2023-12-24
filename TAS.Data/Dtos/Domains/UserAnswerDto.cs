@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace TAS.Data.Dtos.Domains
 {
-    public class VideoDto
+    public class UserAnswerDto
     {
-        public int VideoId { get; set; }
-        public string VideoTitle { get; set; }
-        public string VideoUrl { get; set; }
+        public int? QuestionId { get; set; }
+        public string? UserAnswer { get; set; }
     }
 }

@@ -180,6 +180,7 @@ namespace TAS.API.DependencyConfig
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IVideoService, VideoService>();
             services.AddScoped<IClassService, ClassService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

@@ -28,7 +28,7 @@ namespace TAS.Data.Libraries
                     vnPay.AddResponseData(key, value);
                 }
             }
-
+            var Amount = Convert.ToDouble(vnPay.GetResponseData("vnp_Amount"));
             var orderId = Convert.ToInt64(vnPay.GetResponseData("vnp_TxnRef"));
             var vnPayTranId = Convert.ToInt64(vnPay.GetResponseData("vnp_TransactionNo"));
             var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
@@ -47,6 +47,7 @@ namespace TAS.Data.Libraries
 
             return new PaymentResponseModel()
             {
+                Amount = Amount,
                 Success = true,
                 PaymentMethod = "VnPay",
                 OrderDescription = orderInfo,
