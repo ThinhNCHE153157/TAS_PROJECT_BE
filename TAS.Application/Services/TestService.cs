@@ -332,5 +332,20 @@ namespace TAS.Application.Services
                 return 0;
             }
         }
+
+        public async Task<List<Part>> GetPartByTestId(int testId)
+        {
+            try
+            {
+                var result = _unitOfWork.TestRepository.GetPartByTestId(testId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+           
+        }
     }
 }

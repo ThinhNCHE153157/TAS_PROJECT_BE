@@ -10,9 +10,10 @@ namespace TAS.Application.Services.Interfaces
         public Task<List<QuestionDashboardResponseDto>> GetAllQuestion();
         public Task<GetQuestionByIdResponseDto> GetQuestionById(int id);
         public Task<QuestionAnswer> questionAnswerById(int id);
-        public Task<List<GetQuestionByTestIdResponseDto>> GetQuestionByTestId(GetQuestionByTestIdRequestDto request);
+        public Task<List<GetQuestionByTestIdResponseDto>> GetQuestionByTestId(int request);
         public Task<bool> UpdateQuestion(UpdateQuestionRequestDto request);
         public Task<bool> DeleteQuestion(int questionId);
         public Task<bool> AddQuestion(CreateQuestionRequestDto request);
+        public Task<List<GetQuestionByCourseIdResponseDto>> GetQuestionByCourseId (int courseId);
     }
 }

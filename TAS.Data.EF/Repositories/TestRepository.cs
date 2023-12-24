@@ -146,5 +146,14 @@ namespace TAS.Data.EF.Repositories
             return 0;
         }
 
+        public List<Part> GetPartByTestId(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId).ToList();
+        }
+
+        public List<int> GetTestIdByTopicId(int topicId)
+        {
+            return _context.Set<Test>().Where(x => x.TopicId == topicId).Select(x => x.TestId).ToList();
+        }
     }
 }
