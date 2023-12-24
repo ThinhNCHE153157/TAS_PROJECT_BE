@@ -9,6 +9,8 @@ using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using static System.Net.Mime.MediaTypeNames;
+using TAS.Data.S3Object;
 
 namespace TAS.Application.Services
 {
@@ -18,12 +20,14 @@ namespace TAS.Application.Services
         public readonly IMapper _mapper;
         public readonly ILogger<TestService> _logger;
         public readonly IQuestionService _questionService;
-        public TestService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TestService> logger, IQuestionService questionService)
+        public readonly IS3StorageService _s3StorageService;
+        public TestService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TestService> logger, IQuestionService questionService, IS3StorageService s3StorageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _questionService = questionService;
+            _s3StorageService = s3StorageService;
         }
 
         public async Task<CourseResultResponseDto> CourseResult(int id)
@@ -136,6 +140,19 @@ namespace TAS.Application.Services
         {
             try
             {
+                string url = "";
+                if (request.Url != null)
+                {
+                    S3RequestData s3RequestData = new S3RequestData
+                    {
+                        BucketName = "tas",
+                        InputStream = request.Url.OpenReadStream(),
+                        Name = request.Url.FileName,
+                    };
+                    await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                    url = _s3StorageService.GetFileUrl(s3RequestData);
+                }
+
                 Test test = new Test();
                 test.TestName = request.TestName;
                 test.TopicId = request.TopicId;
@@ -143,7 +160,7 @@ namespace TAS.Application.Services
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 Part part = new Part();
                 part.TestId = test.TestId;
-                part.Url = request.Url;
+                part.Url = url;
                 part.Type = (request.Type == 1) ?true:false;
                 var result = _unitOfWork.TestRepository.AddPart(part);
                 return result;

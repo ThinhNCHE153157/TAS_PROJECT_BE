@@ -52,6 +52,10 @@ namespace TAS.API.Controllers
         }
         [HttpPost]
         //[Authorize]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> CreateTestForCourse([FromBody] CreateTestForCourseRequestDto request)
         {
             var result = await _testService.CreateTestForCourse(request);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,6 +13,6 @@ namespace TAS.Data.Dtos.Requests
         public int TopicId { get; set; }
         public string TestName { get; set; }
         public int Type { get; set; } 
-        public string Url { get; set; }
+        public IFormFile? Url { get; set; }
     }
 }
