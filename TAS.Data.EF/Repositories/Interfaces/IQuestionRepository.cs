@@ -21,5 +21,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public bool DeleteQuestion(int questionId);
         public bool AddQuestionResult(QuestionResult questionResult);
         public IEnumerable<QuestionResult> questionResults(int testId, int accountId);
+        public int GetPartIdByTestId(int testId);
     }
 }

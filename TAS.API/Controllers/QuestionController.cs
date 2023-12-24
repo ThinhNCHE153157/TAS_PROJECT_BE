@@ -93,5 +93,17 @@ namespace TAS.API.Controllers
             }
             return BadRequest();
         }
+
+        [HttpPost]
+        //[Authorize]
+        public async Task<IActionResult> CreateQuestionForTest([FromBody] CreateQuestionForTestRequestDto request)
+        {
+            if (request != null)
+            {
+                var result = await _questionService.AddQuestionForTest(request);
+                return Ok(result);
+            }
+            return BadRequest();
+        }
     }
 }

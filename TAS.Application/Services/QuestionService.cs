@@ -19,14 +19,12 @@ namespace TAS.Application.Services
     public class QuestionService : IQuestionService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<QuestionService> _logger;
         private readonly IMapper _mapper;
 
-        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<QuestionService> logger)
+        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<bool> AddQuestion(CreateQuestionRequestDto request)
@@ -46,6 +44,35 @@ namespace TAS.Application.Services
             //    return false;
             //}
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> AddQuestionForTest(CreateQuestionForTestRequestDto requestDto)
+        {
+            try
+            {
+                var partId =  _unitOfWork.QuestionRepository.GetPartIdByTestId(requestDto.TestId);
+                Question question = new Question();
+                if (partId != 0)
+                {
+                    question.PartId = partId;
+                    question.Description = requestDto.Descrition;
+                    question.QuestionAnswers.Add(new QuestionAnswer()
+                    {
+                        ResultA = requestDto.AnswerA,
+                        ResultB = requestDto.AnswerB,
+                        ResultC = requestDto.AnswerC,
+                        ResultD = requestDto.AnswerD,
+                        CorrectResult = requestDto.CorrectAnswer
+                    });
+                }
+                await _unitOfWork.QuestionRepository.AddAsync(question);
+                await _unitOfWork.CommitAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public async Task<bool> DeleteQuestion(int questionId)

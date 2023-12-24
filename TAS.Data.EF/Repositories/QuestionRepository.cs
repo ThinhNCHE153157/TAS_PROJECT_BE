@@ -147,5 +147,9 @@ namespace TAS.Data.EF.Repositories
                 throw new Exception(e.Message);
             }
         }
+        public int GetPartIdByTestId(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId).FirstOrDefault().PartId;
+        }
     }
 }
