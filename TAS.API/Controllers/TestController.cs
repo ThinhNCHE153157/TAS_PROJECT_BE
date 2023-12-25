@@ -92,5 +92,13 @@ namespace TAS.API.Controllers
             var result = await _testService.TestDetail(testId, accountId).ConfigureAwait(false);
             return Ok(result);
         }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetTestResultByAccount([FromQuery] int accountId)
+        {
+            var result = await _testService.GetTestResult(accountId).ConfigureAwait(false);
+            return Ok(result);
+        }
     }
 }

@@ -84,6 +84,20 @@ namespace TAS.Application.Services
             return null;
         }
 
+        public async Task<List<GetEnterpriseCourseResponseDto>> GetCourseByEnterpriseName(string name)
+        {
+            try
+            {
+                var result = _unitOfWork.CourseRepository.GetCourseByEnterpriseName(name);
+                var result1 = _mapper.Map<List<GetEnterpriseCourseResponseDto>>(result);
+                return result1;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task<GetCourseByIdResponseDto> GetCourseById(int id)
         {
             try
@@ -127,6 +141,32 @@ namespace TAS.Application.Services
                     return 0;
                 }
                 return 0;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public string GetEnterpriseNameByAccountId(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetEnterpriseNameById(id);
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<Course>> GetListCourseByAccountId(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.CourseRepository.GetListCourseByAccountId(id);
+                return result;
             }
             catch (Exception e)
             {

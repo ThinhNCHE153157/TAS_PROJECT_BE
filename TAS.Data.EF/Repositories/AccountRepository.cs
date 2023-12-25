@@ -75,7 +75,7 @@ namespace TAS.Data.EF.Repositories
 
         public string GetEnterpriseNameById(int id)
         {
-            return _context.Enterprises.Where(e => e.AccountId == id).Select(e => e.EnterpriseName).FirstOrDefault();
+            return _context.Enterprises.Where(e => e.AccountId == id).Select(e => e.ShortName).FirstOrDefault();
         }
 
         public Task<Account> GetUserByEmail(string email)

@@ -35,5 +35,25 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Topics.Where(x => x.CourseId == courseId).Select(x => x.TopicId).ToList();
         }
+
+        public List<Course> GetCourseByEnterpriseName(string name)
+        {
+            return _context.Courses.Where(x => x.CreateUser == name).ToList();
+        }
+
+        public List<Course> GetListCourseByAccountId(int id)
+        {
+            var listid =  GetCourseIdByAccountId(id);
+            List<Course> list = new List<Course>();
+            foreach (var item in listid)
+            {
+                var course = _context.Courses.Where(x => x.CourseId == item).FirstOrDefault();
+                if (course!=null)
+                {
+                list.Add(course);
+                }
+            }
+            return list;
+        }
     }
 }

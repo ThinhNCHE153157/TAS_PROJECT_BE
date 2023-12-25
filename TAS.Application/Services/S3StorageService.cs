@@ -84,7 +84,7 @@ namespace TAS.Application.Services
                     Key = obj.Name,
                     BucketName = obj.BucketName,
                     Protocol = Protocol.HTTPS,
-                    Expires = DateTime.Now.AddMinutes(10),
+                    Expires = DateTime.Now.AddDays(10),
                 };
 
                     string url = client.GetPreSignedURL(fileRequest);

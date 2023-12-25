@@ -372,5 +372,19 @@ namespace TAS.Application.Services
             }
            
         }
+
+        public async Task<List<TestResult>> GetTestResult(int accountId)
+        {
+            try
+            {
+                var result = _unitOfWork.TestRepository.GetTestResultByAccountd(accountId).ToList();
+                return result;
+            }
+            catch
+            {
+                _logger.LogError("GetTestResult error"); 
+                return null;
+            }
+        }
     }
 }

@@ -170,5 +170,9 @@ namespace TAS.Data.EF.Repositories
             }
         }
 
+        public List<TestResult> GetTestResultByAccountd(int accountId)
+        {
+            return _context.TestResults.Where(x => x.AccountId == accountId).ToList();
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public bool SaveTestResult(TestResult request);
         public int GetTestResultId(int testId, int accountId);
         public TestResult GetTestResult(int testResultId);
+        public List<TestResult> GetTestResultByAccountd(int accountId);
         public int GetPartIdByTopicId(int topicId);
         public List<Part> GetPartByTestId(int testId);
         public List<int> GetTestIdByTopicId (int topicId);
