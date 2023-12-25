@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using TAS.Data.Entities.Interfaces;
 
 namespace TAS.Data.Entities
 {
-    public partial class Account
+    public partial class Account : IDateTracking
     {
         public Account()
         {
+            Enterprises = new HashSet<Enterprise>();
             TestResults = new HashSet<TestResult>();
             Tokens = new HashSet<Token>();
             Classes = new HashSet<Class>();
-            ClassesNavigation = new HashSet<Class>();
             Courses = new HashSet<Course>();
             Roles = new HashSet<Role>();
         }
@@ -31,12 +32,17 @@ namespace TAS.Data.Entities
         public DateTime? CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public bool? IsDeleted { get; set; }
+        public DateTime? Otpcreatetime { get; set; }
+        public bool? Gender { get; set; }
+        public DateTime? Dob { get; set; }
 
+        public virtual ICollection<Enterprise> Enterprises { get; set; }
         public virtual ICollection<TestResult> TestResults { get; set; }
         public virtual ICollection<Token> Tokens { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+
 
         public virtual ICollection<Class> Classes { get; set; }
-        public virtual ICollection<Class> ClassesNavigation { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
         public virtual ICollection<Role> Roles { get; set; }
     }

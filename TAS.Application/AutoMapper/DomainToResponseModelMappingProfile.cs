@@ -17,9 +17,34 @@ namespace TAS.Application.AutoMapper
             CreateMap<Course,CourseHomepageResponeDto>();
             CreateMap<Course,CourseDashboardResponseDto>();
             CreateMap<Account, AccountHomepageResponeDTO>();
-            CreateMap<Course, GetCourseByIdResponseDto>()
-                .ForMember(d => d.Tests, dt => dt.MapFrom(src => src.Tests));
             CreateMap<Test, TestDto>();
+            CreateMap<Account, GetAccountByIdResponseDto>();
+            CreateMap<Account, AccountManageResponseDto>()
+                .ForMember(_dto => _dto.RoleNames, dt => dt.MapFrom(src => src.Roles.Select(role => role.RoleName).ToList()));
+
+
+            CreateMap<Class, ClassManagementDto>();
+            CreateMap<Account, AccountTeacherName>().ForMember(_dto => _dto.Teacher, dt => dt.MapFrom(src => src.FirstName + ' ' + src.LastName));
+
+            CreateMap<Test,CourseResultResponseDto>();
+            CreateMap<TestResult,TestResultDto>();
+            CreateMap<QuestionAnswer, QuestionAnswerDto>();
+            CreateMap<Test,GetTestByIdResponseDto>();
+            CreateMap<Test,GetListTestFreeResponseDto>();
+            CreateMap<Test, GetAllTestResponseDto>();
+            CreateMap<Topic,GetTopicByCourseIdResponseDto>();
+            CreateMap<Video,VideoDto>();
+            CreateMap<Topic,TopicDto>();
+            CreateMap<Course,GetCourseByIdResponseDto>();
+            CreateMap<Part, PartDto>(); 
+            CreateMap<Question, QuestionDto>();
+            CreateMap<QuestionResult, QuestionResultDto>();
+            CreateMap<QuestionResultDto, QuestionResult>();
+            CreateMap<QuestionResult,UserAnswerDto>()
+                .ForMember(_dto => _dto.QuestionId, dt => dt.MapFrom(src => src.Image))
+                .ForMember(_dto => _dto.UserAnswer, dt => dt.MapFrom(src => src.Type));
+            CreateMap<Test,TestForCourseDto>();
+            CreateMap<Course,GetEnterpriseCourseResponseDto>();
         }
     }
 }

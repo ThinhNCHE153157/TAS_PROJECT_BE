@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Data.Dtos.Requests;
+using TAS.Data.Dtos.Responses;
 using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
 using TAS.Infrastructure.Constants;
@@ -20,14 +21,14 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Account> GetAll()
         {
-            return _context.Set<Account>().Where(a => a.IsDeleted.Equals(Common.IsNotDelete));
+            return _context.Set<Account>().Where(a => a.IsDeleted == Common.IsNotDelete);
         }
 
         public IQueryable<Account> GetAccountManagement()
 		{
-			return _context.Set<Account>().Where(a => a.IsDeleted.Equals(Common.IsNotDelete));
+			return _context.Accounts.Include(a => a.Roles);
 
-		}
+        }
 
 		public IQueryable<Account> GetAllAccount()
         {
@@ -38,6 +39,53 @@ namespace TAS.Data.EF.Repositories
         {
             var user = _context.Accounts.Include(x => x.Roles).Where(x=>x.Username.Equals(requestDto.UserName) && x.IsDeleted==Common.IsNotDelete).FirstOrDefault();
             return user;
+
+        }
+
+        public Account GetAccountByIdReturnAcc(int id)
+        {
+            return _context.Accounts.Include(a => a.Roles).FirstOrDefault(x => x.AccountId == id);
+        }
+        public IQueryable<Account> GetAccountById(int accountId)
+        {
+            return _context.Set<Account>().Where(a => a.AccountId == accountId && a.IsDeleted == Common.IsNotDelete);
+        }
+
+        public IQueryable<Account> GetAccountInClass(int classId)
+        {
+            return _context.Accounts
+                //.Include(a => a.Classes)
+                .Where(a => a.Classes.Any(c => c.ClassId == classId))
+                .Include(a => a.Roles);
+        }
+        public IQueryable<Account> GetAllTeacher()
+        {
+            return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 3 ));
+        }
+        public IQueryable<Account> GetAllAccounts_Manage()
+        {
+            return _context.Accounts.Include(a => a.Roles);
+        }
+
+        public IQueryable<Enterprise> GetAllEnterprise()
+        {
+            //return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 4));
+            return _context.Enterprises;
+        }
+
+        public string GetEnterpriseNameById(int id)
+        {
+            return _context.Enterprises.Where(e => e.AccountId == id).Select(e => e.ShortName).FirstOrDefault();
+        }
+
+        public Task<Account> GetUserByEmail(string email)
+        {
+            return _context.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email));
+        }
+
+        public Task<Account> GetUserByUsername(string username)
+        {
+            return _context.Accounts.FirstOrDefaultAsync(x => x.Username.Equals(username));
         }
     }
 }

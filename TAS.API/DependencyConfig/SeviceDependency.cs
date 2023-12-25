@@ -16,6 +16,8 @@ using TAS.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using TAS.Infrastructure.Helpers;
 using TAS.Data.Entities;
+using Amazon.S3;
+using TAS.Data.Dtos.Domains;
 
 namespace TAS.API.DependencyConfig
 {
@@ -26,8 +28,12 @@ namespace TAS.API.DependencyConfig
             //HttpContextAcessor
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddDbContext<TASContext>(option => option.UseSqlServer(configuration.GetConnectionString("Default"),
-                                                            o => o.MigrationsAssembly("TAS.Data.EF")), ServiceLifetime.Scoped);
+            services.AddDbContext<TASContext>((provider, option) => 
+            {
+                option.UseSqlServer(configuration.GetConnectionString("Default"));
+                option.AddInterceptors(new SoftDateInterceptor(provider.GetService<IHttpContextAccessor>()!));
+             });
+                                                            //o => o.MigrationsAssembly("TAS.Data.EF")).AddInterceptors(new SoftDateInterceptor(provider.GetService<IHttpContextAccessor>()!)), ServiceLifetime.Scoped);
 
             //Config CORS
             services.AddCors(cors => cors.AddPolicy("TasPolicy", builder =>
@@ -59,10 +65,10 @@ namespace TAS.API.DependencyConfig
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminRole",
-                    policy => policy.RequireRole(UserRoles.Admin.ToString(), UserRoles.Manager.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
+                    policy => policy.RequireRole(UserRoles.Admin.ToString(), UserRoles.Enterprise.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
 
-                options.AddPolicy("ManagerRole",
-                    policy => policy.RequireRole(UserRoles.Manager.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
+                options.AddPolicy("EnterpriseRole",
+                    policy => policy.RequireRole(UserRoles.Enterprise.ToString(), UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
 
                 options.AddPolicy("TeacherRole",
                     policy => policy.RequireRole(UserRoles.Teacher.ToString(), UserRoles.Student.ToString()));
@@ -171,7 +177,16 @@ namespace TAS.API.DependencyConfig
         {
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IMailService, MailService>();
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<ITestService, TestService>();
+            services.AddScoped<IS3StorageService,S3StorageService>();
+            services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<IVideoService, VideoService>();
+            services.AddScoped<IClassService, ClassService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }

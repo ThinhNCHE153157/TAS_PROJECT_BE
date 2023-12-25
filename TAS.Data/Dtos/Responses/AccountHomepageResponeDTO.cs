@@ -7,7 +7,7 @@ using TAS.Data.Entities;
 
 namespace TAS.Data.Dtos.Responses
 {
-	public partial class AccountHomepageResponeDTO
+	public class AccountHomepageResponeDTO
 	{
 		public int AccountId { get; set; }
 		public string? Username { get; set; }

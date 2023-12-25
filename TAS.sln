@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAS.API", "TAS.API\TAS.API.csproj", "{A5F6A620-B416-4DD6-8859-8840D61828D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TAS.API", "TAS.API\TAS.API.csproj", "{A5F6A620-B416-4DD6-8859-8840D61828D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAS.Application", "TAS.Application\TAS.Application.csproj", "{735634AE-B442-4ABF-AEA2-111480707009}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TAS.Application", "TAS.Application\TAS.Application.csproj", "{735634AE-B442-4ABF-AEA2-111480707009}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAS.Data", "TAS.Data\TAS.Data.csproj", "{EC960071-45D8-420E-B120-7ED0AA2D7BC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TAS.Data", "TAS.Data\TAS.Data.csproj", "{EC960071-45D8-420E-B120-7ED0AA2D7BC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAS.Data.EF", "TAS.Data.EF\TAS.Data.EF.csproj", "{286E601B-E7F2-4D30-BB99-CBB8DAA45246}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TAS.Data.EF", "TAS.Data.EF\TAS.Data.EF.csproj", "{286E601B-E7F2-4D30-BB99-CBB8DAA45246}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAS.Infrastructure", "TAS.Infrastructure\TAS.Infrastructure.csproj", "{8CC9F21B-DCB6-4C8A-BBDB-E91206E68F5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TAS.Infrastructure", "TAS.Infrastructure\TAS.Infrastructure.csproj", "{8CC9F21B-DCB6-4C8A-BBDB-E91206E68F5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAS.Test", "TAS.Test\TAS.Test.csproj", "{287D2956-67AF-416B-914D-E3FF6E6AA854}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{8CC9F21B-DCB6-4C8A-BBDB-E91206E68F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CC9F21B-DCB6-4C8A-BBDB-E91206E68F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CC9F21B-DCB6-4C8A-BBDB-E91206E68F5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{287D2956-67AF-416B-914D-E3FF6E6AA854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{287D2956-67AF-416B-914D-E3FF6E6AA854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{287D2956-67AF-416B-914D-E3FF6E6AA854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{287D2956-67AF-416B-914D-E3FF6E6AA854}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
