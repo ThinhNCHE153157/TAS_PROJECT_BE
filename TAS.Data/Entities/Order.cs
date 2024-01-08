@@ -13,7 +13,7 @@ namespace TAS.Data.Entities
             VnPayHistories = new HashSet<VnPayHistory>();
         }
 
-        public string OrderId { get; set; }
+        public string OrderId { get; set; } = null!;
         public int? AccountId { get; set; }
         public int? CourseId { get; set; }
         public double? TotalAmount { get; set; }

@@ -86,11 +86,11 @@ namespace TAS.Application.Services
                 {
                     if (account.Otp == id)
                     {
-                        if (account.Otpcreatetime < System.DateTime.Now)
+                        if (account.Otpexpiretime < System.DateTime.Now)
                         {
                             account.IsVerified = true;
                             account.Otp = null;
-                            account.Otpcreatetime = null;
+                            account.Otpexpiretime = null;
                             _unitOfWork.Commit();
                             return true;
                         }
@@ -271,7 +271,7 @@ namespace TAS.Application.Services
                 if (account != null)
                 {
                     account.Otp = otp;
-                    account.Otpcreatetime = ExpriseTime;
+                    account.Otpexpiretime = ExpriseTime;
                     _unitOfWork.Commit();
                     return true;
                 }
@@ -299,20 +299,6 @@ namespace TAS.Application.Services
             smtp.Authenticate("toeicmastersystem@gmail.com", "rpse lwke ibel lbpt");
             smtp.Send(email);
             smtp.Disconnect(true);
-        }
-        public async Task<List<AccountManageResponseDto>> GetAccountInClass(int classId)
-        {
-            try
-            {
-                var accounts = await _unitOfWork.AccountRepository.GetAccountInClass(classId).ToListAsync().ConfigureAwait(false);
-                var result = _mapper.Map<List<AccountManageResponseDto>>(accounts);
-                return result;
-            }
-            catch (Exception e)
-            {
-
-            }
-            return null;
         }
 
         public async Task<List<AccountTeacherName>> GetAllTeacher()

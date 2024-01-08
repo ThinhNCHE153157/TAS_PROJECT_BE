@@ -8,13 +8,13 @@ using TAS.Data.Entities;
 
 namespace TAS.Data.EF.Repositories.Interfaces
 {
-    public interface IClassRepository : IBaseRepository<Class>
+    public interface IClassRepository 
     {
-        public IQueryable<Class> GetAllClassesManage();
-        public Class GetClassDetailById(int id);
+        //public IQueryable<Class> GetAllClassesManage();
+        //public Class GetClassDetailById(int id);
 
-        public IQueryable<Class> GetClassByStudentId(int studentId);
-        public IQueryable<Class> GetClassCode();
-        public Class GetClassByClassCode(string classCode);
+        //public IQueryable<Class> GetClassByStudentId(int studentId);
+        //public IQueryable<Class> GetClassCode();
+        //public Class GetClassByClassCode(string classCode);
     }
 }

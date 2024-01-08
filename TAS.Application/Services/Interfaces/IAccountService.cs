@@ -22,7 +22,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> ChangePassword(ChangePasswordRequestDto request);
         public Task<bool> UpdateAvatar(UpdateAvatarRequestDto request);
         public Task<bool> DeleteAvatar(int id);
-        public Task<List<AccountManageResponseDto>> GetAccountInClass(int classId);
         public Task<List<AccountTeacherName>> GetAllTeacher();
         public Task<List<Enterprise>> GetAllEnterprise();
         public string GetEnterpriseNameById(int id);

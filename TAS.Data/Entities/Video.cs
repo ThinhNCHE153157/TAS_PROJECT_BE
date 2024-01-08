@@ -13,6 +13,8 @@ namespace TAS.Data.Entities
         public int? TopicId { get; set; }
         public string VideoUrl { get; set; } = null!;
         public string VideoTitle { get; set; } = null!;
+        public string? VideoDescription { get; set; }
+        public string? VideoAttachment { get; set; }
         public string? CreateUser { get; set; }
         public string? UpdateUser { get; set; }
         public DateTime? CreateDate { get; set; }
