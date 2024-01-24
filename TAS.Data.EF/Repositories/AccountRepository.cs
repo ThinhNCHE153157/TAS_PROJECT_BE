@@ -51,13 +51,6 @@ namespace TAS.Data.EF.Repositories
             return _context.Set<Account>().Where(a => a.AccountId == accountId && a.IsDeleted == Common.IsNotDelete);
         }
 
-        public IQueryable<Account> GetAccountInClass(int classId)
-        {
-            return _context.Accounts
-                //.Include(a => a.Classes)
-                .Where(a => a.Classes.Any(c => c.ClassId == classId))
-                .Include(a => a.Roles);
-        }
         public IQueryable<Account> GetAllTeacher()
         {
             return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 3 ));

@@ -21,7 +21,6 @@ namespace TAS.Data.Entities
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Address> Addresses { get; set; } = null!;
         public virtual DbSet<City> Cities { get; set; } = null!;
-        public virtual DbSet<Class> Classes { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Course> Courses { get; set; } = null!;
         public virtual DbSet<District> Districts { get; set; } = null!;
@@ -32,7 +31,6 @@ namespace TAS.Data.Entities
         public virtual DbSet<Question> Questions { get; set; } = null!;
         public virtual DbSet<QuestionAnswer> QuestionAnswers { get; set; } = null!;
         public virtual DbSet<QuestionResult> QuestionResults { get; set; } = null!;
-        public virtual DbSet<QuestionResultAnswer> QuestionResultAnswers { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Test> Tests { get; set; } = null!;
         public virtual DbSet<TestResult> TestResults { get; set; } = null!;
@@ -103,9 +101,9 @@ namespace TAS.Data.Entities
                     .HasMaxLength(255)
                     .HasColumnName("otp");
 
-                entity.Property(e => e.Otpcreatetime)
+                entity.Property(e => e.Otpexpiretime)
                     .HasColumnType("datetime")
-                    .HasColumnName("otpcreatetime");
+                    .HasColumnName("otpexpiretime");
 
                 entity.Property(e => e.Password)
                     .HasMaxLength(255)
@@ -133,11 +131,11 @@ namespace TAS.Data.Entities
                     .WithMany(p => p.Accounts)
                     .UsingEntity<Dictionary<string, object>>(
                         "AccountRole",
-                        l => l.HasOne<Role>().WithMany().HasForeignKey("RoleId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Account_r__role___2180FB33"),
-                        r => r.HasOne<Account>().WithMany().HasForeignKey("AccountId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Account_r__accou__208CD6FA"),
+                        l => l.HasOne<Role>().WithMany().HasForeignKey("RoleId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Account_r__role___0D99FE17"),
+                        r => r.HasOne<Account>().WithMany().HasForeignKey("AccountId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Account_r__accou__0CA5D9DE"),
                         j =>
                         {
-                            j.HasKey("AccountId", "RoleId").HasName("PK__Account___91C2B49123B16C8F");
+                            j.HasKey("AccountId", "RoleId").HasName("PK__Account___91C2B4914A9651D3");
 
                             j.ToTable("Account_role");
 
@@ -162,13 +160,13 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Wards)
                     .WithMany(p => p.Addresses)
                     .HasForeignKey(d => d.WardsId)
-                    .HasConstraintName("FK__Address__Address__1332DBDC");
+                    .HasConstraintName("FK__Address__Address__7993056A");
             });
 
             modelBuilder.Entity<City>(entity =>
             {
                 entity.HasKey(e => e.CitiesId)
-                    .HasName("PK__Cities__966E6963C8B4F1F5");
+                    .HasName("PK__Cities__966E696300404875");
 
                 entity.Property(e => e.CitiesId).HasColumnName("Cities_id");
 
@@ -181,77 +179,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Provinces)
                     .WithMany(p => p.Cities)
                     .HasForeignKey(d => d.ProvincesId)
-                    .HasConstraintName("FK__Cities__Province__0A9D95DB");
-            });
-
-            modelBuilder.Entity<Class>(entity =>
-            {
-                entity.ToTable("Class");
-
-                entity.Property(e => e.ClassId).HasColumnName("class_id");
-
-                entity.Property(e => e.ClassCode)
-                    .HasMaxLength(255)
-                    .HasColumnName("class_code");
-
-                entity.Property(e => e.ClassName)
-                    .HasMaxLength(255)
-                    .HasColumnName("class_name");
-
-                entity.Property(e => e.CreateDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("createDate");
-
-                entity.Property(e => e.CreateUser)
-                    .HasMaxLength(255)
-                    .HasColumnName("createUser");
-
-                entity.Property(e => e.Description)
-                    .HasColumnType("text")
-                    .HasColumnName("description");
-
-                entity.Property(e => e.EndTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("end_time");
-
-                entity.Property(e => e.IsDeleted)
-                    .HasColumnName("isDeleted")
-                    .HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.MaxStudent).HasColumnName("max_student");
-
-                entity.Property(e => e.StartTime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("start_time");
-
-                entity.Property(e => e.Subject)
-                    .HasMaxLength(255)
-                    .HasColumnName("subject");
-
-                entity.Property(e => e.UpdateDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("updateDate");
-
-                entity.Property(e => e.UpdateUser)
-                    .HasMaxLength(255)
-                    .HasColumnName("updateUser");
-
-                entity.HasMany(d => d.Accounts)
-                    .WithMany(p => p.Classes)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "ManageClass",
-                        l => l.HasOne<Account>().WithMany().HasForeignKey("AccountId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Manage_cl__accou__282DF8C2"),
-                        r => r.HasOne<Class>().WithMany().HasForeignKey("ClassId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Manage_cl__class__2739D489"),
-                        j =>
-                        {
-                            j.HasKey("ClassId", "AccountId").HasName("PK__Manage_c__399E5BAA6EF3E19E");
-
-                            j.ToTable("Manage_class");
-
-                            j.IndexerProperty<int>("ClassId").HasColumnName("class_id");
-
-                            j.IndexerProperty<int>("AccountId").HasColumnName("account_id");
-                        });
+                    .HasConstraintName("FK__Cities__Province__70FDBF69");
             });
 
             modelBuilder.Entity<Country>(entity =>
@@ -321,11 +249,11 @@ namespace TAS.Data.Entities
                     .WithMany(p => p.Courses)
                     .UsingEntity<Dictionary<string, object>>(
                         "CourseEnroll",
-                        l => l.HasOne<Account>().WithMany().HasForeignKey("AccountId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Course_en__accou__2EDAF651"),
-                        r => r.HasOne<Course>().WithMany().HasForeignKey("CourseId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Course_en__cours__2DE6D218"),
+                        l => l.HasOne<Account>().WithMany().HasForeignKey("AccountId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Course_en__accou__1446FBA6"),
+                        r => r.HasOne<Course>().WithMany().HasForeignKey("CourseId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Course_en__cours__1352D76D"),
                         j =>
                         {
-                            j.HasKey("CourseId", "AccountId").HasName("PK__Course_e__4B74D582FC394AAF");
+                            j.HasKey("CourseId", "AccountId").HasName("PK__Course_e__4B74D582DF2220A9");
 
                             j.ToTable("Course_enroll");
 
@@ -338,7 +266,7 @@ namespace TAS.Data.Entities
             modelBuilder.Entity<District>(entity =>
             {
                 entity.HasKey(e => e.DistrictsId)
-                    .HasName("PK__District__A05B765FA90103D9");
+                    .HasName("PK__District__A05B765F894D131D");
 
                 entity.Property(e => e.DistrictsId).HasColumnName("Districts_id");
 
@@ -351,13 +279,13 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Cities)
                     .WithMany(p => p.Districts)
                     .HasForeignKey(d => d.CitiesId)
-                    .HasConstraintName("FK__Districts__Distr__0D7A0286");
+                    .HasConstraintName("FK__Districts__Distr__73DA2C14");
             });
 
             modelBuilder.Entity<Enterprise>(entity =>
             {
                 entity.HasKey(e => e.EnterpriseCode)
-                    .HasName("PK__Enterpri__84AA8D1A15BD686E");
+                    .HasName("PK__Enterpri__84AA8D1A8175B37B");
 
                 entity.ToTable("Enterprise");
 
@@ -387,19 +315,22 @@ namespace TAS.Data.Entities
                 entity.Property(e => e.ShortName)
                     .HasMaxLength(255)
                     .HasColumnName("short_name");
+
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Enterprises)
                     .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK__Enterpris__accou__18EBB532");
+                    .HasConstraintName("FK__Enterpris__accou__0504B816");
             });
 
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Order");
 
-                entity.Property(e => e.OrderId).HasMaxLength(50).HasColumnName("order_id");
+                entity.Property(e => e.OrderId)
+                    .HasMaxLength(50)
+                    .HasColumnName("order_id");
 
                 entity.Property(e => e.AccountId).HasColumnName("account_id");
 
@@ -410,7 +341,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK__Order__totalAmou__5F7E2DAC");
+                    .HasConstraintName("FK__Order__account_i__7F4BDEC0");
             });
 
             modelBuilder.Entity<Part>(entity =>
@@ -421,23 +352,22 @@ namespace TAS.Data.Entities
 
                 entity.Property(e => e.TestId).HasColumnName("test_id");
 
-                entity.Property(e => e.Type).HasDefaultValueSql("((0))");
+                entity.Property(e => e.Type).HasColumnName("type");
 
                 entity.Property(e => e.Url)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
                     .HasColumnName("url");
 
                 entity.HasOne(d => d.Test)
                     .WithMany(p => p.Parts)
                     .HasForeignKey(d => d.TestId)
-                    .HasConstraintName("FK__Part__test_id__3D2915A8");
+                    .HasConstraintName("FK__Part__test_id__22951AFD");
             });
 
             modelBuilder.Entity<Province>(entity =>
             {
                 entity.HasKey(e => e.ProvincesId)
-                    .HasName("PK__Province__9FBCE10252871D92");
+                    .HasName("PK__Province__9FBCE1028B44FC47");
 
                 entity.Property(e => e.ProvincesId).HasColumnName("Provinces_id");
 
@@ -450,7 +380,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Country)
                     .WithMany(p => p.Provinces)
                     .HasForeignKey(d => d.CountryId)
-                    .HasConstraintName("FK__Provinces__Count__07C12930");
+                    .HasConstraintName("FK__Provinces__Count__6E2152BE");
             });
 
             modelBuilder.Entity<Question>(entity =>
@@ -501,7 +431,7 @@ namespace TAS.Data.Entities
                     .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.PartId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Question__part_i__489AC854");
+                    .HasConstraintName("FK__Question__part_i__2A363CC5");
             });
 
             modelBuilder.Entity<QuestionAnswer>(entity =>
@@ -510,32 +440,22 @@ namespace TAS.Data.Entities
 
                 entity.Property(e => e.QuestionAnswerId).HasColumnName("question_answer_id");
 
-                entity.Property(e => e.CorrectResult)
+                entity.Property(e => e.Answer)
                     .HasMaxLength(255)
-                    .HasColumnName("correct_result");
+                    .HasColumnName("answer");
+
+                entity.Property(e => e.Explanation)
+                    .HasMaxLength(1000)
+                    .HasColumnName("explanation");
+
+                entity.Property(e => e.Iscorrect).HasColumnName("iscorrect");
 
                 entity.Property(e => e.QuestionId).HasColumnName("question_id");
-
-                entity.Property(e => e.ResultA)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultA");
-
-                entity.Property(e => e.ResultB)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultB");
-
-                entity.Property(e => e.ResultC)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultC");
-
-                entity.Property(e => e.ResultD)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultD");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.QuestionAnswers)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK__Question___corre__4B7734FF");
+                    .HasConstraintName("FK__Question___quest__2D12A970");
             });
 
             modelBuilder.Entity<QuestionResult>(entity =>
@@ -548,62 +468,16 @@ namespace TAS.Data.Entities
                     .HasColumnType("text")
                     .HasColumnName("description");
 
-                entity.Property(e => e.Image)
-                    .HasMaxLength(255)
-                    .HasColumnName("image");
+                entity.Property(e => e.QuestionAnswerId).HasColumnName("question_answer_id");
 
-                entity.Property(e => e.Note)
-                    .HasColumnType("text")
-                    .HasColumnName("note");
+                entity.Property(e => e.QuestionId).HasColumnName("question_id");
 
                 entity.Property(e => e.TestResultId).HasColumnName("test_result_id");
-
-                entity.Property(e => e.Type)
-                    .HasMaxLength(255)
-                    .HasColumnName("type");
 
                 entity.HasOne(d => d.TestResult)
                     .WithMany(p => p.QuestionResults)
                     .HasForeignKey(d => d.TestResultId)
-                    .HasConstraintName("FK__Question___test___4E53A1AA");
-            });
-
-            modelBuilder.Entity<QuestionResultAnswer>(entity =>
-            {
-                entity.ToTable("Question_result_answer");
-
-                entity.Property(e => e.QuestionResultAnswerId).HasColumnName("question_result_answer_id");
-
-                entity.Property(e => e.CorrectResult)
-                    .HasMaxLength(255)
-                    .HasColumnName("correct_result");
-
-                entity.Property(e => e.QuestionResultId).HasColumnName("question_result_id");
-
-                entity.Property(e => e.ResultA)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultA");
-
-                entity.Property(e => e.ResultB)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultB");
-
-                entity.Property(e => e.ResultC)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultC");
-
-                entity.Property(e => e.ResultD)
-                    .HasMaxLength(255)
-                    .HasColumnName("resultD");
-
-                entity.Property(e => e.Seleted)
-                    .HasMaxLength(255)
-                    .HasColumnName("seleted");
-
-                entity.HasOne(d => d.QuestionResult)
-                    .WithMany(p => p.QuestionResultAnswers)
-                    .HasForeignKey(d => d.QuestionResultId)
-                    .HasConstraintName("FK__Question___selet__51300E55");
+                    .HasConstraintName("FK__Question___test___2FEF161B");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -660,24 +534,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Topic)
                     .WithMany(p => p.Tests)
                     .HasForeignKey(d => d.TopicId)
-                    .HasConstraintName("FK__Test__topic_id__3A4CA8FD");
-
-                entity.HasMany(d => d.Classes)
-                    .WithMany(p => p.Tests)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "ClassTest",
-                        l => l.HasOne<Class>().WithMany().HasForeignKey("ClassId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Class_tes__class__40058253"),
-                        r => r.HasOne<Test>().WithMany().HasForeignKey("TestId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK__Class_tes__test___40F9A68C"),
-                        j =>
-                        {
-                            j.HasKey("TestId", "ClassId").HasName("PK__Class_te__8C205B9A35DAB052");
-
-                            j.ToTable("Class_test");
-
-                            j.IndexerProperty<int>("TestId").HasColumnName("test_id");
-
-                            j.IndexerProperty<int>("ClassId").HasColumnName("class_id");
-                        });
+                    .HasConstraintName("FK__Test__topic_id__1FB8AE52");
             });
 
             modelBuilder.Entity<TestResult>(entity =>
@@ -690,9 +547,13 @@ namespace TAS.Data.Entities
 
                 entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
 
+                entity.Property(e => e.IsPass).HasColumnName("isPass");
+
                 entity.Property(e => e.TestFinish).HasColumnName("test_finish");
 
                 entity.Property(e => e.TestId).HasColumnName("test_id");
+
+                entity.Property(e => e.TestNumberCorrect).HasColumnName("test_numberCorrect");
 
                 entity.Property(e => e.TestScore).HasColumnName("test_score");
 
@@ -700,13 +561,13 @@ namespace TAS.Data.Entities
                     .WithMany(p => p.TestResults)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Test_resu__accou__44CA3770");
+                    .HasConstraintName("FK__Test_resu__accou__2665ABE1");
 
                 entity.HasOne(d => d.Test)
                     .WithMany(p => p.TestResults)
                     .HasForeignKey(d => d.TestId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Test_resu__test___43D61337");
+                    .HasConstraintName("FK__Test_resu__test___257187A8");
             });
 
             modelBuilder.Entity<Token>(entity =>
@@ -734,7 +595,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Tokens)
                     .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK__Token__expired__1BC821DD");
+                    .HasConstraintName("FK__Token__expired__07E124C1");
             });
 
             modelBuilder.Entity<Topic>(entity =>
@@ -776,12 +637,12 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Course)
                     .WithMany(p => p.Topics)
                     .HasForeignKey(d => d.CourseId)
-                    .HasConstraintName("FK__Topic__course_id__32AB8735");
+                    .HasConstraintName("FK__Topic__course_id__18178C8A");
             });
 
             modelBuilder.Entity<Video>(entity =>
             {
-                entity.ToTable("video");
+                entity.ToTable("Video");
 
                 entity.Property(e => e.VideoId).HasColumnName("video_id");
 
@@ -807,6 +668,14 @@ namespace TAS.Data.Entities
                     .HasMaxLength(255)
                     .HasColumnName("updateUser");
 
+                entity.Property(e => e.VideoAttachment)
+                    .HasMaxLength(255)
+                    .HasColumnName("video_attachment");
+
+                entity.Property(e => e.VideoDescription)
+                    .HasColumnType("text")
+                    .HasColumnName("video_description");
+
                 entity.Property(e => e.VideoTitle)
                     .HasMaxLength(255)
                     .HasColumnName("video_title");
@@ -818,7 +687,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Topic)
                     .WithMany(p => p.Videos)
                     .HasForeignKey(d => d.TopicId)
-                    .HasConstraintName("FK__video__topic_id__367C1819");
+                    .HasConstraintName("FK__Video__topic_id__1BE81D6E");
             });
 
             modelBuilder.Entity<VnPayHistory>(entity =>
@@ -827,20 +696,22 @@ namespace TAS.Data.Entities
 
                 entity.Property(e => e.Amount).HasColumnName("amount");
 
-                entity.Property(e => e.TransactionId).HasColumnName("TransactionId").HasMaxLength(255);
+                entity.Property(e => e.OrderId)
+                    .HasMaxLength(50)
+                    .HasColumnName("order_id");
 
-                entity.Property(e => e.OrderId).HasMaxLength(50).HasColumnName("order_id");
+                entity.Property(e => e.TransactionId).HasMaxLength(255);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.VnPayHistories)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__VnPayHist__order__625A9A57");
+                    .HasConstraintName("FK__VnPayHist__order__02284B6B");
             });
 
             modelBuilder.Entity<Ward>(entity =>
             {
                 entity.HasKey(e => e.WardsId)
-                    .HasName("PK__Wards__E69734F995044072");
+                    .HasName("PK__Wards__E69734F99D69BC7D");
 
                 entity.Property(e => e.WardsId).HasColumnName("Wards_id");
 
@@ -853,7 +724,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Districts)
                     .WithMany(p => p.Wards)
                     .HasForeignKey(d => d.DistrictsId)
-                    .HasConstraintName("FK__Wards__Districts__10566F31");
+                    .HasConstraintName("FK__Wards__Districts__76B698BF");
             });
 
             OnModelCreatingPartial(modelBuilder);

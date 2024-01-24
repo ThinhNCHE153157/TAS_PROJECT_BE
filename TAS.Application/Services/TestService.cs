@@ -57,36 +57,36 @@ namespace TAS.Application.Services
                 if (test != null)
                 {
                     var result = _mapper.Map<GetTestByIdResponseDto>(test);
-                    foreach (var item in result.Parts)
-                    {
-                        foreach (var ques in item.Questions)
-                        {
-                            var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
-                            if (questionAnswer != null)
-                            {
-                                if (questionAnswer.ResultA != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultA!);
-                                }
-                                if (questionAnswer.ResultB != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultB!);
-                                }
-                                if (questionAnswer.ResultC != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultC!);
-                                }
-                                if (questionAnswer.ResultD != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultD!);
-                                }
-                                if (questionAnswer.CorrectResult != null)
-                                {
-                                    ques.CorrectAnswer = questionAnswer.CorrectResult!;
-                                }
-                            }
-                        }
-                    }
+                    //foreach (var item in result.Parts)
+                    //{
+                    //    foreach (var ques in item.Questions)
+                    //    {
+                    //        var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
+                    //        if (questionAnswer != null)
+                    //        {
+                    //            if (questionAnswer.ResultA != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultA!);
+                    //            }
+                    //            if (questionAnswer.ResultB != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultB!);
+                    //            }
+                    //            if (questionAnswer.ResultC != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultC!);
+                    //            }
+                    //            if (questionAnswer.ResultD != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultD!);
+                    //            }
+                    //            if (questionAnswer.CorrectResult != null)
+                    //            {
+                    //                ques.CorrectAnswer = questionAnswer.CorrectResult!;
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     return result;
                 }
                 return null;
@@ -287,56 +287,56 @@ namespace TAS.Application.Services
         public async Task<SaveTestResultResponseDto> TestDetail(int testId, int accountId)
         {
             SaveTestResultResponseDto response = new SaveTestResultResponseDto();
-            var useranswer = _unitOfWork.QuestionRepository.questionResults(testId, accountId);
-            foreach (var item in useranswer)
-            {
-                var userAnswer = _mapper.Map<UserAnswerDto>(item);
-                response.userAnswers.Add(userAnswer);
-                response.NumCorrect= item.Description;
-            }
-            var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).FirstOrDefaultAsync().ConfigureAwait(false);
-            if (test != null)
-            {
-                response.TestName = test.TestName;
-                var result = _mapper.Map<GetTestByIdResponseDto>(test);
-                foreach (var item in result.Parts)
-                {
-                    foreach (var ques in item.Questions)
-                    {
-                        var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
-                        if (questionAnswer != null)
-                        {
-                            if (questionAnswer.ResultA != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultA!);
-                            }
-                            if (questionAnswer.ResultB != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultB!);
-                            }
-                            if (questionAnswer.ResultC != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultC!);
-                            }
-                            if (questionAnswer.ResultD != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultD!);
-                            }
-                            if (questionAnswer.CorrectResult != null)
-                            {
-                                ques.CorrectAnswer = questionAnswer.CorrectResult!;
-                            }
-                        }
-                    }
-                }
-                foreach (var item in result.Parts)
-                {
-                    foreach (var ques in item.Questions)
-                    {
-                        response.questionDtos.Add(ques);
-                    }
-                }
-            }
+            //var useranswer = _unitOfWork.QuestionRepository.questionResults(testId, accountId);
+            //foreach (var item in useranswer)
+            //{
+            //    var userAnswer = _mapper.Map<UserAnswerDto>(item);
+            //    response.userAnswers.Add(userAnswer);
+            //    response.NumCorrect= item.Description;
+            //}
+            //var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).FirstOrDefaultAsync().ConfigureAwait(false);
+            //if (test != null)
+            //{
+            //    response.TestName = test.TestName;
+            //    var result = _mapper.Map<GetTestByIdResponseDto>(test);
+            //    foreach (var item in result.Parts)
+            //    {
+            //        foreach (var ques in item.Questions)
+            //        {
+            //            var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
+            //            if (questionAnswer != null)
+            //            {
+            //                if (questionAnswer.ResultA != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultA!);
+            //                }
+            //                if (questionAnswer.ResultB != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultB!);
+            //                }
+            //                if (questionAnswer.ResultC != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultC!);
+            //                }
+            //                if (questionAnswer.ResultD != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultD!);
+            //                }
+            //                if (questionAnswer.CorrectResult != null)
+            //                {
+            //                    ques.CorrectAnswer = questionAnswer.CorrectResult!;
+            //                }
+            //            }
+            //        }
+            //    }
+            //    foreach (var item in result.Parts)
+            //    {
+            //        foreach (var ques in item.Questions)
+            //        {
+            //            response.questionDtos.Add(ques);
+            //        }
+            //    }
+            //}
             return response;
         }
 

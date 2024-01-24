@@ -18,7 +18,6 @@ namespace TAS.Data.Entities
         public bool? Type { get; set; }
         public string? Url { get; set; }
 
-
         public virtual Test? Test { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
     }

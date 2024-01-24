@@ -9,30 +9,30 @@ using TAS.Data.Entities;
 
 namespace TAS.Data.EF.Repositories
 {
-    public class ClassRepository : BaseRepository<Class>, IClassRepository
+    public class ClassRepository 
     {
-        public ClassRepository(TASContext context) : base(context) 
-        {
+        //public ClassRepository(TASContext context) : base(context) 
+        //{
 
-        }
+        //}
 
-        public IQueryable<Class> GetClassCode()
-        {
-            return _context.Classes.Select(c => new Class
-            {
-                ClassId = c.ClassId,
-                ClassCode = c.ClassCode,
-            }).AsQueryable();
-        }
+        //public IQueryable<Class> GetClassCode()
+        //{
+        //    return _context.Classes.Select(c => new Class
+        //    {
+        //        ClassId = c.ClassId,
+        //        ClassCode = c.ClassCode,
+        //    }).AsQueryable();
+        //}
 
-        public IQueryable<Class> GetAllClassesManage()
-        {
-            return _context.Classes
-                .Include(c => c.Accounts)
-                    .ThenInclude(a => a.Roles)
-                .Where(c => c.Accounts.Any(a => a.Roles.Any(r => r.RoleId == 3)))
-                .AsQueryable();
-        }
+        //public IQueryable<Class> GetAllClassesManage()
+        //{
+        //    return _context.Classes
+        //        .Include(c => c.Accounts)
+        //            .ThenInclude(a => a.Roles)
+        //        .Where(c => c.Accounts.Any(a => a.Roles.Any(r => r.RoleId == 3)))
+        //        .AsQueryable();
+        //}
 
         //public IQueryable<Class> GetAllClassesManage()
         //{
@@ -57,23 +57,23 @@ namespace TAS.Data.EF.Repositories
         //        .AsQueryable();
         //}
 
-        public IQueryable<Class> GetClassByStudentId(int studentId)
-        {
-            var result = _context.Classes
-                .Where(c => c.Accounts.Any(a => a.AccountId == studentId))
-                .AsQueryable();
+        //public IQueryable<Class> GetClassByStudentId(int studentId)
+        //{
+        //    var result = _context.Classes
+        //        .Where(c => c.Accounts.Any(a => a.AccountId == studentId))
+        //        .AsQueryable();
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public Class GetClassDetailById(int id)
-        {
-            return _context.Classes.Include(c => c.Accounts).ThenInclude(a => a.Roles).SingleOrDefault(cl => cl.ClassId == id);
-        }
+        //public Class GetClassDetailById(int id)
+        //{
+        //    return _context.Classes.Include(c => c.Accounts).ThenInclude(a => a.Roles).SingleOrDefault(cl => cl.ClassId == id);
+        //}
 
-        public Class GetClassByClassCode(string classCode)
-        {
-            return _context.Classes.FirstOrDefault(c => c.ClassCode.ToLower().Equals(classCode.ToLower()));
-        }
+        //public Class GetClassByClassCode(string classCode)
+        //{
+        //    return _context.Classes.FirstOrDefault(c => c.ClassCode.ToLower().Equals(classCode.ToLower()));
+        //}
     }
 }
