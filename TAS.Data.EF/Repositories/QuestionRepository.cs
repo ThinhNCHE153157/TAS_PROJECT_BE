@@ -33,22 +33,22 @@ namespace TAS.Data.EF.Repositories
 
         public bool UpdateQuestion(UpdateQuestionRequestDto request)
         {
-            var question = GetQuestionById(request.QuestionId).FirstOrDefault();
-            var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == request.QuestionId).FirstOrDefault();
-            if (question != null && questionAnswer != null)
-            {
-                question.Description = request.Description;
-                question.Image = request.Image;
-                question.Type = request.Type;
-                question.Note = request.Note;
-                questionAnswer.ResultA = request.QuestionNavigation.ResultA;
-                questionAnswer.ResultB = request.QuestionNavigation.ResultB;
-                questionAnswer.ResultC = request.QuestionNavigation.ResultC;
-                questionAnswer.ResultD = request.QuestionNavigation.ResultD;
-                questionAnswer.CorrectResult = request.QuestionNavigation.CorrectResult;
-                _context.SaveChanges();
-                return true;
-            }
+            //var question = GetQuestionById(request.QuestionId).FirstOrDefault();
+            //var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == request.QuestionId).FirstOrDefault();
+            //if (question != null && questionAnswer != null)
+            //{
+            //    question.Description = request.Description;
+            //    question.Image = request.Image;
+            //    question.Type = request.Type;
+            //    question.Note = request.Note;
+            //    questionAnswer.ResultA = request.QuestionNavigation.ResultA;
+            //    questionAnswer.ResultB = request.QuestionNavigation.ResultB;
+            //    questionAnswer.ResultC = request.QuestionNavigation.ResultC;
+            //    questionAnswer.ResultD = request.QuestionNavigation.ResultD;
+            //    questionAnswer.CorrectResult = request.QuestionNavigation.CorrectResult;
+            //    _context.SaveChanges();
+            //    return true;
+            //}
             return false;
         }
 
@@ -146,6 +146,10 @@ namespace TAS.Data.EF.Repositories
             {
                 throw new Exception(e.Message);
             }
+        }
+        public int GetPartIdByTestId(int testId)
+        {
+            return _context.Set<Part>().Where(x => x.TestId == testId).FirstOrDefault().PartId;
         }
     }
 }

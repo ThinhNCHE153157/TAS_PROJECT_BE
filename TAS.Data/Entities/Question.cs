@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using TAS.Data.Entities.Interfaces;
 
 namespace TAS.Data.Entities
 {
-    public partial class Question
+    public partial class Question : IDateTracking
     {
         public Question()
         {
@@ -14,8 +15,8 @@ namespace TAS.Data.Entities
         public int QuestionId { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
-        public string? Type { get; set; }
         public string? Note { get; set; }
+        public string? Type { get; set; }
         public string? CreateUser { get; set; }
         public string? UpdateUser { get; set; }
         public DateTime? CreateDate { get; set; }

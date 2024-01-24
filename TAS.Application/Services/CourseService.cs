@@ -1,11 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
@@ -73,6 +67,37 @@ namespace TAS.Application.Services
             }
         }
 
+        public async Task<List<int?>> GetCourseByAccountId(int accountId)
+        {
+            try
+            {
+                if (accountId != 0)
+                {
+                    var result = _unitOfWork.CourseRepository.GetCourseIdByAccountId(accountId);
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return null;
+        }
+
+        public async Task<List<GetEnterpriseCourseResponseDto>> GetCourseByEnterpriseName(string name)
+        {
+            try
+            {
+                var result = _unitOfWork.CourseRepository.GetCourseByEnterpriseName(name);
+                var result1 = _mapper.Map<List<GetEnterpriseCourseResponseDto>>(result);
+                return result1;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
         public async Task<GetCourseByIdResponseDto> GetCourseById(int id)
         {
             try
@@ -109,13 +134,39 @@ namespace TAS.Application.Services
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     var result = await _unitOfWork.CourseRepository.GetCourseIdByName(name).FirstOrDefaultAsync().ConfigureAwait(false);
-                    if (result!=null)
+                    if (result != null)
                     {
                         return result.CourseId;
                     }
                     return 0;
                 }
                 return 0;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public string GetEnterpriseNameByAccountId(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetEnterpriseNameById(id);
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<Course>> GetListCourseByAccountId(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.CourseRepository.GetListCourseByAccountId(id);
+                return result;
             }
             catch (Exception e)
             {

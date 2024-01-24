@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using TAS.Application.Services.Interfaces;
 using TAS.Data.Dtos.Requests;
@@ -20,10 +22,14 @@ namespace TAS.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
-        public AccountController(IAccountService accountService, ITokenService tokenService)
+        private readonly IMailService _mailService;
+        private readonly ILogger _logger;
+
+        public AccountController(IAccountService accountService, ITokenService tokenService, IMailService mailService)
         {
             _accountService = accountService;
             _tokenService = tokenService;
+            _mailService = mailService;
         }
         /// <summary>
         /// Get all user
@@ -44,6 +50,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAccountById([FromQuery] int id)
         {
             var data = await _accountService.GetAccountById(id);
@@ -54,12 +61,17 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
+            if (isSuccess)
+            {
+                await _mailService.SendVerifyCode(request.Email);
+                return Ok();
+            }
             if (!isSuccess)
             {
                 return BadRequest("Something wrong when register");
             }
 
-            return Ok();
+            return BadRequest("Something wrong when register");
         }
 
 
@@ -77,12 +89,17 @@ namespace TAS.API.Controllers
             {
                 listRole.Add(role.RoleName);
             }
+            string name = userLogin.UserName;
+            if (listRole.Contains("Enterprise"))
+            {
+                name = _accountService.GetEnterpriseNameById(UserAccount.AccountId);
+            }
             //var userRole = (UserRoles)UserAccount.Roles.RoleId;
-
             var authClaims = new Collection<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Name,userLogin.UserName),
+                new Claim(JwtRegisteredClaimNames.Name,name),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name,name.ToString()),
             };
             foreach (var role in listRole)
             {
@@ -92,13 +109,6 @@ namespace TAS.API.Controllers
             return Ok(new UserLoginResponseDto(UserAccount.AccountId, accessToken));
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllAccounts_Manage()
-        //{
-        //    var data = await _accountService.GetAllAccounts_Manage();
-        //    return Ok(data);
-        //}
-
         [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountAddRequestDto request)
         {
@@ -107,7 +117,6 @@ namespace TAS.API.Controllers
             {
                 return BadRequest("Something wrong when add account");
             }
-
             return Ok();
         }
 

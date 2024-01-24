@@ -29,7 +29,11 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> GetTestById([FromQuery] GetTestByIdRequestDto request)
         {
             var result = await _testService.GetTestById(request.TestId);
+            if (request!=null)
+            {
             return Ok(result);
+            }
+            return NotFound();
         }
 
         [HttpPut]
@@ -48,7 +52,11 @@ namespace TAS.API.Controllers
         }
         [HttpPost]
         //[Authorize]
-        public async Task<IActionResult> CreateTestForCourse([FromBody] CreateTestForCourseRequestDto request)
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> CreateTestForCourse([FromForm] CreateTestForCourseRequestDto request)
         {
             var result = await _testService.CreateTestForCourse(request);
             return Ok(result);
@@ -82,6 +90,14 @@ namespace TAS.API.Controllers
         public async Task<IActionResult> TestResultDetail([FromQuery] int testId, int accountId)
         {
             var result = await _testService.TestDetail(testId, accountId).ConfigureAwait(false);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetTestResultByAccount([FromQuery] int accountId)
+        {
+            var result = await _testService.GetTestResult(accountId).ConfigureAwait(false);
             return Ok(result);
         }
     }

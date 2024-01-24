@@ -13,6 +13,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public bool AddTopic(Topic topic);
         public IQueryable<Topic> UpdateTopic(Topic topic);
         public IQueryable<Topic> DeleteTopic(int topicId);
+        public Topic GetTopicByName(string name);
 
     }
 }

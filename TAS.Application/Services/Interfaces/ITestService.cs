@@ -18,5 +18,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<SaveTestResultResponseDto> TestDetail(int testId, int accountId);
         public int GetPartIdByTopicId(int courseId);
         public Task<List<Part>> GetPartByTestId(int testId);
+        public Task<List<TestResult>> GetTestResult(int accountId);
     }
 }

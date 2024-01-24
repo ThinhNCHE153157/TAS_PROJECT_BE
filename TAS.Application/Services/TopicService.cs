@@ -70,5 +70,19 @@ namespace TAS.Application.Services
                 return null;
             }
         }
+
+        public async Task<Topic> GetTopicByName(string name)
+        {
+            try
+            {
+                var result = _unitOfWork.TopicRepository.GetTopicByName(name);
+                return result;
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Error in GetTopicByName");
+                return null;
+            }
+        }
     }
 }

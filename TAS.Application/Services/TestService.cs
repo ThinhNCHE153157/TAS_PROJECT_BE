@@ -9,6 +9,8 @@ using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using static System.Net.Mime.MediaTypeNames;
+using TAS.Data.S3Object;
 
 namespace TAS.Application.Services
 {
@@ -18,12 +20,14 @@ namespace TAS.Application.Services
         public readonly IMapper _mapper;
         public readonly ILogger<TestService> _logger;
         public readonly IQuestionService _questionService;
-        public TestService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TestService> logger, IQuestionService questionService)
+        public readonly IS3StorageService _s3StorageService;
+        public TestService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<TestService> logger, IQuestionService questionService, IS3StorageService s3StorageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
             _questionService = questionService;
+            _s3StorageService = s3StorageService;
         }
 
         public async Task<CourseResultResponseDto> CourseResult(int id)
@@ -53,36 +57,36 @@ namespace TAS.Application.Services
                 if (test != null)
                 {
                     var result = _mapper.Map<GetTestByIdResponseDto>(test);
-                    foreach (var item in result.Parts)
-                    {
-                        foreach (var ques in item.Questions)
-                        {
-                            var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
-                            if (questionAnswer != null)
-                            {
-                                if (questionAnswer.ResultA != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultA!);
-                                }
-                                if (questionAnswer.ResultB != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultB!);
-                                }
-                                if (questionAnswer.ResultC != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultC!);
-                                }
-                                if (questionAnswer.ResultD != null)
-                                {
-                                    ques.Answers.Add(questionAnswer.ResultD!);
-                                }
-                                if (questionAnswer.CorrectResult != null)
-                                {
-                                    ques.CorrectAnswer = questionAnswer.CorrectResult!;
-                                }
-                            }
-                        }
-                    }
+                    //foreach (var item in result.Parts)
+                    //{
+                    //    foreach (var ques in item.Questions)
+                    //    {
+                    //        var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
+                    //        if (questionAnswer != null)
+                    //        {
+                    //            if (questionAnswer.ResultA != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultA!);
+                    //            }
+                    //            if (questionAnswer.ResultB != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultB!);
+                    //            }
+                    //            if (questionAnswer.ResultC != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultC!);
+                    //            }
+                    //            if (questionAnswer.ResultD != null)
+                    //            {
+                    //                ques.Answers.Add(questionAnswer.ResultD!);
+                    //            }
+                    //            if (questionAnswer.CorrectResult != null)
+                    //            {
+                    //                ques.CorrectAnswer = questionAnswer.CorrectResult!;
+                    //            }
+                    //        }
+                    //    }
+                    //}
                     return result;
                 }
                 return null;
@@ -134,17 +138,38 @@ namespace TAS.Application.Services
 
         public async Task<bool> CreateTestForCourse(CreateTestForCourseRequestDto request)
         {
-            //try
-            //{
-            //    var test = _mapper.Map<Test>(request.Tests);
-            //    var result = _unitOfWork.TestRepository.CreateTestForCourse(request.CourseId,test);
-            //    return result;
-            //}catch(Exception e)
-            //{
-            //    _logger.LogError(e.Message);
-            //    return false;
-            //}
-            throw new NotImplementedException();
+            try
+            {
+                string url = "";
+                if (request.Url != null)
+                {
+                    S3RequestData s3RequestData = new S3RequestData
+                    {
+                        BucketName = "tas",
+                        InputStream = request.Url.OpenReadStream(),
+                        Name = request.Url.FileName,
+                    };
+                    await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                    url = _s3StorageService.GetFileUrl(s3RequestData);
+                }
+
+                Test test = new Test();
+                test.TestName = request.TestName;
+                test.TopicId = request.TopicId;
+                await _unitOfWork.TestRepository.AddAsync(test).ConfigureAwait(false);
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                Part part = new Part();
+                part.TestId = test.TestId;
+                part.Url = url;
+                part.Type = (request.Type == 1) ?true:false;
+                var result = _unitOfWork.TestRepository.AddPart(part);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
         }
 
         public async Task<List<GetListTestFreeResponseDto>> getListTestFreeResponseDtos()
@@ -262,56 +287,56 @@ namespace TAS.Application.Services
         public async Task<SaveTestResultResponseDto> TestDetail(int testId, int accountId)
         {
             SaveTestResultResponseDto response = new SaveTestResultResponseDto();
-            var useranswer = _unitOfWork.QuestionRepository.questionResults(testId, accountId);
-            foreach (var item in useranswer)
-            {
-                var userAnswer = _mapper.Map<UserAnswerDto>(item);
-                response.userAnswers.Add(userAnswer);
-                response.NumCorrect= item.Description;
-            }
-            var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).FirstOrDefaultAsync().ConfigureAwait(false);
-            if (test != null)
-            {
-                response.TestName = test.TestName;
-                var result = _mapper.Map<GetTestByIdResponseDto>(test);
-                foreach (var item in result.Parts)
-                {
-                    foreach (var ques in item.Questions)
-                    {
-                        var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
-                        if (questionAnswer != null)
-                        {
-                            if (questionAnswer.ResultA != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultA!);
-                            }
-                            if (questionAnswer.ResultB != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultB!);
-                            }
-                            if (questionAnswer.ResultC != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultC!);
-                            }
-                            if (questionAnswer.ResultD != null)
-                            {
-                                ques.Answers.Add(questionAnswer.ResultD!);
-                            }
-                            if (questionAnswer.CorrectResult != null)
-                            {
-                                ques.CorrectAnswer = questionAnswer.CorrectResult!;
-                            }
-                        }
-                    }
-                }
-                foreach (var item in result.Parts)
-                {
-                    foreach (var ques in item.Questions)
-                    {
-                        response.questionDtos.Add(ques);
-                    }
-                }
-            }
+            //var useranswer = _unitOfWork.QuestionRepository.questionResults(testId, accountId);
+            //foreach (var item in useranswer)
+            //{
+            //    var userAnswer = _mapper.Map<UserAnswerDto>(item);
+            //    response.userAnswers.Add(userAnswer);
+            //    response.NumCorrect= item.Description;
+            //}
+            //var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).FirstOrDefaultAsync().ConfigureAwait(false);
+            //if (test != null)
+            //{
+            //    response.TestName = test.TestName;
+            //    var result = _mapper.Map<GetTestByIdResponseDto>(test);
+            //    foreach (var item in result.Parts)
+            //    {
+            //        foreach (var ques in item.Questions)
+            //        {
+            //            var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
+            //            if (questionAnswer != null)
+            //            {
+            //                if (questionAnswer.ResultA != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultA!);
+            //                }
+            //                if (questionAnswer.ResultB != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultB!);
+            //                }
+            //                if (questionAnswer.ResultC != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultC!);
+            //                }
+            //                if (questionAnswer.ResultD != null)
+            //                {
+            //                    ques.Answers.Add(questionAnswer.ResultD!);
+            //                }
+            //                if (questionAnswer.CorrectResult != null)
+            //                {
+            //                    ques.CorrectAnswer = questionAnswer.CorrectResult!;
+            //                }
+            //            }
+            //        }
+            //    }
+            //    foreach (var item in result.Parts)
+            //    {
+            //        foreach (var ques in item.Questions)
+            //        {
+            //            response.questionDtos.Add(ques);
+            //        }
+            //    }
+            //}
             return response;
         }
 
@@ -346,6 +371,20 @@ namespace TAS.Application.Services
                 return null;
             }
            
+        }
+
+        public async Task<List<TestResult>> GetTestResult(int accountId)
+        {
+            try
+            {
+                var result = _unitOfWork.TestRepository.GetTestResultByAccountd(accountId).ToList();
+                return result;
+            }
+            catch
+            {
+                _logger.LogError("GetTestResult error"); 
+                return null;
+            }
         }
     }
 }

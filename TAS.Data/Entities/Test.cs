@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using TAS.Data.Entities.Interfaces;
 
 namespace TAS.Data.Entities
 {
-    public partial class Test
+    public partial class Test : IDateTracking
     {
         public Test()
         {
             Parts = new HashSet<Part>();
             TestResults = new HashSet<TestResult>();
-            Classes = new HashSet<Class>();
         }
 
         public int TestId { get; set; }
@@ -27,7 +27,5 @@ namespace TAS.Data.Entities
         public virtual Topic? Topic { get; set; }
         public virtual ICollection<Part> Parts { get; set; }
         public virtual ICollection<TestResult> TestResults { get; set; }
-
-        public virtual ICollection<Class> Classes { get; set; }
     }
 }

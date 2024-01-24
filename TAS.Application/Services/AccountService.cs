@@ -65,6 +65,7 @@ namespace TAS.Application.Services
                 var user = _mapper.Map<Account>(request);
                 user.Password = HashingHelper.EncryptPassword(request.Password);
                 user.Roles.Add(_unitOfWork.RoleRepositery.GetRoleById(4));
+                user.IsVerified = false;
                 await _unitOfWork.AccountRepository.AddAsync(user).ConfigureAwait(false);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 return true;
@@ -74,6 +75,34 @@ namespace TAS.Application.Services
                 _logger.LogError(e.Message);
             }
             return false;
+        }
+
+        public async Task<bool> VerifyAccount(string id,string email)
+        {
+            try
+            {
+                Account account = await _unitOfWork.AccountRepository.GetUserByEmail(email).ConfigureAwait(false);
+                if (account != null)
+                {
+                    if (account.Otp == id)
+                    {
+                        if (account.Otpexpiretime < System.DateTime.Now)
+                        {
+                            account.IsVerified = true;
+                            account.Otp = null;
+                            account.Otpexpiretime = null;
+                            _unitOfWork.Commit();
+                            return true;
+                        }
+                    }
+                }
+                        return false;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
         }
 
         public async Task<Account> UserLogin(UserLoginRequestDto userLogin)
@@ -234,11 +263,32 @@ namespace TAS.Application.Services
             return null;
         }
 
+        public async Task<bool> updateOtp(string email, string otp,DateTime ExpriseTime)
+        {
+            try
+            {
+                Account account = await _unitOfWork.AccountRepository.GetUserByEmail(email).ConfigureAwait(false);
+                if (account != null)
+                {
+                    account.Otp = otp;
+                    account.Otpexpiretime = ExpriseTime;
+                    _unitOfWork.Commit();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
+
         public async Task SendEmailAsync(MailRequestDto mailRequest)
         {
             MailRequestDto mail = new MailRequestDto();
             var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse("toeicsystem@gmail.com");
+            email.Sender = MailboxAddress.Parse("toeicmastersystem@gmail.com");
             email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
             email.Subject = mailRequest.Subject;
             var builder = new BodyBuilder();
@@ -246,23 +296,9 @@ namespace TAS.Application.Services
             email.Body = builder.ToMessageBody();
             using var smtp = new MailKit.Net.Smtp.SmtpClient();
             smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-            smtp.Authenticate("toeicsystem@gmail.com", "bnqu mosz dyne cehr");
+            smtp.Authenticate("toeicmastersystem@gmail.com", "rpse lwke ibel lbpt");
             smtp.Send(email);
             smtp.Disconnect(true);
-        }
-        public async Task<List<AccountManageResponseDto>> GetAccountInClass(int classId)
-        {
-            try
-            {
-                var accounts = await _unitOfWork.AccountRepository.GetAccountInClass(classId).ToListAsync().ConfigureAwait(false);
-                var result = _mapper.Map<List<AccountManageResponseDto>>(accounts);
-                return result;
-            }
-            catch (Exception e)
-            {
-
-            }
-            return null;
         }
 
         public async Task<List<AccountTeacherName>> GetAllTeacher()
@@ -396,6 +432,34 @@ namespace TAS.Application.Services
                     return result;
                 }
                 return null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
+
+        public string GetEnterpriseNameById(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetEnterpriseNameById(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
+
+        public Task<Account> GetUserByEmail(string email)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetUserByEmail(email);
+                return result;
             }
             catch (Exception e)
             {

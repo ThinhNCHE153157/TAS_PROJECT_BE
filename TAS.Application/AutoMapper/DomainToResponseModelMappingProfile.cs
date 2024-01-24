@@ -23,7 +23,7 @@ namespace TAS.Application.AutoMapper
                 .ForMember(_dto => _dto.RoleNames, dt => dt.MapFrom(src => src.Roles.Select(role => role.RoleName).ToList()));
 
 
-            CreateMap<Class, ClassManagementDto>();
+            //CreateMap<Class, ClassManagementDto>();
             CreateMap<Account, AccountTeacherName>().ForMember(_dto => _dto.Teacher, dt => dt.MapFrom(src => src.FirstName + ' ' + src.LastName));
 
             CreateMap<Test,CourseResultResponseDto>();
@@ -40,10 +40,11 @@ namespace TAS.Application.AutoMapper
             CreateMap<Question, QuestionDto>();
             CreateMap<QuestionResult, QuestionResultDto>();
             CreateMap<QuestionResultDto, QuestionResult>();
-            CreateMap<QuestionResult,UserAnswerDto>()
-                .ForMember(_dto => _dto.QuestionId, dt => dt.MapFrom(src => src.Image))
-                .ForMember(_dto => _dto.UserAnswer, dt => dt.MapFrom(src => src.Type));
+            //CreateMap<QuestionResult,UserAnswerDto>()
+            //    .ForMember(_dto => _dto.QuestionId, dt => dt.MapFrom(src => src.Image))
+            //    .ForMember(_dto => _dto.UserAnswer, dt => dt.MapFrom(src => src.Type));
             CreateMap<Test,TestForCourseDto>();
+            CreateMap<Course,GetEnterpriseCourseResponseDto>();
         }
     }
 }

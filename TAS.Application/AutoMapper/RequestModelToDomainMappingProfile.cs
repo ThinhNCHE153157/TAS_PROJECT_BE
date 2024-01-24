@@ -18,7 +18,7 @@ namespace TAS.Application.AutoMapper
         {
             CreateMap<UserRegisterRequestDto, Account>();
             CreateMap<AccountAddRequestDto, Account>();
-            CreateMap<ClassAddNewClassDto, Class>();
+            //CreateMap<ClassAddNewClassDto, Class>();
             CreateMap<RoleRequestDto, Role>()
                 .ForMember(d => d.RoleName, opt => opt.MapFrom(src =>(UserRoles)src.RoleId));
             CreateMap<AddCourseRequestDto, Course>();
@@ -27,6 +27,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<CreateQuestionRequestDto, Question>();
             CreateMap<CreateTestRequestDto, Test>();
             CreateMap<AddTopicRequestDto, Topic>();
+            CreateMap<AddVideoOfTopicRequestDto, Video>();
             CreateMap<AddVideoToTopicRequestDto, Video>();
             CreateMap<UpdateVideoRequestDto, Video>();
             CreateMap<SaveTestResultRequestDto, TestResult>();
