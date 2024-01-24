@@ -117,6 +117,10 @@ namespace TAS.API.Controllers
 
         [HttpPost]
         [Authorize]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> AddVideo(AddVideoToTopicRequestDto request)
         {
             if (request == null)

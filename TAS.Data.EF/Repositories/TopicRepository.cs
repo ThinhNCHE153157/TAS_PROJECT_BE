@@ -36,6 +36,12 @@ namespace TAS.Data.EF.Repositories
             return _context.Set<Topic>().Include(x=>x.Tests).Where(x => x.CourseId == courseId);
         }
 
+        public Topic GetTopicByName(string name)
+        {
+            var topic = _context.Topics.FirstOrDefault(x => x.TopicName == name);
+            return topic;
+        }
+
         public IQueryable<Topic> UpdateTopic(Topic topic)
         {
             throw new NotImplementedException();

@@ -8,5 +8,6 @@ namespace TAS.Application.Services.Interfaces
     {
         public Task<Topic> addTopic(AddTopicRequestDto request);
         public Task<List<GetTopicByCourseIdResponseDto>> getListTopicByCourseId(int courseId);
+        public Task<Topic> GetTopicByName(string name);
     }
 }
