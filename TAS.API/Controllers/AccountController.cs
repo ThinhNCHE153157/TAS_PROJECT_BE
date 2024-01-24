@@ -50,7 +50,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetAccountById([FromQuery] int id)
         {
             var data = await _accountService.GetAccountById(id);
