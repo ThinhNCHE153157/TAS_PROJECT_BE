@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
+using TAS.Infrastructure.Constants;
 
 namespace TAS.Data.EF.Repositories
 {
@@ -43,7 +44,7 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Topic> GetTopicByCourseId(int courseId)
         {
-            return _context.Set<Topic>().Include(x=>x.Tests).Where(x => x.CourseId == courseId);
+            return _context.Set<Topic>().Include(x => x.Tests).Where(x => x.CourseId == courseId);
         }
 
         public Topic GetTopicByName(string name)

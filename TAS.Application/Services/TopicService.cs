@@ -6,6 +6,7 @@ using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using TAS.Infrastructure.Constants;
 
 namespace TAS.Application.Services
 {
@@ -64,6 +65,16 @@ namespace TAS.Application.Services
                     var topic = await _unitOfWork.TopicRepository.GetTopicByCourseId(courseId).Include(x => x.Videos).ToListAsync().ConfigureAwait(false);
                     if (topic != null)
                     {
+                        foreach (var item in topic)
+                        {
+                            foreach (var test in item.Tests)
+                            {
+                                if (test.IsDeleted==Common.IsDelete)
+                                {
+                                    item.Tests.Remove(test);
+                                }
+                            }
+                        }
                         var result = _mapper.Map<List<GetTopicByCourseIdResponseDto>>(topic);
                         foreach (var item in result)
                         {
@@ -73,6 +84,7 @@ namespace TAS.Application.Services
                             {
                                 item.PartId = x;
                             }
+
                         }
                         return result;
                     }

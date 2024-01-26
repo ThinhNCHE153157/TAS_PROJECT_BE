@@ -386,5 +386,19 @@ namespace TAS.Application.Services
                 return null;
             }
         }
+
+        public async Task<bool> DeleteTest(int id)
+        {
+            try
+            {
+                var result =  _unitOfWork.TestRepository.DeleteTestByTestId(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
     }
 }
