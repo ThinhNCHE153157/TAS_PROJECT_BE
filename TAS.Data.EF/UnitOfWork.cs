@@ -18,6 +18,7 @@ namespace TAS.Data.EF
         private ITopicRepository _topicRepository;
         private IVideoRepository _videoRepository;
         private IOrderRepository _orderRepository;
+        private IFlashcardRepository _flashcardRepository;
 
         public UnitOfWork(TASContext context)
         {
@@ -120,6 +121,18 @@ namespace TAS.Data.EF
                 return _orderRepository;
             }
         }
+
+        public IFlashcardRepository FlashcardRepository
+        {
+            get
+            {
+                if (this._flashcardRepository is null)
+                {
+                    this._flashcardRepository = new FlashcardRepository(_context);
+                }
+                return _flashcardRepository;
+            }
+        }   
 
         
 

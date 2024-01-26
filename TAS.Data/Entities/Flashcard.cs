@@ -16,6 +16,7 @@ namespace TAS.Data.Entities
         }
 
         public int FlashcardId { get; set; }
+        public string? FlashcardName { get; set; }
         public string? Description { get; set; }
         public string? CreateUser { get; set; }
         public string? UpdateUser { get; set; }

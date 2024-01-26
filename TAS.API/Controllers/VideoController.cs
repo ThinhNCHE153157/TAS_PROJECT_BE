@@ -121,7 +121,7 @@ namespace TAS.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [DisableRequestSizeLimit]
-        public async Task<IActionResult> AddVideo([FromForm]List<AddVideoToTopicRequestDto> request)
+        public async Task<IActionResult> AddVideo([FromForm]AddVideoToTopicRequestDto request)
         {
             if (request == null)
             {

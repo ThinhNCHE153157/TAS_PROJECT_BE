@@ -372,6 +372,10 @@ namespace TAS.Data.Entities
                     .IsUnicode(false)
                     .HasColumnName("description");
 
+                entity.Property(e => e.FlashcardName)
+                    .HasMaxLength(255)
+                    .HasColumnName("flashcard_name");
+
                 entity.Property(e => e.IsDeleted)
                     .HasColumnName("isDeleted")
                     .HasDefaultValueSql("((0))");

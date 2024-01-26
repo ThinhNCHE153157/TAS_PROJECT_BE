@@ -32,45 +32,42 @@ namespace TAS.Application.Services
             _topicService = topicService;
         }
 
-        public async Task<bool> AddVideoToTopic(List<AddVideoToTopicRequestDto> request)
+        public async Task<bool> AddVideoToTopic(AddVideoToTopicRequestDto request)
         {
             try
             {
-                foreach (var item in request)
+                Video video = new Video();
+                if (request != null)
                 {
-                    Video video = new Video();
-                    if (item != null)
+                    S3RequestData s3RequestData = new S3RequestData
                     {
-                        S3RequestData s3RequestData = new S3RequestData
+                        BucketName = "tas",
+                        InputStream = request.VideoUrl.OpenReadStream(),
+                        Name = request.VideoUrl.FileName,
+                    };
+                    await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                    video.VideoUrl = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
+                    if (request.VideoAttachment != null)
+                    {
+                        S3RequestData s3RequestData1 = new S3RequestData
                         {
                             BucketName = "tas",
-                            InputStream = item.VideoUrl.OpenReadStream(),
-                            Name = item.VideoUrl.FileName,
+                            InputStream = request.VideoAttachment.OpenReadStream(),
+                            Name = request.VideoAttachment.FileName,
                         };
-                        await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
-                        video.VideoUrl = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
-                        if (item.VideoAttachment != null)
-                        {
-                            S3RequestData s3RequestData1 = new S3RequestData
-                            {
-                                BucketName = "tas",
-                                InputStream = item.VideoAttachment.OpenReadStream(),
-                                Name = item.VideoAttachment.FileName,
-                            };
-                            await _s3StorageService.UploadFileAsync(s3RequestData1).ConfigureAwait(false);
-                            video.VideoAttachment = _s3StorageService.GetFileUrlDontExpires(s3RequestData1);
-                        }
-                        var topic = await _topicService.GetTopicByName(item.TopicName);
-                        if (topic!=null)
-                        {
-                            video.TopicId = topic.TopicId;
-                        }
-                        video.VideoDescription = item.VideoDescription;
-                        video.VideoTitle = item.VideoTitle;
-                        await _unitOfWork.VideoRepository.AddAsync(video).ConfigureAwait(false);
-                        await _unitOfWork.CommitAsync().ConfigureAwait(false);
-                        return true;
+                        await _s3StorageService.UploadFileAsync(s3RequestData1).ConfigureAwait(false);
+                        video.VideoAttachment = _s3StorageService.GetFileUrlDontExpires(s3RequestData1);
                     }
+                    var topic = await _topicService.GetTopicByName(request.TopicName);
+                    if (topic != null)
+                    {
+                        video.TopicId = topic.TopicId;
+                    }
+                    video.VideoDescription = request.VideoDescription;
+                    video.VideoTitle = request.VideoTitle;
+                    await _unitOfWork.VideoRepository.AddAsync(video).ConfigureAwait(false);
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    return true;
                 }
                 return false;
             }
