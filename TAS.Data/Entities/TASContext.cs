@@ -782,7 +782,7 @@ namespace TAS.Data.Entities
                     .HasColumnName("updateUser");
 
                 entity.Property(e => e.VideoAttachment)
-                    .HasMaxLength(255)
+                    .HasMaxLength(400)
                     .HasColumnName("video_attachment");
 
                 entity.Property(e => e.VideoDescription)
@@ -794,7 +794,7 @@ namespace TAS.Data.Entities
                     .HasColumnName("video_title");
 
                 entity.Property(e => e.VideoUrl)
-                    .HasMaxLength(255)
+                    .HasMaxLength(400)
                     .HasColumnName("video_url");
 
                 entity.HasOne(d => d.Topic)
