@@ -161,9 +161,49 @@ namespace TAS.Application.Services
                 Part part = new Part();
                 part.TestId = test.TestId;
                 part.Url = url;
-                part.Type = (request.Type == 1) ?true:false;
+                part.Type = (request.Type == 1) ? true : false;
                 var result = _unitOfWork.TestRepository.AddPart(part);
                 return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateTestForCourse(UpdateTestForCourseRequestDto request)
+        {
+            try
+            {
+                string url = "";
+                if (request.Url != null)
+                {
+                    S3RequestData s3RequestData = new S3RequestData
+                    {
+                        BucketName = "tas",
+                        InputStream = request.Url.OpenReadStream(),
+                        Name = request.Url.FileName,
+                    };
+                    await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                    url = _s3StorageService.GetFileUrl(s3RequestData);
+                }
+                var test = _unitOfWork.TestRepository.GetTestById(request.TestId).FirstOrDefault();
+                if (test != null)
+                {
+                    test.TestName = request.TestName;
+                    test.TestDescription = request.Description;
+                    var part = _unitOfWork.TestRepository.GetPartByTestId(request.TestId).FirstOrDefault();
+                    if (part != null)
+                    {
+                        part.Url = url;
+                        part.Type = (request.Type == 1) ? true : false;
+                        //await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    }
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    return true;
+                }
+                return false;
             }
             catch (Exception e)
             {
@@ -271,7 +311,7 @@ namespace TAS.Application.Services
                 var testResultId = _unitOfWork.TestRepository.GetTestResultId(request.TestId, request.AccountId);
                 foreach (var item in request.ListAnswer)
                 {
-                    QuestionResultDto questionResult = new QuestionResultDto(testResultId,request.NumberCorrect, item.QuestionId.ToString(), item.UserAnswer);
+                    QuestionResultDto questionResult = new QuestionResultDto(testResultId, request.NumberCorrect, item.QuestionId.ToString(), item.UserAnswer);
                     var answer = _mapper.Map<QuestionResult>(questionResult);
                     _unitOfWork.QuestionRepository.AddQuestionResult(answer);
                 }
@@ -370,7 +410,7 @@ namespace TAS.Application.Services
                 _logger.LogError(e.Message);
                 return null;
             }
-           
+
         }
 
         public async Task<List<TestResult>> GetTestResult(int accountId)
@@ -382,7 +422,7 @@ namespace TAS.Application.Services
             }
             catch
             {
-                _logger.LogError("GetTestResult error"); 
+                _logger.LogError("GetTestResult error");
                 return null;
             }
         }
@@ -391,7 +431,7 @@ namespace TAS.Application.Services
         {
             try
             {
-                var result =  _unitOfWork.TestRepository.DeleteTestByTestId(id);
+                var result = _unitOfWork.TestRepository.DeleteTestByTestId(id);
                 return result;
             }
             catch (Exception e)
