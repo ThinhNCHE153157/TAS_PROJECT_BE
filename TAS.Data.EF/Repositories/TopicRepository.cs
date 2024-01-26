@@ -24,6 +24,16 @@ namespace TAS.Data.EF.Repositories
                 return true;
             }
             return false;
+        } 
+        public bool AddListTopic(List<Topic> topic)
+        {
+            if (topic != null)
+            {
+                _context.Topics.AddRange(topic);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         public IQueryable<Topic> DeleteTopic(int topicId)

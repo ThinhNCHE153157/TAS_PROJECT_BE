@@ -19,12 +19,15 @@ namespace TAS.Data.Entities
         }
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
+        public virtual DbSet<AccountFlashcard> AccountFlashcards { get; set; } = null!;
         public virtual DbSet<Address> Addresses { get; set; } = null!;
         public virtual DbSet<City> Cities { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
         public virtual DbSet<Course> Courses { get; set; } = null!;
         public virtual DbSet<District> Districts { get; set; } = null!;
         public virtual DbSet<Enterprise> Enterprises { get; set; } = null!;
+        public virtual DbSet<Flashcard> Flashcards { get; set; } = null!;
+        public virtual DbSet<ItemCard> ItemCards { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<Part> Parts { get; set; } = null!;
         public virtual DbSet<Province> Provinces { get; set; } = null!;
@@ -143,6 +146,32 @@ namespace TAS.Data.Entities
 
                             j.IndexerProperty<int>("RoleId").HasColumnName("role_id");
                         });
+            });
+
+            modelBuilder.Entity<AccountFlashcard>(entity =>
+            {
+                entity.HasKey(e => new { e.FlashcardId, e.AccountId })
+                    .HasName("PK__Account___821F53FE375F71C4");
+
+                entity.ToTable("Account_Flashcard");
+
+                entity.Property(e => e.FlashcardId).HasColumnName("flashcard_id");
+
+                entity.Property(e => e.AccountId).HasColumnName("account_id");
+
+                entity.Property(e => e.IsOwn).HasColumnName("isOWn");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.AccountFlashcards)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Account_F__accou__38845C1C");
+
+                entity.HasOne(d => d.Flashcard)
+                    .WithMany(p => p.AccountFlashcards)
+                    .HasForeignKey(d => d.FlashcardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Account_F__flash__39788055");
             });
 
             modelBuilder.Entity<Address>(entity =>
@@ -322,6 +351,86 @@ namespace TAS.Data.Entities
                     .WithMany(p => p.Enterprises)
                     .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("FK__Enterpris__accou__0504B816");
+            });
+
+            modelBuilder.Entity<Flashcard>(entity =>
+            {
+                entity.ToTable("Flashcard");
+
+                entity.Property(e => e.FlashcardId).HasColumnName("flashcard_id");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createDate");
+
+                entity.Property(e => e.CreateUser)
+                    .HasMaxLength(255)
+                    .HasColumnName("createUser");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("isDeleted")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("updateDate");
+
+                entity.Property(e => e.UpdateUser)
+                    .HasMaxLength(255)
+                    .HasColumnName("updateUser");
+            });
+
+            modelBuilder.Entity<ItemCard>(entity =>
+            {
+                entity.ToTable("ItemCard");
+
+                entity.Property(e => e.Defination)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("defination");
+
+                entity.Property(e => e.Example)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("example");
+
+                entity.Property(e => e.FlashcardId).HasColumnName("flashcard_id");
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("image");
+
+                entity.Property(e => e.NewWord)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("newWord");
+
+                entity.Property(e => e.Note)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("note");
+
+                entity.Property(e => e.Spelling)
+                    .HasMaxLength(255)
+                    .HasColumnName("spelling");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("type");
+
+                entity.HasOne(d => d.Flashcard)
+                    .WithMany(p => p.ItemCards)
+                    .HasForeignKey(d => d.FlashcardId)
+                    .HasConstraintName("FK__ItemCard__flashc__3C54ED00");
             });
 
             modelBuilder.Entity<Order>(entity =>

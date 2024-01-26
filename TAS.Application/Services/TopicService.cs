@@ -38,6 +38,21 @@ namespace TAS.Application.Services
                 return null;
             }
         }
+        public async Task<List<Topic>> addListTopic(List<AddTopicRequestDto> request)
+        {
+            try
+            {
+                var topic = _mapper.Map<List<Topic>>(request);
+                var result = _unitOfWork.TopicRepository.AddListTopic(topic);
+                return topic;
+
+            }
+            catch (Exception)
+            {
+                _logger.LogError("Error in addListTopic");
+                return null;
+            }
+        }
 
         public async Task<List<GetTopicByCourseIdResponseDto>> getListTopicByCourseId(int courseId)
         {
