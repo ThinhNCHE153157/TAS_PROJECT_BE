@@ -11,16 +11,18 @@ namespace TAS.Application.Services
         {
             _accountService = accountService;
         }
-        public async Task SendVerifyCode(string email)
+        public async Task<bool> SendVerifyCode(string email)
         {
-            MailRequestDto mailRequest = new MailRequestDto();
-            mailRequest.ToEmail = email;
-            Random random = new Random();
-            int otpNumber = random.Next(1000, 10000);
-            string otp = otpNumber.ToString("D4");
-            var user = await _accountService.GetUserByEmail(email);
-            var result = _accountService.updateOtp(email, otp, System.DateTime.Now.AddMinutes(10));
-            mailRequest.Body = $@"
+            try
+            {
+                MailRequestDto mailRequest = new MailRequestDto();
+                mailRequest.ToEmail = email;
+                Random random = new Random();
+                int otpNumber = random.Next(1000, 10000);
+                string otp = otpNumber.ToString("D4");
+                var user = await _accountService.GetUserByEmail(email);
+                var result = _accountService.updateOtp(email, otp, System.DateTime.Now.AddMinutes(10));
+                mailRequest.Body = $@"
             <html>
             <head>
                 <style>
@@ -54,24 +56,40 @@ namespace TAS.Application.Services
                 </div>
             </body>
             </html>";
-            mailRequest.Subject = "Mã xác thực có hiệu lực trong vòng 10 phút!";
-            var x = SendEmailAsync(mailRequest);
+                mailRequest.Subject = "Mã xác thực có hiệu lực trong vòng 10 phút!";
+                var x = SendEmailAsync(mailRequest);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                return false;
+            }
         }
-        public async Task SendEmailAsync(MailRequestDto mailRequest)
+        public async Task<bool> SendEmailAsync(MailRequestDto mailRequest)
         {
-            MailRequestDto mail = new MailRequestDto();
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse("toeicmastersystem@gmail.com");
-            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
-            email.Subject = mailRequest.Subject;
-            var builder = new BodyBuilder();
-            builder.HtmlBody = mailRequest.Body;
-            email.Body = builder.ToMessageBody();
-            using var smtp = new MailKit.Net.Smtp.SmtpClient();
-            smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-            smtp.Authenticate("toeicmastersystem@gmail.com", "rpse lwke ibel lbpt");
-            smtp.Send(email);
-            smtp.Disconnect(true);
+            try
+            {
+                MailRequestDto mail = new MailRequestDto();
+                var email = new MimeMessage();
+                email.Sender = MailboxAddress.Parse("toeicmastersystem@gmail.com");
+                email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
+                email.Subject = mailRequest.Subject;
+                var builder = new BodyBuilder();
+                builder.HtmlBody = mailRequest.Body;
+                email.Body = builder.ToMessageBody();
+                using var smtp = new MailKit.Net.Smtp.SmtpClient();
+                smtp.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate("toeicmastersystem@gmail.com", "rpse lwke ibel lbpt");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                return false;
+            }
         }
     }
 }

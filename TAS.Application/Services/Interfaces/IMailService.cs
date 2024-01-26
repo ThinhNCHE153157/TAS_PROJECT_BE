@@ -9,7 +9,7 @@ namespace TAS.Application.Services.Interfaces
 {
     public interface IMailService
     {
-        Task SendEmailAsync(MailRequestDto mailRequest);
-        Task SendVerifyCode(string email);
+        public Task<bool> SendEmailAsync(MailRequestDto mailRequest);
+        public Task<bool> SendVerifyCode(string email);
     }
 }

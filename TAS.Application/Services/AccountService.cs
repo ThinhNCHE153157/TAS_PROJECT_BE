@@ -77,16 +77,16 @@ namespace TAS.Application.Services
             return false;
         }
 
-        public async Task<bool> VerifyAccount(string id,string email)
+        public async Task<bool> VerifyAccount(string otp,string email)
         {
             try
             {
                 Account account = await _unitOfWork.AccountRepository.GetUserByEmail(email).ConfigureAwait(false);
                 if (account != null)
                 {
-                    if (account.Otp == id)
+                    if (account.Otp == otp)
                     {
-                        if (account.Otpexpiretime < System.DateTime.Now)
+                        if (account.Otpexpiretime > System.DateTime.Now)
                         {
                             account.IsVerified = true;
                             account.Otp = null;

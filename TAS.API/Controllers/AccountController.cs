@@ -223,5 +223,43 @@ namespace TAS.API.Controllers
             var data = await _accountService.GetAllEnterprise();
             return Ok(data);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> VerifyAccount([FromQuery] string otp, [FromQuery] string email)
+        {
+            Account account = await _accountService.GetUserByEmail(email);
+            if (account == null)
+            {
+                return NotFound($"Account with Email {email} not found.");
+            }
+            if (account.Otpexpiretime < System.DateTime.Now)
+            {
+                return BadRequest("OTP is expired");
+            }
+            var isSuccess = await _accountService.VerifyAccount(otp, email).ConfigureAwait(false);
+            if (!isSuccess)
+            {
+                return BadRequest("Something wrong when verify account");
+            }
+            return Ok("Verify successfully");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResendSendVerifyCode([FromQuery] string email)
+        {
+            Account account = await _accountService.GetUserByEmail(email);
+            if (account == null)
+            {
+                return NotFound($"Account with Email {email} not found.");
+            }
+            if (account.IsVerified == true)
+            {
+                return BadRequest("Account is verified");
+            }
+            else
+            {
+                await _mailService.SendVerifyCode(email);
+                return Ok();
+            }
+        }
     }
 }
