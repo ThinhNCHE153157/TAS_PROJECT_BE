@@ -87,7 +87,7 @@ namespace TAS.Application.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw;
+                return false;
             }
         }
 
@@ -105,24 +105,52 @@ namespace TAS.Application.Services
             }
         }
 
+        public async Task<bool> DeleteItemcard(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.FlashcardRepository.DeleteItemcard(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
         public async Task<List<GetFlashcardByAccountIdResponseDto>> GetFlashCardByAccountId(int accountId)
         {
             try
             {
                 var result = _unitOfWork.FlashcardRepository.GetFlashCardByAccountId(accountId);
-                var listaccountFlashcard = _unitOfWork.FlashcardRepository.GetAccountFlashcardsByAccountId(accountId);
-                var response = _mapper.Map<List<GetFlashcardByAccountIdResponseDto>>(result);
-                foreach (var item in response)
+                return result;
+                //var listaccountFlashcard = _unitOfWork.FlashcardRepository.GetAccountFlashcardsByAccountId(accountId);
+                //var response = _mapper.Map<List<GetFlashcardByAccountIdResponseDto>>(result);
+                //return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<GetFlashcardByFlashcardResponseDto> GetFlashCardByFlashcardId(int flashcardid, int accountid)
+        {
+            try
+            {
+                var result = _unitOfWork.FlashcardRepository.GetFlashCardByFlashcardId(flashcardid);
+                var account = _unitOfWork.FlashcardRepository.GetAccountOwner(flashcardid);
+                var response = _mapper.Map<GetFlashcardByFlashcardResponseDto>(result);
+                response.AccountId = account.AccountId;
+                if (account.AccountId == accountid)
                 {
-                    item.NumberOfItem = item.ItemCards.Count;
-                    foreach (var item1 in listaccountFlashcard)
-                    {
-                        if (item.FlashcardId == item1.FlashcardId)
-                        {
-                            item.AccountId = item1.AccountId;
-                            item.IsOwn = true;
-                        }
-                    }
+                    response.IsOwn = true;
+                }
+                else
+                {
+                    response.IsOwn = false;
                 }
                 return response;
             }

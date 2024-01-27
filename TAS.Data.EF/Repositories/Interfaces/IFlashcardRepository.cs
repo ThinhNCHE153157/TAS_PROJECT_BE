@@ -11,7 +11,8 @@ namespace TAS.Data.EF.Repositories.Interfaces
 {
     public interface IFlashcardRepository : IBaseRepository<Flashcard>
     {
-        List<Flashcard> GetFlashCardByAccountId(int accountId);
+        List<GetFlashcardByAccountIdResponseDto> GetFlashCardByAccountId(int accountId);
+        Flashcard GetFlashCardByFlashcardId(int id);
         List<AccountFlashcard> GetAccountFlashcardsByAccountId(int accountId);
         bool CreateFlashCard(Flashcard flashcard);
         bool UpdateFlashCard(FlashCardRequestDto request, int id);
@@ -19,5 +20,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         bool AddItemcard(List<ItemCard> itemcard);
         bool AddFlashCardItem(ItemCard itemcard);
         ItemCard GetItemCardById(int id);
+        bool DeleteItemcard(int id);
+        public Account GetAccountOwner(int Flashcardid);
     }
 }

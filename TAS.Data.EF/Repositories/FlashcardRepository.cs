@@ -78,14 +78,39 @@ namespace TAS.Data.EF.Repositories
                 var y = _context.AccountFlashcards.Where(x => x.FlashcardId == id).FirstOrDefault();
                 if (y != null)
                 {
-                    _context.Remove(y);
+                    _context.AccountFlashcards.Remove(y);
                     _context.SaveChanges();
-                    if (x != null)
-                    {
-                        _context.Remove(x);
-                        _context.SaveChanges();
-                        return true;
-                    }
+                }
+                if (x != null)
+                {
+                    _context.Flashcards.Remove(x);
+                    _context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteItemcard(int id)
+        {
+            try
+            {
+                var x = _context.ItemCards.Where(x => x.Id == id).FirstOrDefault();
+                var y = _context.AccountItemCards.Where(x => x.ItemcardId == id).FirstOrDefault();
+                if (y != null)
+                {
+                    _context.AccountItemCards.Remove(y);
+                    _context.SaveChanges();
+                }
+                if (x != null)
+                {
+                    _context.ItemCards.Remove(x);
+                    _context.SaveChanges();
+                    return true;
                 }
                 return false;
             }
@@ -100,19 +125,40 @@ namespace TAS.Data.EF.Repositories
             return _context.AccountFlashcards.Where(x => x.AccountId == accountId).ToList();
         }
 
-        public List<Flashcard> GetFlashCardByAccountId(int accountId)
+        public Account GetAccountOwner(int Flashcardid)
+        {
+            var acoountid = _context.AccountFlashcards.Where(x => x.FlashcardId == Flashcardid && x.IsOwn == true).FirstOrDefault();
+            if (acoountid != null)
+            {
+                var account = _context.Accounts.Where(x => x.AccountId == acoountid.AccountId).FirstOrDefault();
+                return account;
+            }
+            return null;
+        }
+
+        public List<GetFlashcardByAccountIdResponseDto> GetFlashCardByAccountId(int accountId)
         {
             try
             {
-                List<Flashcard> result = new List<Flashcard>();
+                List<GetFlashcardByAccountIdResponseDto> result = new List<GetFlashcardByAccountIdResponseDto>();
                 List<AccountFlashcard> listFlashcardId = _context.AccountFlashcards.Where(x => x.AccountId == accountId).ToList();
                 if (listFlashcardId.Count != 0)
                 {
                     foreach (var item in listFlashcardId)
                     {
                         Flashcard result1 = _context.Flashcards.Include(x => x.ItemCards).Where(x => x.FlashcardId == item.FlashcardId).FirstOrDefault();
-                        result.Add(result1);
-
+                        GetFlashcardByAccountIdResponseDto flashcard = new GetFlashcardByAccountIdResponseDto();
+                        flashcard.FlashcardId = item.FlashcardId;
+                        flashcard.AccountId = item.AccountId;
+                        if (result1 != null)
+                        {
+                            flashcard.FlashcardName = result1.FlashcardName;
+                            flashcard.Description = result1.Description;
+                            flashcard.CreateUser = result1.CreateUser;
+                            flashcard.NumberOfItem = result1.ItemCards.Count;
+                            flashcard.IsOwn = item.IsOwn;
+                            result.Add(flashcard);
+                        }
                     }
                 }
                 return result;
@@ -120,6 +166,24 @@ namespace TAS.Data.EF.Repositories
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        public Flashcard GetFlashCardByFlashcardId(int id)
+        {
+            try
+            {
+                Flashcard result = _context.Flashcards.Include(x => x.ItemCards).Where(x => x.FlashcardId == id).FirstOrDefault();
+                if (result!=null)
+                {
+                return result;
+                }
+                return null;
+            }
+
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 

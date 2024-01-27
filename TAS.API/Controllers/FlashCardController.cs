@@ -23,6 +23,13 @@ namespace TAS.API.Controllers
             return Ok(data);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetFlashCardByFlashcardId([FromQuery] int flashid, [FromQuery] int accountid)
+        {
+            var data = await _flashcardService.GetFlashCardByFlashcardId(flashid, accountid);
+            return Ok(data);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateFlashCard([FromBody] FlashCardRequestDto request)
@@ -48,7 +55,7 @@ namespace TAS.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateItemCard([FromBody] List<AddItemCardRequestDto> request)
         {
-            var data = await _flashcardService.AddItemcard(request);
+              var data = await _flashcardService.AddItemcard(request);
             return Ok(data);
         }
 
@@ -62,12 +69,12 @@ namespace TAS.API.Controllers
             var data = await _flashcardService.UpdateItemcard(request);
             return Ok(data);
         }
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteItemCard([FromBody] List<DeleteItemCardRequestDto> request)
-        //{
-        //    var data = await _flashcardService.DeleteItemcard(request);
-        //    return Ok(data);
-        //}
+        [HttpDelete]
+        public async Task<IActionResult> DeleteItemCard([FromQuery]int id)
+        {
+            var data = await _flashcardService.DeleteItemcard(id);
+            return Ok(data);
+        }
 
         [HttpPost]
         [Consumes("multipart/form-data")]

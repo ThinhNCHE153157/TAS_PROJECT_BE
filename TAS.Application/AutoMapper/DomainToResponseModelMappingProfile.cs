@@ -47,6 +47,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<QuestionAnswer, GetQuestionAnswerDto>();
             CreateMap<ItemCard, ItemCardDto>();
             CreateMap<Flashcard, GetFlashcardByAccountIdResponseDto>();
+            CreateMap<Flashcard, GetFlashcardByFlashcardResponseDto>();
         }
     }
 }

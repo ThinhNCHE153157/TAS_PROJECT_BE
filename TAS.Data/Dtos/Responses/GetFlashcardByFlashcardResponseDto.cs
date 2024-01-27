@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Data.Dtos.Domains;
-using TAS.Data.Entities;
 
 namespace TAS.Data.Dtos.Responses
 {
-    public class GetFlashcardByAccountIdResponseDto
+    public class GetFlashcardByFlashcardResponseDto
     {
         public int FlashcardId { get; set; }
         public int AccountId { get; set; }
@@ -17,6 +16,6 @@ namespace TAS.Data.Dtos.Responses
         public bool? IsOwn { get; set; }
         public string CreateUser { get; set; }
         public int NumberOfItem { get; set; }
-            
+        public List<ItemCardDto> ItemCards { get; set; }
     }
 }
