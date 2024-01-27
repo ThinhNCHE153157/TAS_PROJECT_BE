@@ -12,7 +12,7 @@ namespace TAS.Data.Dtos.Requests
     {
         public int TestId { get; set; }
         public string Description { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public string QuestionAnswers { get; set; }
     }
 }
