@@ -13,7 +13,7 @@ namespace TAS.Data.Dtos.Requests
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public bool? Gender { get; set; }
-        public DateTime? Dob { get; set; }
+        //public DateTime? Dob { get; set; }
         public string? Address { get; set; }
     }
 }

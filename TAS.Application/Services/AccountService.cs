@@ -485,7 +485,7 @@ namespace TAS.Application.Services
                     account.LastName = request.LastName;
                     account.Phone = request.Phone;
                     account.Address = request.Address;
-                    account.Dob = request.Dob;
+                    //account.Dob = request.Dob;
                     account.Gender = request.Gender;
                     _unitOfWork.Commit();
                     return true;
