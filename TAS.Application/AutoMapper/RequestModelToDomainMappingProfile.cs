@@ -33,6 +33,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<SaveTestResultRequestDto, TestResult>();
             CreateMap<FlashCardRequestDto, Flashcard>();
             CreateMap<AddItemCardRequestDto,ItemCard>();
+            CreateMap<PartTestDto, Part>();
         }
     }
 }

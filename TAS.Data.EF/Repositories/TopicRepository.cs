@@ -44,7 +44,7 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Topic> GetTopicByCourseId(int courseId)
         {
-            return _context.Set<Topic>().Include(x => x.Tests).Where(x => x.CourseId == courseId);
+            return _context.Set<Topic>().Include(x => x.Tests).ThenInclude(x=>x.Parts).Where(x => x.CourseId == courseId);
         }
 
         public Topic GetTopicByName(string name)
