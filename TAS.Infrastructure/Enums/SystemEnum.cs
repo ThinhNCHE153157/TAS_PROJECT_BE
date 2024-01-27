@@ -12,7 +12,7 @@
         {
             Admin = 1,
             Enterprise = 2,
-            //Teacher = 3,
+            Teacher = 3,
             Student = 4
         }
         public enum CourseStatus
