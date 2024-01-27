@@ -44,5 +44,12 @@ namespace TAS.API.Controllers
             var data = await _flashcardService.DeleteFlashCard(id);
             return Ok(data);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateItemCard([FromBody] List<AddItemCardRequestDto> request)
+        {
+            var data = await _flashcardService.AddItemcard(request);
+            return Ok(data);
+        }
     }
 }

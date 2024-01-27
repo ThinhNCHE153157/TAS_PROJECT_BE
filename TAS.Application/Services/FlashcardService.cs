@@ -28,6 +28,21 @@ namespace TAS.Application.Services
             _logger = logger;
         }
 
+        public async Task<bool> AddItemcard(List<AddItemCardRequestDto> request)
+        {
+            try
+            {
+                var itemcard = _mapper.Map<List<ItemCard>>(request);
+                var result = _unitOfWork.FlashcardRepository.AddItemcard(itemcard);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
         public async Task<bool> CreateFlashCard(FlashCardRequestDto request)
         {
             try

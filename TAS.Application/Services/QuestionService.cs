@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using TAS.Application.Services.Interfaces;
+using TAS.Data.Dtos.Domains;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using TAS.Data.S3Object;
 using TAS.Infrastructure.Helpers;
 
 namespace TAS.Application.Services
@@ -20,29 +23,56 @@ namespace TAS.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<QuestionService> _logger;
+        private readonly IS3StorageService _s3StorageService;
 
-        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<QuestionService> logger, IS3StorageService s3StorageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
+            _s3StorageService = s3StorageService;
         }
 
         public async Task<bool> AddQuestion(CreateQuestionRequestDto request)
         {
-            //try
-            //{
-            //    if (request != null)
-            //    {
-            //        var question =  _mapper.Map<Question>(request);
-            //        var result =  _unitOfWork.QuestionRepository.CreateQuestion(question,question.QuestionNavigation);
-            //        return result;
-            //    }
-            //    return false;
-            //}catch(Exception e)
-            //{
-            //    _logger.LogError(e.Message);    
-            //    return false;
-            //}
+            try
+            {
+                Question question = new Question();
+                if (request != null)
+                {
+                    if (request.Image != null)
+                    {
+                        S3RequestData s3RequestData = new S3RequestData
+                        {
+                            BucketName = "tas",
+                            InputStream = request.Image.OpenReadStream(),
+                            Name = request.Image.FileName,
+                        };
+                        await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                        question.Image = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
+                    }
+                    List<QuestionAnswerDto> list = new List<QuestionAnswerDto>();   
+                    if (request.QuestionAnswers != null)
+                    {
+                        list = JsonConvert.DeserializeObject<List<QuestionAnswerDto>>(request.QuestionAnswers);
+                    }
+                    int partId = _unitOfWork.QuestionRepository.GetPartIdByTestId(request.TestId);
+                    question.PartId = partId;
+                    question.Description = request.Description;
+                    var listquestionAnswer = _mapper.Map<List<QuestionAnswer>>(list);
+                    question.QuestionAnswers = listquestionAnswer;
+                    await _unitOfWork.QuestionRepository.AddAsync(question).ConfigureAwait(false);
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
             throw new NotImplementedException();
         }
 

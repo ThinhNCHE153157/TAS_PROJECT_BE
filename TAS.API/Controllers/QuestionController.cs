@@ -83,8 +83,12 @@ namespace TAS.API.Controllers
         }
 
         [HttpPost]
+        //[Consumes("multipart/form-data")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[DisableRequestSizeLimit]
         //[Authorize]
-        public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionRequestDto request)
+        public async Task<IActionResult> CreateQuestion([FromForm] CreateQuestionRequestDto request)
         {
             if (request != null)
             {

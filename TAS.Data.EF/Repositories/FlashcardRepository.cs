@@ -21,7 +21,16 @@ namespace TAS.Data.EF.Repositories
             _accessor = accessor;
         }
 
-
+        public bool AddItemcard(List<ItemCard> itemcard)
+        {
+            if (itemcard!=null)
+            {
+                _context.ItemCards.AddRange(itemcard);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
 
         public bool CreateFlashCard(Flashcard flashcard)
         {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
+using TAS.Infrastructure.Constants;
 
 namespace TAS.Data.EF.Repositories
 {
@@ -23,12 +24,12 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Question> GetQuestionById(int questionId)
         {
-            return _context.Questions.Where(x => x.QuestionId == questionId);
+            return _context.Questions.Where(x => x.QuestionId == questionId & x.IsDeleted==Common.IsNotDelete);
         }
 
         public IQueryable<Question> GetQuestionByPartId(int id)
         {
-            return _context.Questions.Include(x => x.Part).Where(x => x.Part.TestId == id);
+            return _context.Questions.Include(x => x.Part).Where(x => x.Part.TestId == id && x.IsDeleted==Common.IsNotDelete);
         }
 
         public bool UpdateQuestion(UpdateQuestionRequestDto request)
@@ -55,11 +56,12 @@ namespace TAS.Data.EF.Repositories
         public bool DeleteQuestion(int questionId)
         {
             var question = GetQuestionById(questionId).FirstOrDefault();
-            var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == questionId).FirstOrDefault();
-            if (question != null && questionAnswer != null)
+            //var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == questionId).FirstOrDefault();
+            if (question != null )
             {
-                _context.Questions.Remove(question);
-                _context.QuestionAnswers.Remove(questionAnswer);
+                question.IsDeleted = true;
+                //_context.Questions.Remove(question);
+                //_context.QuestionAnswers.Remove(questionAnswer);
                 _context.SaveChanges();
                 return true;
             }

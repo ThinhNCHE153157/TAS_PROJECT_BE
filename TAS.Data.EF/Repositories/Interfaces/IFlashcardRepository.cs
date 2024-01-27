@@ -15,5 +15,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         bool CreateFlashCard(Flashcard flashcard);
         bool UpdateFlashCard(FlashCardRequestDto request, int id);
         bool DeleteFlashCard(int id);
+        bool AddItemcard(List<ItemCard> itemcard);
     }
 }
