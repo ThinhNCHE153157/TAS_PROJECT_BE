@@ -142,6 +142,7 @@ namespace TAS.Application.Services
             {
                 var result = _unitOfWork.FlashcardRepository.GetFlashCardByFlashcardId(flashcardid);
                 var account = _unitOfWork.FlashcardRepository.GetAccountOwner(flashcardid);
+                var accountitemcard = _unitOfWork.FlashcardRepository.GetAccountItemcard(accountid);
                 var response = _mapper.Map<GetFlashcardByFlashcardResponseDto>(result);
                 response.AccountId = account.AccountId;
                 if (account.AccountId == accountid)
@@ -151,6 +152,19 @@ namespace TAS.Application.Services
                 else
                 {
                     response.IsOwn = false;
+                }
+                if (accountitemcard != null)
+                {
+                    foreach (var item in response.ItemCards)
+                    {
+                        foreach (var item2 in accountitemcard)
+                        {
+                            if (item.Id == item2.ItemcardId)
+                            {
+                                item.Status = item2.Status;
+                            }
+                        }
+                    }
                 }
                 return response;
             }

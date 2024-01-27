@@ -125,6 +125,12 @@ namespace TAS.Data.EF.Repositories
             return _context.AccountFlashcards.Where(x => x.AccountId == accountId).ToList();
         }
 
+        public List<AccountItemCard> GetAccountItemcard(int accountid)
+        {
+            var result = _context.AccountItemCards.Where(x => x.AccountId == accountid).ToList();
+            return result;
+        }
+
         public Account GetAccountOwner(int Flashcardid)
         {
             var acoountid = _context.AccountFlashcards.Where(x => x.FlashcardId == Flashcardid && x.IsOwn == true).FirstOrDefault();

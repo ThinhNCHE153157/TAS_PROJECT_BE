@@ -22,5 +22,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         ItemCard GetItemCardById(int id);
         bool DeleteItemcard(int id);
         public Account GetAccountOwner(int Flashcardid);
+        public List<AccountItemCard> GetAccountItemcard(int accountid);
     }
 }
