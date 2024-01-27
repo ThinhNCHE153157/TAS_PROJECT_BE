@@ -12,6 +12,6 @@ namespace TAS.Data.Dtos.Responses
         public int QuestionId { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
-        public List<QuestionAnswerDto> QuestionAnswers { get; set; } = new List<QuestionAnswerDto>();
+        public List<GetQuestionAnswerDto> QuestionAnswers { get; set; } = new List<GetQuestionAnswerDto>();
     }
 }

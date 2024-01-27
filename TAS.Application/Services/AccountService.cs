@@ -467,5 +467,35 @@ namespace TAS.Application.Services
                 return null;
             }
         }
+
+        public async Task<bool> UpdateProfile(UpdateProfileRequestDto request)
+        {
+            try
+            {
+                var account = await _unitOfWork.AccountRepository.GetAccountById(request.AccountId)
+                    .Where(x => x.IsDeleted == Common.IsNotDelete)
+                    .FirstOrDefaultAsync().ConfigureAwait(false);
+                if (account == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    account.FirstName = request.FirstName;
+                    account.LastName = request.LastName;
+                    account.Phone = request.Phone;
+                    account.Address = request.Address;
+                    account.Dob = request.Dob;
+                    account.Gender = request.Gender;
+                    _unitOfWork.Commit();
+                    return true;
+                }
+            }
+            catch
+            {
+                _logger.LogError("Update profile failed");  
+                return false;
+            }
+        }
     }
 }

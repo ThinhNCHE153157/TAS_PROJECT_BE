@@ -261,5 +261,29 @@ namespace TAS.API.Controllers
                 return Ok();
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequestDto request)
+        {
+            if (request!=null)
+            {
+                Account acc = await _accountService.GetAccountByIdReturnAcc(request.AccountId);
+                if (acc == null)
+                {
+                    return NotFound($"Account with ID {request.AccountId} not found.");
+                }
+                else
+                {
+                    var isSuccess = await _accountService.UpdateProfile(request).ConfigureAwait(false);
+                    if (!isSuccess)
+                    {
+                        return BadRequest("Something wrong when update profile");
+                    }
+
+                    return Ok();
+                }
+            }
+            return BadRequest("Something wrong when update profile");
+        }
     }
 }

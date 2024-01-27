@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,7 @@ namespace TAS.Data.Dtos.Requests
     {
         public int QuestionId { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
-        public string Type { get; set; }
-        public string Note { get; set; }
-        public QuestionAnswerDto QuestionNavigation { get; set; }
+        public IFormFile Image { get; set; }
+        public string QuestionAnswers { get; set; }
     }
 }

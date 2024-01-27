@@ -163,7 +163,7 @@ namespace TAS.Application.Services
                             question1.Description = ques.Description;
                             question1.Image = ques.Image;
                             List<QuestionAnswer> questionAnswer = _unitOfWork.QuestionRepository.GetlistQuestionAnswerByQuesId(ques.QuestionId);
-                            var quesmap = _mapper.Map<List<QuestionAnswerDto>>(questionAnswer);
+                            var quesmap = _mapper.Map<List<GetQuestionAnswerDto>>(questionAnswer);
                             question1.QuestionAnswers = quesmap;
                             question.Questions.Add(question1);
                         }
@@ -172,7 +172,7 @@ namespace TAS.Application.Services
                 }
                 return result;
 
-                        }
+            }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
@@ -274,16 +274,41 @@ namespace TAS.Application.Services
             {
                 if (request != null)
                 {
-                    var result = _unitOfWork.QuestionRepository.UpdateQuestion(request);
-                    return result;
+                    var question = await _unitOfWork.QuestionRepository.GetQuestionById(request.QuestionId).FirstOrDefaultAsync().ConfigureAwait(false);
+                    if (request.Image != null)
+                    {
+                        S3RequestData s3RequestData = new S3RequestData
+                        {
+                            BucketName = "tas",
+                            InputStream = request.Image.OpenReadStream(),
+                            Name = request.Image.FileName,
+                        };
+                        await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                        question.Image = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
+                    }
+                    question.Description = request.Description;
+                    if (question.QuestionAnswers.Count!=0)
+                    {
+                        _unitOfWork.QuestionRepository.DeleteQuestionAnswer(request.QuestionId);
+                    }
+                    List<QuestionAnswerDto> answerDtos = JsonConvert.DeserializeObject<List<QuestionAnswerDto>>(request.QuestionAnswers);
+                    var listquestionAnswer = _mapper.Map<List<QuestionAnswer>>(answerDtos);
+                    foreach (var item in listquestionAnswer)
+                    {
+                        item.QuestionId = request.QuestionId;
+                    }
+                    _unitOfWork.QuestionRepository.CreateQuestionAnswer(listquestionAnswer);
+                    //question.QuestionAnswers = listquestionAnswer;
+                    var result = _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    return true;
                 }
                 return false;
             }
             catch (Exception e)
             {
+                return false;
                 throw new Exception(e.Message);
             }
-            return false;
         }
     }
 }
