@@ -155,6 +155,7 @@ namespace TAS.Application.Services
 
                 Test test = new Test();
                 test.TestName = request.TestName;
+                test.TestDescription = request.TestDescription;
                 test.TopicId = request.TopicId;
                 await _unitOfWork.TestRepository.AddAsync(test).ConfigureAwait(false);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
