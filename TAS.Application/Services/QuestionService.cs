@@ -52,7 +52,7 @@ namespace TAS.Application.Services
                         await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
                         question.Image = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
                     }
-                    List<QuestionAnswerDto> list = new List<QuestionAnswerDto>();   
+                    List<QuestionAnswerDto> list = new List<QuestionAnswerDto>();
                     if (request.QuestionAnswers != null)
                     {
                         list = JsonConvert.DeserializeObject<List<QuestionAnswerDto>>(request.QuestionAnswers);
@@ -141,58 +141,38 @@ namespace TAS.Application.Services
             List<GetQuestionByCourseIdResponseDto> result = new List<GetQuestionByCourseIdResponseDto>();
             try
             {
-                //var listTopicId = _unitOfWork.CourseRepository.GetListTopicIdByCourseId(courseId).ToList();
-                //foreach (var item in listTopicId)
-                //{
-                //    var ListtestId = _unitOfWork.TestRepository.GetTestIdByTopicId(item);
-                //    foreach (var testid in ListtestId)
-                //    {
-                //        GetQuestionByCourseIdResponseDto question = new GetQuestionByCourseIdResponseDto();
-                //        question.TestId = testid;
-                //        var part = _unitOfWork.TestRepository.GetPartByTestId(testid).FirstOrDefault();
-                //        if (part != null)
-                //        {
-                //            question.Url = part.Url;
-                //        }
-                //        var listQuestion = await _unitOfWork.QuestionRepository.GetQuestionByTestId(testid).ToListAsync().ConfigureAwait(false);
-                //        foreach (var ques in listQuestion)
-                //        {
-                //            GetQuestionByTestIdResponseDto question1 = new GetQuestionByTestIdResponseDto();
-                //            question1.QuestionId = ques.QuestionId;
-                //            question1.Description = ques.Description;
-                //            question1.Image = ques.Image;
-                //            QuestionAnswer questionAnswer = questionAnswerById(ques.QuestionId).Result;
-                //            if (questionAnswer != null)
-                //            {
-                //                if (questionAnswer.ResultA != null)
-                //                {
-                //                    question1.ResultA = questionAnswer.ResultA!;
-                //                }
-                //                if (questionAnswer.ResultB != null)
-                //                {
-                //                    question1.ResultB = questionAnswer.ResultB!;
-                //                }
-                //                if (questionAnswer.ResultC != null)
-                //                {
-                //                    question1.ResultC = questionAnswer.ResultC!;
-                //                }
-                //                if (questionAnswer.ResultD != null)
-                //                {
-                //                    question1.ResultD = questionAnswer.ResultD!;
-                //                }
-                //                if (questionAnswer.CorrectResult != null)
-                //                {
-                //                    question1.CorrectResult = questionAnswer.CorrectResult!;
-                //                }
-                //            }
-                //            question.Questions.Add(question1);
-                //        }   
-                //    result.Add(question);
-                //    }
-                //}
+
+                var listTopicId = _unitOfWork.CourseRepository.GetListTopicIdByCourseId(courseId).ToList();
+                foreach (var item in listTopicId)
+                {
+                    var ListtestId = _unitOfWork.TestRepository.GetTestIdByTopicId(item);
+                    foreach (var testid in ListtestId)
+                    {
+                        GetQuestionByCourseIdResponseDto question = new GetQuestionByCourseIdResponseDto();
+                        question.TestId = testid;
+                        var part = _unitOfWork.TestRepository.GetPartByTestId(testid).FirstOrDefault();
+                        if (part.Url != null)
+                        {
+                            question.Url = part.Url;
+                        }
+                        var listQuestion = await _unitOfWork.QuestionRepository.GetQuestionByTestId(testid).ToListAsync().ConfigureAwait(false);
+                        foreach (var ques in listQuestion)
+                        {
+                            GetQuestionByTestIdResponseDto question1 = new GetQuestionByTestIdResponseDto();
+                            question1.QuestionId = ques.QuestionId;
+                            question1.Description = ques.Description;
+                            question1.Image = ques.Image;
+                            List<QuestionAnswer> questionAnswer = _unitOfWork.QuestionRepository.GetlistQuestionAnswerByQuesId(ques.QuestionId);
+                            var quesmap = _mapper.Map<List<QuestionAnswerDto>>(questionAnswer);
+                            question1.QuestionAnswers = quesmap;
+                            question.Questions.Add(question1);
+                        }
+                        result.Add(question);
+                    }
+                }
                 return result;
 
-            }
+                        }
             catch (Exception e)
             {
                 throw new Exception(e.Message);

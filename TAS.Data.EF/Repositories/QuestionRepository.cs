@@ -153,5 +153,17 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Set<Part>().Where(x => x.TestId == testId).FirstOrDefault().PartId;
         }
+
+        public List<QuestionAnswer> GetlistQuestionAnswerByQuesId(int id)
+        {
+            try
+            {
+                return _context.QuestionAnswers.Where(x => x.QuestionId == id).ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }
