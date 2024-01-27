@@ -173,17 +173,35 @@ namespace TAS.Data.EF.Repositories
             return false;
         }
 
-        public bool UpdateQuestionAnswer(QuestionAnswer questionAnswer)
+        public bool UpdateQuestionAnswer1(QuestionAnswer questionAnswer)
         {
             throw new NotImplementedException();
         }
 
-        public bool CreateQuestionAnswer(List<QuestionAnswer> questionAnswer)
+        public bool UpdateQuestionAnswer(List<QuestionAnswer> questionAnswer)
         {
             try
             {
-                _context.QuestionAnswers.AddRange(questionAnswer);
-                _context.SaveChanges();
+                foreach (var item in questionAnswer)
+                {
+                    if (item.QuestionAnswerId < 0)
+                    {
+                        item.QuestionAnswerId = 0;
+                        _context.QuestionAnswers.Add(item);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        var qa = _context.QuestionAnswers.Where(x => x.QuestionAnswerId == item.QuestionAnswerId).FirstOrDefault();
+                        if (qa != null)
+                        {
+                            qa.Answer = item.Answer;
+                            qa.Iscorrect = item.Iscorrect;
+                            _context.QuestionAnswers.Update(qa);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
                 return true;
             }
             catch (Exception e)

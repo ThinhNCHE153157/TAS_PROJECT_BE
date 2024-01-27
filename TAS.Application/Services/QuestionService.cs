@@ -287,17 +287,13 @@ namespace TAS.Application.Services
                         question.Image = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
                     }
                     question.Description = request.Description;
-                    if (question.QuestionAnswers.Count!=0)
-                    {
-                        _unitOfWork.QuestionRepository.DeleteQuestionAnswer(request.QuestionId);
-                    }
-                    List<QuestionAnswerDto> answerDtos = JsonConvert.DeserializeObject<List<QuestionAnswerDto>>(request.QuestionAnswers);
+                    List<GetQuestionAnswerDto> answerDtos = JsonConvert.DeserializeObject<List<GetQuestionAnswerDto>>(request.QuestionAnswers);
                     var listquestionAnswer = _mapper.Map<List<QuestionAnswer>>(answerDtos);
                     foreach (var item in listquestionAnswer)
                     {
                         item.QuestionId = request.QuestionId;
                     }
-                    _unitOfWork.QuestionRepository.CreateQuestionAnswer(listquestionAnswer);
+                    _unitOfWork.QuestionRepository.UpdateQuestionAnswer(listquestionAnswer);
                     //question.QuestionAnswers = listquestionAnswer;
                     var result = _unitOfWork.CommitAsync().ConfigureAwait(false);
                     return true;

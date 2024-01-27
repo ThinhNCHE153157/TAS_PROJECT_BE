@@ -24,7 +24,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public IEnumerable<QuestionResult> questionResults(int testId, int accountId);
         public int GetPartIdByTestId(int testId);
         public bool DeleteQuestionAnswer(int questionId);
-        public bool UpdateQuestionAnswer(QuestionAnswer questionAnswer);
-        public bool CreateQuestionAnswer(List<QuestionAnswer> questionAnswer);
+        public bool UpdateQuestionAnswer1(QuestionAnswer questionAnswer);
+        public bool UpdateQuestionAnswer(List<QuestionAnswer> questionAnswer);
     }
 }
