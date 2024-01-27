@@ -28,6 +28,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> VerifyAccount(string id, string email);
         public Task<bool> UpdateProfile(UpdateProfileRequestDto request);
         public Task<Account> GetAccountByUsername(string username);
-
+        public Task<bool> AddEnterprise(AddEnterpriseRequestDto account);
     }
 }

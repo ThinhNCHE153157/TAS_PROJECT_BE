@@ -516,5 +516,21 @@ namespace TAS.Application.Services
                 return null;
             }
         }
+
+        public async Task<bool> AddEnterprise(AddEnterpriseRequestDto account)
+        {
+            try
+            {
+                var enterprise = _mapper.Map<Enterprise>(account);
+                _unitOfWork.AccountRepository.AddEnterprise(enterprise);
+                _unitOfWork.Commit();
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
     }
 }

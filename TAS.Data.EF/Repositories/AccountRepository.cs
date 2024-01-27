@@ -86,5 +86,12 @@ namespace TAS.Data.EF.Repositories
             var account = _context.Accounts.FirstOrDefault(x => x.Username.Equals(username));
             return account;
         }
+
+        public bool AddEnterprise(Enterprise account)
+        {
+            _context.Enterprises.Add(account);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }

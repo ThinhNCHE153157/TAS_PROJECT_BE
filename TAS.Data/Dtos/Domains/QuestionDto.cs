@@ -12,7 +12,6 @@ namespace TAS.Data.Dtos.Domains
         public int QuestionId { get; set; }
         public string? Description { get; set; }
         public string? Image { get; set; }
-        public List<string> Answers { get; set; } = new List<string>();
-        public string CorrectAnswer { get; set; } 
+        public List<QuestionAnswerDto> questionAnswers { get; set; }
     }
 }

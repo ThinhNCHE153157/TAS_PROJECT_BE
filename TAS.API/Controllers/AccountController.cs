@@ -291,5 +291,16 @@ namespace TAS.API.Controllers
             }
             return BadRequest("Something wrong when update profile");
         }
+
+        [HttpPost]
+        public  async Task<IActionResult> AddEnterprise([FromBody] AddEnterpriseRequestDto request)
+        {
+            var isSuccess = await _accountService.AddEnterprise(request).ConfigureAwait(false);
+            if (!isSuccess)
+            {
+                return BadRequest("Something wrong when add enterprise");
+            }
+            return Ok();
+        }
     }
 }
