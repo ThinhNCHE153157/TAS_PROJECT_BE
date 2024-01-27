@@ -51,5 +51,33 @@ namespace TAS.API.Controllers
             var data = await _flashcardService.AddItemcard(request);
             return Ok(data);
         }
+
+        [HttpPut]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UpdateItemCard([FromForm] UpdateItemRequestDto request)
+        {
+            var data = await _flashcardService.UpdateItemcard(request);
+            return Ok(data);
+        }
+        //[HttpDelete]
+        //public async Task<IActionResult> DeleteItemCard([FromBody] List<DeleteItemCardRequestDto> request)
+        //{
+        //    var data = await _flashcardService.DeleteItemcard(request);
+        //    return Ok(data);
+        //}
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> CreateFlashCardItem([FromForm] AddFlashCardItemRequestDto request)
+        {
+            var data = await _flashcardService.AddFlashCardItem(request);
+            return Ok(data);
+        }
     }
 }

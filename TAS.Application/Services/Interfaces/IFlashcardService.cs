@@ -11,5 +11,7 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> UpdateFlashCard(FlashCardRequestDto request,int id);
         public Task<bool> DeleteFlashCard(int id);
         public Task<bool> AddItemcard(List<AddItemCardRequestDto> request);
+        public Task<bool> AddFlashCardItem(AddFlashCardItemRequestDto request);
+        public Task<bool> UpdateItemcard(UpdateItemRequestDto request);
     }
 }

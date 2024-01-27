@@ -21,6 +21,17 @@ namespace TAS.Data.EF.Repositories
             _accessor = accessor;
         }
 
+        public bool AddFlashCardItem(ItemCard itemcard)
+        {
+            if (itemcard!=null)
+            {
+                _context.ItemCards.Add(itemcard);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public bool AddItemcard(List<ItemCard> itemcard)
         {
             if (itemcard!=null)
@@ -115,6 +126,11 @@ namespace TAS.Data.EF.Repositories
             {
                 throw;
             }
+        }
+
+        public ItemCard GetItemCardById(int id)
+        {
+            return _context.ItemCards.Where(x => x.Id == id).FirstOrDefault();
         }
 
         public bool UpdateFlashCard(FlashCardRequestDto request, int id)

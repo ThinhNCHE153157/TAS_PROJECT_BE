@@ -35,6 +35,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<AddItemCardRequestDto,ItemCard>();
             CreateMap<PartTestDto, Part>();
             CreateMap<GetQuestionAnswerDto, QuestionAnswer>();
+            CreateMap<AddFlashCardItemRequestDto, ItemCard>();
         }
     }
 }
