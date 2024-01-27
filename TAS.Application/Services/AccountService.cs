@@ -522,6 +522,7 @@ namespace TAS.Application.Services
             try
             {
                 var enterprise = _mapper.Map<Enterprise>(account);
+                enterprise.Status = 0;
                 _unitOfWork.AccountRepository.AddEnterprise(enterprise);
                 _unitOfWork.Commit();
                 return true;
