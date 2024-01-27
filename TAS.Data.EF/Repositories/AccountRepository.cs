@@ -80,5 +80,11 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.Accounts.FirstOrDefaultAsync(x => x.Username.Equals(username));
         }
+
+        public Account GetAccountByUsername(string username)
+        {
+            var account = _context.Accounts.FirstOrDefault(x => x.Username.Equals(username));
+            return account;
+        }
     }
 }

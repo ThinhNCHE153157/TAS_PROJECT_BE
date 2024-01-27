@@ -60,6 +60,12 @@ namespace TAS.API.Controllers
         [HttpPost]
         public async Task<IActionResult> UserRegister([FromBody] UserRegisterRequestDto request)
         {
+            var user = await _accountService.GetUserByEmail(request.Email);
+            var user1 = await _accountService.GetAccountByUsername(request.Username);
+            if (user != null || user1!=null)
+            {
+                return BadRequest("Email is already exist");
+            }
             var isSuccess = await _accountService.UserRegister(request).ConfigureAwait(false);
             if (isSuccess)
             {

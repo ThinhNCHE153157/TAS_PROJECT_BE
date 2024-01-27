@@ -27,6 +27,7 @@ namespace TAS.Application.Services.Interfaces
         public string GetEnterpriseNameById(int id);
         public Task<bool> VerifyAccount(string id, string email);
         public Task<bool> UpdateProfile(UpdateProfileRequestDto request);
+        public Task<Account> GetAccountByUsername(string username);
 
     }
 }

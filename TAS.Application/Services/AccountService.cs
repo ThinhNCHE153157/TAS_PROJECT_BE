@@ -77,7 +77,7 @@ namespace TAS.Application.Services
             return false;
         }
 
-        public async Task<bool> VerifyAccount(string otp,string email)
+        public async Task<bool> VerifyAccount(string otp, string email)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace TAS.Application.Services
                         }
                     }
                 }
-                        return false;
+                return false;
             }
             catch (Exception e)
             {
@@ -193,8 +193,8 @@ namespace TAS.Application.Services
                     var role = _unitOfWork.RoleRepositery.GetRoleById(roleDto.RoleId);
                     account.Roles.Add(role);
                 }
-                    await _unitOfWork.AccountRepository.AddAsync(account).ConfigureAwait(false);
-                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                await _unitOfWork.AccountRepository.AddAsync(account).ConfigureAwait(false);
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 return true;
             }
             catch (Exception e)
@@ -232,7 +232,7 @@ namespace TAS.Application.Services
                         }
                         existingAccount.Roles.Add(role);
                     }
-                     await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
                     return true;
 
                 }
@@ -263,7 +263,7 @@ namespace TAS.Application.Services
             return null;
         }
 
-        public async Task<bool> updateOtp(string email, string otp,DateTime ExpriseTime)
+        public async Task<bool> updateOtp(string email, string otp, DateTime ExpriseTime)
         {
             try
             {
@@ -427,7 +427,7 @@ namespace TAS.Application.Services
             try
             {
                 var result = _unitOfWork.AccountRepository.GetAllEnterprise().ToList();
-                if (result!=null)
+                if (result != null)
                 {
                     return result;
                 }
@@ -493,8 +493,27 @@ namespace TAS.Application.Services
             }
             catch
             {
-                _logger.LogError("Update profile failed");  
+                _logger.LogError("Update profile failed");
                 return false;
+            }
+        }
+
+        public async Task<Account> GetAccountByUsername(string username)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetAccountByUsername(username);
+                if (result != null)
+                {
+                    return result;
+                }
+                return null;
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
             }
         }
     }
