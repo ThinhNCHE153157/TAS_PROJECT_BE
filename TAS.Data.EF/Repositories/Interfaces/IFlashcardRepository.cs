@@ -11,7 +11,8 @@ namespace TAS.Data.EF.Repositories.Interfaces
 {
     public interface IFlashcardRepository : IBaseRepository<Flashcard>
     {
-        List<GetFlashcardByAccountIdResponseDto> GetFlashCardByAccountId(int accountId);
+        List<Flashcard> GetFlashCardByAccountId(int accountId);
+        List<AccountFlashcard> GetAccountFlashcardsByAccountId(int accountId);
         bool CreateFlashCard(Flashcard flashcard);
         bool UpdateFlashCard(FlashCardRequestDto request, int id);
         bool DeleteFlashCard(int id);

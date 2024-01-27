@@ -20,6 +20,7 @@ namespace TAS.Data.Entities
 
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<AccountFlashcard> AccountFlashcards { get; set; } = null!;
+        public virtual DbSet<AccountItemCard> AccountItemCards { get; set; } = null!;
         public virtual DbSet<Address> Addresses { get; set; } = null!;
         public virtual DbSet<City> Cities { get; set; } = null!;
         public virtual DbSet<Country> Countries { get; set; } = null!;
@@ -172,6 +173,32 @@ namespace TAS.Data.Entities
                     .HasForeignKey(d => d.FlashcardId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Account_F__flash__39788055");
+            });
+
+            modelBuilder.Entity<AccountItemCard>(entity =>
+            {
+                entity.HasKey(e => new { e.ItemcardId, e.AccountId })
+                    .HasName("PK__Account___9217BD266B743277");
+
+                entity.ToTable("Account_itemCard");
+
+                entity.Property(e => e.ItemcardId).HasColumnName("itemcard_id");
+
+                entity.Property(e => e.AccountId).HasColumnName("account_id");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.AccountItemCards)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Account_i__accou__4F67C174");
+
+                entity.HasOne(d => d.Itemcard)
+                    .WithMany(p => p.AccountItemCards)
+                    .HasForeignKey(d => d.ItemcardId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Account_i__itemc__505BE5AD");
             });
 
             modelBuilder.Entity<Address>(entity =>
@@ -424,8 +451,6 @@ namespace TAS.Data.Entities
                     .HasMaxLength(255)
                     .HasColumnName("spelling");
 
-                entity.Property(e => e.Status).HasColumnName("status");
-
                 entity.Property(e => e.Type)
                     .HasMaxLength(255)
                     .IsUnicode(false)
@@ -434,7 +459,7 @@ namespace TAS.Data.Entities
                 entity.HasOne(d => d.Flashcard)
                     .WithMany(p => p.ItemCards)
                     .HasForeignKey(d => d.FlashcardId)
-                    .HasConstraintName("FK__ItemCard__flashc__3C54ED00");
+                    .HasConstraintName("FK__ItemCard__flashc__48BAC3E5");
             });
 
             modelBuilder.Entity<Order>(entity =>

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TAS.Data.Entities
+namespace TAS.Data.Dtos.Domains
 {
-    public partial class ItemCard
+    public class ItemCardDto
     {
         public int Id { get; set; }
         public int? FlashcardId { get; set; }
@@ -17,8 +17,5 @@ namespace TAS.Data.Entities
         public string? Spelling { get; set; }
         public string? Example { get; set; }
         public string? Note { get; set; }
-
-        public virtual Flashcard? Flashcard { get; set; }
-        public virtual ICollection<AccountItemCard> AccountItemCards { get; set; }
     }
 }

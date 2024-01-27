@@ -23,7 +23,7 @@ namespace TAS.Data.EF.Repositories
 
         public bool AddFlashCardItem(ItemCard itemcard)
         {
-            if (itemcard!=null)
+            if (itemcard != null)
             {
                 _context.ItemCards.Add(itemcard);
                 _context.SaveChanges();
@@ -34,7 +34,7 @@ namespace TAS.Data.EF.Repositories
 
         public bool AddItemcard(List<ItemCard> itemcard)
         {
-            if (itemcard!=null)
+            if (itemcard != null)
             {
                 _context.ItemCards.AddRange(itemcard);
                 _context.SaveChanges();
@@ -76,18 +76,18 @@ namespace TAS.Data.EF.Repositories
             {
                 var x = _context.Flashcards.Where(x => x.FlashcardId == id).FirstOrDefault();
                 var y = _context.AccountFlashcards.Where(x => x.FlashcardId == id).FirstOrDefault();
-                if (y!=null)
+                if (y != null)
                 {
                     _context.Remove(y);
                     _context.SaveChanges();
-                    if (x!=null)
+                    if (x != null)
                     {
                         _context.Remove(x);
                         _context.SaveChanges();
                         return true;
                     }
                 }
-                    return false;
+                return false;
             }
             catch (Exception ex)
             {
@@ -95,29 +95,24 @@ namespace TAS.Data.EF.Repositories
             }
         }
 
-        public List<GetFlashcardByAccountIdResponseDto> GetFlashCardByAccountId(int accountId)
+        public List<AccountFlashcard> GetAccountFlashcardsByAccountId(int accountId)
+        {
+            return _context.AccountFlashcards.Where(x => x.AccountId == accountId).ToList();
+        }
+
+        public List<Flashcard> GetFlashCardByAccountId(int accountId)
         {
             try
             {
-                List<GetFlashcardByAccountIdResponseDto> result = new List<GetFlashcardByAccountIdResponseDto>();
+                List<Flashcard> result = new List<Flashcard>();
                 List<AccountFlashcard> listFlashcardId = _context.AccountFlashcards.Where(x => x.AccountId == accountId).ToList();
                 if (listFlashcardId.Count != 0)
                 {
                     foreach (var item in listFlashcardId)
                     {
                         Flashcard result1 = _context.Flashcards.Include(x => x.ItemCards).Where(x => x.FlashcardId == item.FlashcardId).FirstOrDefault();
-                        GetFlashcardByAccountIdResponseDto flashcard = new GetFlashcardByAccountIdResponseDto();
-                        flashcard.FlashcardId = item.FlashcardId;
-                        flashcard.AccountId = item.AccountId;
-                        if (result1 != null)
-                        {
-                            flashcard.FlashcardName = result1.FlashcardName;
-                            flashcard.Description = result1.Description;
-                            flashcard.CreateUser = result1.CreateUser;
-                            flashcard.NumberOfItem = result1.ItemCards.Count;
-                            flashcard.IsOwn = item.IsOwn;
-                            result.Add(flashcard);
-                        }
+                        result.Add(result1);
+
                     }
                 }
                 return result;

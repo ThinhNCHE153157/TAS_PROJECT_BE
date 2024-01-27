@@ -110,12 +110,26 @@ namespace TAS.Application.Services
             try
             {
                 var result = _unitOfWork.FlashcardRepository.GetFlashCardByAccountId(accountId);
-                return result;
+                var listaccountFlashcard = _unitOfWork.FlashcardRepository.GetAccountFlashcardsByAccountId(accountId);
+                var response = _mapper.Map<List<GetFlashcardByAccountIdResponseDto>>(result);
+                foreach (var item in response)
+                {
+                    item.NumberOfItem = item.ItemCards.Count;
+                    foreach (var item1 in listaccountFlashcard)
+                    {
+                        if (item.FlashcardId == item1.FlashcardId)
+                        {
+                            item.AccountId = item1.AccountId;
+                            item.IsOwn = true;
+                        }
+                    }
+                }
+                return response;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw;
+                return null;
             }
         }
 
