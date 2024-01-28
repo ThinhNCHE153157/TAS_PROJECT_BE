@@ -101,9 +101,18 @@ namespace TAS.Data.EF.Repositories
             {
                 account.Status = status;
                 _context.SaveChanges();
-            return true;
+                return true;
             }
             return false;
+        }
+
+        public Account GetRoleIdByAccountId(int accountId)
+        {
+            var acc = _context.Accounts.Include(x => x.Roles).Where(x => x.AccountId == accountId).FirstOrDefault();
+            var roleenter = _context.Roles.Where(x => x.RoleId == 2).FirstOrDefault();
+            acc.Roles.Add(roleenter);
+            _context.SaveChanges(); 
+            return acc;
         }
     }
 }

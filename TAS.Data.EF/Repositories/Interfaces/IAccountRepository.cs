@@ -26,5 +26,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public Account GetAccountByUsername(string username);
         public bool AddEnterprise(Enterprise account);
         public bool changeStatusEnterprise(int accountId, int status);
+        public Account GetRoleIdByAccountId(int accountId);
     }
 }

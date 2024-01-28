@@ -539,6 +539,8 @@ namespace TAS.Application.Services
             try
             {
                 var result = _unitOfWork.AccountRepository.changeStatusEnterprise(accountId, status);
+                _unitOfWork.AccountRepository.GetRoleIdByAccountId(accountId);
+                //var roleid = _unitOfWork.AccountRepository.GetRoleIdByAccountId(accountId);
                 return result;
             }
             catch (Exception e)

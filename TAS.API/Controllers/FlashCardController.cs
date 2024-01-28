@@ -31,7 +31,7 @@ namespace TAS.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> CreateFlashCard([FromBody] FlashCardRequestDto request)
         {
             var data = await _flashcardService.CreateFlashCard(request);
