@@ -8,6 +8,8 @@ namespace TAS.Data.Entities
     {
         public Account()
         {
+            AccountFlashcards = new HashSet<AccountFlashcard>();
+            AccountItemCards = new HashSet<AccountItemCard>();
             Enterprises = new HashSet<Enterprise>();
             Orders = new HashSet<Order>();
             TestResults = new HashSet<TestResult>();
@@ -36,6 +38,8 @@ namespace TAS.Data.Entities
         public DateTime? UpdateDate { get; set; }
         public bool? IsDeleted { get; set; }
 
+        public virtual ICollection<AccountFlashcard> AccountFlashcards { get; set; }
+        public virtual ICollection<AccountItemCard> AccountItemCards { get; set; }
         public virtual ICollection<Enterprise> Enterprises { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<TestResult> TestResults { get; set; }

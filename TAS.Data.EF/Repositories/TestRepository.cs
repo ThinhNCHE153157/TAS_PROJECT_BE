@@ -174,5 +174,17 @@ namespace TAS.Data.EF.Repositories
         {
             return _context.TestResults.Where(x => x.AccountId == accountId).ToList();
         }
+
+        public bool DeleteTestByTestId(int testId)
+        {
+            var result = _context.Set<Test>().Where(x => x.TestId == testId).FirstOrDefault();
+            if (result != null)
+            {
+                result.IsDeleted = true;
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
     }
 }

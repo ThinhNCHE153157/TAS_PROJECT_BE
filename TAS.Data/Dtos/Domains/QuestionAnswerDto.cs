@@ -8,10 +8,8 @@ namespace TAS.Data.Dtos.Domains
 {
     public class QuestionAnswerDto
     {
-        public string? ResultA { get; set; }
-        public string? ResultB { get; set; }
-        public string? ResultC { get; set; }
-        public string? ResultD { get; set; }
-        public string? CorrectResult { get; set; }
+        public string? Answer { get; set; }
+        public bool? Iscorrect { get; set; }
+
     }
 }

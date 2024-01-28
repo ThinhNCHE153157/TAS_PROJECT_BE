@@ -53,7 +53,7 @@ namespace TAS.Application.Services
         {
             try
             {
-                var test = await _unitOfWork.TestRepository.GetTestById(id).Include(x => x.Parts).ThenInclude(x => x.Questions).FirstOrDefaultAsync().ConfigureAwait(false);
+                var test = await _unitOfWork.TestRepository.GetTestById(id).Include(x => x.Parts).ThenInclude(x => x.Questions).ThenInclude(x => x.QuestionAnswers).FirstOrDefaultAsync().ConfigureAwait(false);
                 if (test != null)
                 {
                     var result = _mapper.Map<GetTestByIdResponseDto>(test);
@@ -155,15 +155,56 @@ namespace TAS.Application.Services
 
                 Test test = new Test();
                 test.TestName = request.TestName;
+                test.TestDescription = request.TestDescription;
                 test.TopicId = request.TopicId;
                 await _unitOfWork.TestRepository.AddAsync(test).ConfigureAwait(false);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 Part part = new Part();
                 part.TestId = test.TestId;
                 part.Url = url;
-                part.Type = (request.Type == 1) ?true:false;
+                part.Type = (request.Type == 1) ? true : false;
                 var result = _unitOfWork.TestRepository.AddPart(part);
                 return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateTestForCourse(UpdateTestForCourseRequestDto request)
+        {
+            try
+            {
+                string url = "";
+                if (request.Url != null)
+                {
+                    S3RequestData s3RequestData = new S3RequestData
+                    {
+                        BucketName = "tas",
+                        InputStream = request.Url.OpenReadStream(),
+                        Name = request.Url.FileName,
+                    };
+                    await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                    url = _s3StorageService.GetFileUrl(s3RequestData);
+                }
+                var test = _unitOfWork.TestRepository.GetTestById(request.TestId).FirstOrDefault();
+                if (test != null)
+                {
+                    test.TestName = request.TestName;
+                    test.TestDescription = request.Description;
+                    var part = _unitOfWork.TestRepository.GetPartByTestId(request.TestId).FirstOrDefault();
+                    if (part != null)
+                    {
+                        part.Url = url;
+                        part.Type = (request.Type == 1) ? true : false;
+                        //await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    }
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    return true;
+                }
+                return false;
             }
             catch (Exception e)
             {
@@ -271,7 +312,11 @@ namespace TAS.Application.Services
                 var testResultId = _unitOfWork.TestRepository.GetTestResultId(request.TestId, request.AccountId);
                 foreach (var item in request.ListAnswer)
                 {
-                    QuestionResultDto questionResult = new QuestionResultDto(testResultId,request.NumberCorrect, item.QuestionId.ToString(), item.UserAnswer);
+                    QuestionResultDto questionResult = new QuestionResultDto();
+
+                    questionResult.TestResultId = testResultId;
+                    questionResult.Description = item.UserAnswer;
+                    questionResult.QuestionId = item.QuestionId;
                     var answer = _mapper.Map<QuestionResult>(questionResult);
                     _unitOfWork.QuestionRepository.AddQuestionResult(answer);
                 }
@@ -287,56 +332,34 @@ namespace TAS.Application.Services
         public async Task<SaveTestResultResponseDto> TestDetail(int testId, int accountId)
         {
             SaveTestResultResponseDto response = new SaveTestResultResponseDto();
-            //var useranswer = _unitOfWork.QuestionRepository.questionResults(testId, accountId);
-            //foreach (var item in useranswer)
-            //{
-            //    var userAnswer = _mapper.Map<UserAnswerDto>(item);
-            //    response.userAnswers.Add(userAnswer);
-            //    response.NumCorrect= item.Description;
-            //}
-            //var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).FirstOrDefaultAsync().ConfigureAwait(false);
-            //if (test != null)
-            //{
-            //    response.TestName = test.TestName;
-            //    var result = _mapper.Map<GetTestByIdResponseDto>(test);
-            //    foreach (var item in result.Parts)
-            //    {
-            //        foreach (var ques in item.Questions)
-            //        {
-            //            var questionAnswer = _questionService.questionAnswerById(ques.QuestionId).Result;
-            //            if (questionAnswer != null)
-            //            {
-            //                if (questionAnswer.ResultA != null)
-            //                {
-            //                    ques.Answers.Add(questionAnswer.ResultA!);
-            //                }
-            //                if (questionAnswer.ResultB != null)
-            //                {
-            //                    ques.Answers.Add(questionAnswer.ResultB!);
-            //                }
-            //                if (questionAnswer.ResultC != null)
-            //                {
-            //                    ques.Answers.Add(questionAnswer.ResultC!);
-            //                }
-            //                if (questionAnswer.ResultD != null)
-            //                {
-            //                    ques.Answers.Add(questionAnswer.ResultD!);
-            //                }
-            //                if (questionAnswer.CorrectResult != null)
-            //                {
-            //                    ques.CorrectAnswer = questionAnswer.CorrectResult!;
-            //                }
-            //            }
-            //        }
-            //    }
-            //    foreach (var item in result.Parts)
-            //    {
-            //        foreach (var ques in item.Questions)
-            //        {
-            //            response.questionDtos.Add(ques);
-            //        }
-            //    }
-            //}
+            var useranswer = _unitOfWork.QuestionRepository.questionResults(testId, accountId);
+            foreach (var item in useranswer)
+            {
+                var userAnswer = _mapper.Map<UserAnswerDto>(item);
+                var x = _unitOfWork.QuestionRepository.GetTestResultByTestResultId(item.TestResultId);
+                if (x != null)
+                {
+                    response.NumCorrect = x.TestNumberCorrect.ToString();
+                }
+                response.userAnswers.Add(userAnswer);
+            }
+            var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).ThenInclude(x => x.QuestionAnswers).FirstOrDefaultAsync().ConfigureAwait(false);
+            if (test != null)
+            {
+                response.TestName = test.TestName;
+                var result = _mapper.Map<GetTestByIdResponseDto>(test);
+                foreach (var item in result.Parts)
+                {
+
+                    foreach (var item1 in result.Parts)
+                    {
+                        foreach (var ques in item1.Questions)
+                        {
+                            response.questionDtos.Add(ques);
+                        }
+                    }
+                }
+            }
             return response;
         }
 
@@ -370,20 +393,41 @@ namespace TAS.Application.Services
                 _logger.LogError(e.Message);
                 return null;
             }
-           
+
         }
 
-        public async Task<List<TestResult>> GetTestResult(int accountId)
+        public async Task<List<TestResultDto2>> GetTestResult(int accountId)
         {
             try
             {
                 var result = _unitOfWork.TestRepository.GetTestResultByAccountd(accountId).ToList();
-                return result;
+                var response = _mapper.Map<List<TestResultDto2>>(result);
+                foreach (var item in response)
+                {
+                    var test = _unitOfWork.TestRepository.GetTestById(item.TestId).FirstOrDefault();
+                    item.TestName = test.TestName;
+                }
+
+                return response;
             }
             catch
             {
-                _logger.LogError("GetTestResult error"); 
+                _logger.LogError("GetTestResult error");
                 return null;
+            }
+        }
+
+        public async Task<bool> DeleteTest(int id)
+        {
+            try
+            {
+                var result = _unitOfWork.TestRepository.DeleteTestByTestId(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
             }
         }
     }

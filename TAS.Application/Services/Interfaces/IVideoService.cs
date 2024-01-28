@@ -8,6 +8,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> DeleteVideo(string videoName);
         public Task<bool> UpdateVideo(UpdateVideoRequestDto request);
         public Task<bool> GetVideo(string videoName);
-        public Task<bool> AddVideoToTopic(List<AddVideoToTopicRequestDto> request);
+        public Task<bool> AddVideoToTopic(AddVideoToTopicRequestDto request);
     }
 }

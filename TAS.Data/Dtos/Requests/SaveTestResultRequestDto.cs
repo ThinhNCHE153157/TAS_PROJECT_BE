@@ -13,7 +13,7 @@ namespace TAS.Data.Dtos.Requests
         public int TestId { get; set; }
         public double TestFinish { get; set; }
         public double TestScore { get; set; }
-        public string NumberCorrect { get; set; }
+        public string TestNumberCorrect { get; set; }
         public List<UserAnswerDto> ListAnswer { get; set; }
 
     }

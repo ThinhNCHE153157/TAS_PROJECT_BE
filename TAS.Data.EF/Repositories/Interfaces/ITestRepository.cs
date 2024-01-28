@@ -9,6 +9,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public IQueryable<Test> GetTestResultById(int testId);
         public IQueryable<Test> GetTestById(int testId);
         public bool UpdateTest(Test test);
+        public bool DeleteTestByTestId(int testId);
         public bool UpdateStatusTest(int testId);
         public IQueryable<Test> GetListTestFree();
         public IEnumerable<int> GetPartsByTestId(int testId);
