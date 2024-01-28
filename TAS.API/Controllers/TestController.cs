@@ -121,6 +121,13 @@ namespace TAS.API.Controllers
             var result = await _testService.DeleteTest(testId).ConfigureAwait(false);
             return Ok(result);
         }
+        //[HttpGet]
+        ////[Authorize]
+        //public async Task<IActionResult> GetTestHistory([FromQuery] int testId, [FromQuery] int accountId)
+        //{
+        //    var result = await _testService.GetTestHistory(testId,accountId).ConfigureAwait(false);
+        //    return Ok(result);
+        //}
 
 
     }

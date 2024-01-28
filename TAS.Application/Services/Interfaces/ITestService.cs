@@ -1,4 +1,5 @@
-﻿using TAS.Data.Dtos.Requests;
+﻿using TAS.Data.Dtos.Domains;
+using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.Entities;
 
@@ -20,6 +21,7 @@ namespace TAS.Application.Services.Interfaces
         public Task<SaveTestResultResponseDto> TestDetail(int testId, int accountId);
         public int GetPartIdByTopicId(int courseId);
         public Task<List<Part>> GetPartByTestId(int testId);
-        public Task<List<TestResult>> GetTestResult(int accountId);
+        public Task<List<TestResultDto2>> GetTestResult(int accountId);
+        //public Task<List<TestResult>> GetTestHistory(int )
     }
 }

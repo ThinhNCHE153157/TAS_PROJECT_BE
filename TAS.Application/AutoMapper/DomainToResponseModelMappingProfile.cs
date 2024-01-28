@@ -25,6 +25,7 @@ namespace TAS.Application.AutoMapper
             CreateMap<Account, AccountTeacherName>().ForMember(_dto => _dto.Teacher, dt => dt.MapFrom(src => src.FirstName + ' ' + src.LastName));
             CreateMap<Test,CourseResultResponseDto>();
             CreateMap<TestResult,TestResultDto>();
+            CreateMap<TestResult,TestResultDto2>();
             CreateMap<QuestionAnswer, QuestionAnswerDto>();
             CreateMap<Test,GetTestByIdResponseDto>();
             CreateMap<Test,GetListTestFreeResponseDto>();

@@ -53,6 +53,27 @@ namespace TAS.Application.Services
             }
         }
 
+        public async Task<List<AllAccountBuyCourse>> allAccountBuyCourses(int accountId)
+        {
+            var enterpriseName = GetEnterpriseNameByAccountId(accountId);
+            var result = await GetListCourseByEnterpriseName(enterpriseName);
+            List<AllAccountBuyCourse> list = new List<AllAccountBuyCourse>();
+            foreach (var item in result)
+            {
+                var listorder = _unitOfWork.OrderRepository.GetAll().Where(x => x.CourseId == item.CourseId).ToList();
+                foreach (var item1 in listorder)
+                {
+                    AllAccountBuyCourse allAccountBuyCourse = new AllAccountBuyCourse();
+                    var acc = _unitOfWork.AccountRepository.GetAccountById((int)item1.AccountId).FirstOrDefault();
+                    allAccountBuyCourse.UserName = acc.Username;
+                    allAccountBuyCourse.Email = acc.Email;
+                    allAccountBuyCourse.CourseName = item.CourseName;
+                    list.Add(allAccountBuyCourse);
+                }
+            }
+            return list;
+        }
+
         public async Task<List<CourseDashboardResponseDto>> GetAllCourse()
         {
             try
@@ -172,6 +193,12 @@ namespace TAS.Application.Services
             {
                 throw new Exception(e.Message);
             }
+        }
+
+        public async Task<List<Course>> GetListCourseByEnterpriseName(string name)
+        {
+            var result = _unitOfWork.CourseRepository.GetCourseByEnterpriseName(name);
+            return result;
         }
 
         public async Task<bool> UpdateCost(UpdateCostRequestDto request)
