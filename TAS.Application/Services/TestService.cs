@@ -53,7 +53,7 @@ namespace TAS.Application.Services
         {
             try
             {
-                var test = await _unitOfWork.TestRepository.GetTestById(id).Include(x => x.Parts).ThenInclude(x => x.Questions).ThenInclude(x=>x.QuestionAnswers).FirstOrDefaultAsync().ConfigureAwait(false);
+                var test = await _unitOfWork.TestRepository.GetTestById(id).Include(x => x.Parts).ThenInclude(x => x.Questions).ThenInclude(x => x.QuestionAnswers).FirstOrDefaultAsync().ConfigureAwait(false);
                 if (test != null)
                 {
                     var result = _mapper.Map<GetTestByIdResponseDto>(test);
@@ -343,7 +343,7 @@ namespace TAS.Application.Services
                 }
                 response.userAnswers.Add(userAnswer);
             }
-            var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).ThenInclude(x=>x.QuestionAnswers).FirstOrDefaultAsync().ConfigureAwait(false);
+            var test = await _unitOfWork.TestRepository.GetTestById(testId).Include(x => x.Parts).ThenInclude(x => x.Questions).ThenInclude(x => x.QuestionAnswers).FirstOrDefaultAsync().ConfigureAwait(false);
             if (test != null)
             {
                 response.TestName = test.TestName;
@@ -396,12 +396,19 @@ namespace TAS.Application.Services
 
         }
 
-        public async Task<List<TestResult>> GetTestResult(int accountId)
+        public async Task<List<TestResultDto2>> GetTestResult(int accountId)
         {
             try
             {
                 var result = _unitOfWork.TestRepository.GetTestResultByAccountd(accountId).ToList();
-                return result;
+                var response = _mapper.Map<List<TestResultDto2>>(result);
+                foreach (var item in response)
+                {
+                    var test = _unitOfWork.TestRepository.GetTestById(item.TestId).FirstOrDefault();
+                    item.TestName = test.TestName;
+                }
+
+                return response;
             }
             catch
             {

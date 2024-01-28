@@ -174,6 +174,12 @@ namespace TAS.Application.Services
             }
         }
 
+        public async Task<List<Course>> GetListCourseByEnterpriseName(string name)
+        {
+            var result = _unitOfWork.CourseRepository.GetCourseByEnterpriseName(name);
+            return result;
+        }
+
         public async Task<bool> UpdateCost(UpdateCostRequestDto request)
         {
             try

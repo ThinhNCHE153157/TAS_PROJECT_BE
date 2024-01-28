@@ -17,5 +17,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<List<GetEnterpriseCourseResponseDto>> GetCourseByEnterpriseName(string name);
         public string GetEnterpriseNameByAccountId(int id);
         public Task<List<Course>> GetListCourseByAccountId(int id);
+        public Task<List<Course>> GetListCourseByEnterpriseName(string name);
     }
 }
