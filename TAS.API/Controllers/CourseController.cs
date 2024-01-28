@@ -140,15 +140,16 @@ namespace TAS.API.Controllers
             return NotFound();
         }
 
-        //[HttpGet]
-        ////[Authorize]
-        //public async Task<IActionResult> GetListCourseByEnterprise([FromQuery] int accountId)
-        //{ 
-        //    if (result != null)
-        //    {
-        //        return Ok(result);
-        //    }
-        //    return NotFound();
-        //}
+        [HttpGet]
+        //[Authorize]
+        public async Task<IActionResult> GetListCourseByEnterprise([FromQuery] int accountId)
+        {
+            var result = await _courseService.allAccountBuyCourses(accountId);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NotFound();
+        }
     }
 }

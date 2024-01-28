@@ -47,7 +47,7 @@ namespace TAS.Data.EF.Repositories
             List<Course> list = new List<Course>();
             foreach (var item in listid)
             {
-                var course = _context.Courses.Where(x => x.CourseId == item).FirstOrDefault();
+                var course = _context.Courses.Include(x=>x.Topics).Where(x => x.CourseId == item).FirstOrDefault();
                 if (course!=null)
                 {
                 list.Add(course);

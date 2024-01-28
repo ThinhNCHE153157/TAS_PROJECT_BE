@@ -53,9 +53,25 @@ namespace TAS.Application.Services
             }
         }
 
-        public Task<List<AllAccountBuyCourse>> allAccountBuyCourses()
+        public async Task<List<AllAccountBuyCourse>> allAccountBuyCourses(int accountId)
         {
-            throw new NotImplementedException();
+            var enterpriseName = GetEnterpriseNameByAccountId(accountId);
+            var result = await GetListCourseByEnterpriseName(enterpriseName);
+            List<AllAccountBuyCourse> list = new List<AllAccountBuyCourse>();
+            foreach (var item in result)
+            {
+                var listorder = _unitOfWork.OrderRepository.GetAll().Where(x => x.CourseId == item.CourseId).ToList();
+                foreach (var item1 in listorder)
+                {
+                    AllAccountBuyCourse allAccountBuyCourse = new AllAccountBuyCourse();
+                    var acc = _unitOfWork.AccountRepository.GetAccountById((int)item1.AccountId).FirstOrDefault();
+                    allAccountBuyCourse.UserName = acc.Username;
+                    allAccountBuyCourse.Email = acc.Email;
+                    allAccountBuyCourse.CourseName = item.CourseName;
+                    list.Add(allAccountBuyCourse);
+                }
+            }
+            return list;
         }
 
         public async Task<List<CourseDashboardResponseDto>> GetAllCourse()

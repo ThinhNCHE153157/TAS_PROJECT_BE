@@ -18,6 +18,6 @@ namespace TAS.Application.Services.Interfaces
         public string GetEnterpriseNameByAccountId(int id);
         public Task<List<Course>> GetListCourseByAccountId(int id);
         public Task<List<Course>> GetListCourseByEnterpriseName(string name);
-        public Task<List<AllAccountBuyCourse>> allAccountBuyCourses();
+        public Task<List<AllAccountBuyCourse>> allAccountBuyCourses(int accountId);
     }
 }
