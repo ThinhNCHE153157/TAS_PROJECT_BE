@@ -16,5 +16,7 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> AddQuestion(CreateQuestionRequestDto request);
         public Task<List<GetQuestionByCourseIdResponseDto>> GetQuestionByCourseId (int courseId);
         public Task<bool> AddQuestionForTest(CreateQuestionForTestRequestDto requestDto);
+        //public Task<bool> GetAllQuestionByTestId(int testid);
+
     }
 }

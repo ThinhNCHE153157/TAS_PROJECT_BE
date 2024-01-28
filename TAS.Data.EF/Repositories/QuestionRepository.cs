@@ -211,5 +211,10 @@ namespace TAS.Data.EF.Repositories
             }
 
         }
+
+        public TestResult GetTestResultByTestResultId(int testResultId)
+        {
+            return _context.TestResults.Where(x => x.TestResultId == testResultId).FirstOrDefault();
+        }
     }
 }

@@ -29,5 +29,6 @@ namespace TAS.Application.Services.Interfaces
         public Task<bool> UpdateProfile(UpdateProfileRequestDto request);
         public Task<Account> GetAccountByUsername(string username);
         public Task<bool> AddEnterprise(AddEnterpriseRequestDto account);
+        public Task<bool> changeStatusEnterprise(int accountId, int status);
     }
 }

@@ -25,19 +25,19 @@ namespace TAS.Data.EF.Repositories
         }
 
         public IQueryable<Account> GetAccountManagement()
-		{
-			return _context.Accounts.Include(a => a.Roles);
+        {
+            return _context.Accounts.Include(a => a.Roles);
 
         }
 
-		public IQueryable<Account> GetAllAccount()
+        public IQueryable<Account> GetAllAccount()
         {
             return _context.Set<Account>().Where(a => a.IsDeleted.Equals(Common.IsNotDelete));
         }
 
         public Account Getuser(UserLoginRequestDto requestDto)
         {
-            var user = _context.Accounts.Include(x => x.Roles).Where(x=>x.Username.Equals(requestDto.UserName) && x.IsDeleted==Common.IsNotDelete).FirstOrDefault();
+            var user = _context.Accounts.Include(x => x.Roles).Where(x => x.Username.Equals(requestDto.UserName) && x.IsDeleted == Common.IsNotDelete).FirstOrDefault();
             return user;
 
         }
@@ -53,7 +53,7 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Account> GetAllTeacher()
         {
-            return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 3 ));
+            return _context.Accounts.Where(a => a.Roles.Any(r => r.RoleId == 3));
         }
         public IQueryable<Account> GetAllAccounts_Manage()
         {
@@ -92,6 +92,18 @@ namespace TAS.Data.EF.Repositories
             _context.Enterprises.Add(account);
             _context.SaveChanges();
             return true;
+        }
+
+        public bool changeStatusEnterprise(int accountId, int status)
+        {
+            var account = _context.Enterprises.FirstOrDefault(x => x.AccountId == accountId);
+            if (account != null)
+            {
+                account.Status = status;
+                _context.SaveChanges();
+            return true;
+            }
+            return false;
         }
     }
 }

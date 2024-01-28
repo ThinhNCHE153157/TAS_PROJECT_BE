@@ -37,9 +37,9 @@ namespace TAS.Application.AutoMapper
             CreateMap<Question, QuestionDto>();
             CreateMap<QuestionResult, QuestionResultDto>();
             CreateMap<QuestionResultDto, QuestionResult>();
-            //CreateMap<QuestionResult,UserAnswerDto>()
-            //    .ForMember(_dto => _dto.QuestionId, dt => dt.MapFrom(src => src.Image))
-            //    .ForMember(_dto => _dto.UserAnswer, dt => dt.MapFrom(src => src.Type));
+            CreateMap<QuestionResult, UserAnswerDto>()
+                .ForMember(_dto => _dto.QuestionId, dt => dt.MapFrom(src => src.QuestionId))
+                .ForMember(_dto => _dto.UserAnswer, dt => dt.MapFrom(src => src.Description));
             CreateMap<Test,TestForCourseDto>();
             CreateMap<Part,PartTestDto>();
             CreateMap<Course,GetEnterpriseCourseResponseDto>();

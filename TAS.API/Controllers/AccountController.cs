@@ -302,5 +302,16 @@ namespace TAS.API.Controllers
             }
             return Ok();
         }
+
+        [HttpPut]
+        public async Task<IActionResult> changeStatusEnterprise([FromQuery] int accountId, [FromQuery] int status)
+        {
+            var isSuccess = await _accountService.changeStatusEnterprise(accountId, status).ConfigureAwait(false);
+            if (!isSuccess)
+            {
+                return BadRequest("Something wrong when change status enterprise");
+            }
+            return Ok();
+        }
     }
 }

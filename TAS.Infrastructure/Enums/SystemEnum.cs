@@ -22,5 +22,12 @@
             Rejected = 3,
             Draft = 4
         }
+
+        public enum EnterpriseStatus
+        {
+            Approved = 2,
+            Pending = 1,
+            Rejected = 0,
+        }
     }
 }

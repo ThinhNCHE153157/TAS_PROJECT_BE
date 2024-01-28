@@ -26,5 +26,6 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public bool DeleteQuestionAnswer(int questionId);
         public bool UpdateQuestionAnswer1(QuestionAnswer questionAnswer);
         public bool UpdateQuestionAnswer(List<QuestionAnswer> questionAnswer);
+        TestResult GetTestResultByTestResultId(int testResultId);
     }
 }

@@ -522,7 +522,7 @@ namespace TAS.Application.Services
             try
             {
                 var enterprise = _mapper.Map<Enterprise>(account);
-                enterprise.Status = 0;
+                enterprise.Status = (int)EnterpriseStatus.Pending;
                 _unitOfWork.AccountRepository.AddEnterprise(enterprise);
                 _unitOfWork.Commit();
                 return true;
@@ -532,6 +532,21 @@ namespace TAS.Application.Services
                 _logger.LogError(e.Message);
                 return false;
             }
+        }
+
+        public async Task<bool> changeStatusEnterprise(int accountId, int status)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.changeStatusEnterprise(accountId, status);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+
         }
     }
 }
