@@ -53,6 +53,11 @@ namespace TAS.Application.Services
             }
         }
 
+        public Task<List<AllAccountBuyCourse>> allAccountBuyCourses()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<CourseDashboardResponseDto>> GetAllCourse()
         {
             try

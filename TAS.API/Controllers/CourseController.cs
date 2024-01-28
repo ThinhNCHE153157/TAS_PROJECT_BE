@@ -140,17 +140,15 @@ namespace TAS.API.Controllers
             return NotFound();
         }
 
-        [HttpGet]
-        //[Authorize]
-        public async Task<IActionResult> GetListCourseByEnterprise([FromQuery] int accountId)
-        {
-            var enterpriseName = _courseService.GetEnterpriseNameByAccountId(accountId);
-            var result = await _courseService.GetListCourseByEnterpriseName(enterpriseName);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            return NotFound();
-        }
+        //[HttpGet]
+        ////[Authorize]
+        //public async Task<IActionResult> GetListCourseByEnterprise([FromQuery] int accountId)
+        //{ 
+        //    if (result != null)
+        //    {
+        //        return Ok(result);
+        //    }
+        //    return NotFound();
+        //}
     }
 }
