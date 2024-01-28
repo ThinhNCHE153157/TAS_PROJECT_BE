@@ -23,5 +23,8 @@ namespace TAS.Data.EF.Repositories.Interfaces
         public IQueryable<Account> GetAllAccounts_Manage();
         public IQueryable<Enterprise> GetAllEnterprise();
         public string GetEnterpriseNameById(int id);
+        public Account GetAccountByUsername(string username);
+        public bool AddEnterprise(Enterprise account);
+        public bool changeStatusEnterprise(int accountId, int status);
     }
 }

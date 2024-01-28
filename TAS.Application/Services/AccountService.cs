@@ -77,16 +77,16 @@ namespace TAS.Application.Services
             return false;
         }
 
-        public async Task<bool> VerifyAccount(string id,string email)
+        public async Task<bool> VerifyAccount(string otp, string email)
         {
             try
             {
                 Account account = await _unitOfWork.AccountRepository.GetUserByEmail(email).ConfigureAwait(false);
                 if (account != null)
                 {
-                    if (account.Otp == id)
+                    if (account.Otp == otp)
                     {
-                        if (account.Otpexpiretime < System.DateTime.Now)
+                        if (account.Otpexpiretime > System.DateTime.Now)
                         {
                             account.IsVerified = true;
                             account.Otp = null;
@@ -96,7 +96,7 @@ namespace TAS.Application.Services
                         }
                     }
                 }
-                        return false;
+                return false;
             }
             catch (Exception e)
             {
@@ -193,8 +193,8 @@ namespace TAS.Application.Services
                     var role = _unitOfWork.RoleRepositery.GetRoleById(roleDto.RoleId);
                     account.Roles.Add(role);
                 }
-                    await _unitOfWork.AccountRepository.AddAsync(account).ConfigureAwait(false);
-                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                await _unitOfWork.AccountRepository.AddAsync(account).ConfigureAwait(false);
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 return true;
             }
             catch (Exception e)
@@ -232,7 +232,7 @@ namespace TAS.Application.Services
                         }
                         existingAccount.Roles.Add(role);
                     }
-                     await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
                     return true;
 
                 }
@@ -263,7 +263,7 @@ namespace TAS.Application.Services
             return null;
         }
 
-        public async Task<bool> updateOtp(string email, string otp,DateTime ExpriseTime)
+        public async Task<bool> updateOtp(string email, string otp, DateTime ExpriseTime)
         {
             try
             {
@@ -427,7 +427,7 @@ namespace TAS.Application.Services
             try
             {
                 var result = _unitOfWork.AccountRepository.GetAllEnterprise().ToList();
-                if (result!=null)
+                if (result != null)
                 {
                     return result;
                 }
@@ -466,6 +466,87 @@ namespace TAS.Application.Services
                 _logger.LogError(e.Message);
                 return null;
             }
+        }
+
+        public async Task<bool> UpdateProfile(UpdateProfileRequestDto request)
+        {
+            try
+            {
+                var account = await _unitOfWork.AccountRepository.GetAccountById(request.AccountId)
+                    .Where(x => x.IsDeleted == Common.IsNotDelete)
+                    .FirstOrDefaultAsync().ConfigureAwait(false);
+                if (account == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    account.FirstName = request.FirstName;
+                    account.LastName = request.LastName;
+                    account.Phone = request.Phone;
+                    account.Address = request.Address;
+                    //account.Dob = request.Dob;
+                    account.Gender = request.Gender;
+                    _unitOfWork.Commit();
+                    return true;
+                }
+            }
+            catch
+            {
+                _logger.LogError("Update profile failed");
+                return false;
+            }
+        }
+
+        public async Task<Account> GetAccountByUsername(string username)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.GetAccountByUsername(username);
+                if (result != null)
+                {
+                    return result;
+                }
+                return null;
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return null;
+            }
+        }
+
+        public async Task<bool> AddEnterprise(AddEnterpriseRequestDto account)
+        {
+            try
+            {
+                var enterprise = _mapper.Map<Enterprise>(account);
+                enterprise.Status = (int)EnterpriseStatus.Pending;
+                _unitOfWork.AccountRepository.AddEnterprise(enterprise);
+                _unitOfWork.Commit();
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> changeStatusEnterprise(int accountId, int status)
+        {
+            try
+            {
+                var result = _unitOfWork.AccountRepository.changeStatusEnterprise(accountId, status);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
+
         }
     }
 }

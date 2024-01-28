@@ -11,6 +11,7 @@ namespace TAS.Data.EF.Repositories.Interfaces
     {
         public IQueryable<Topic> GetTopicByCourseId(int courseId);
         public bool AddTopic(Topic topic);
+        public bool AddListTopic(List<Topic> topic);
         public IQueryable<Topic> UpdateTopic(Topic topic);
         public IQueryable<Topic> DeleteTopic(int topicId);
         public Topic GetTopicByName(string name);

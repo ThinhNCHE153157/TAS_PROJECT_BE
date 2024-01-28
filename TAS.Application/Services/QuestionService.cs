@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+using Newtonsoft.Json;
 using TAS.Application.Services.Interfaces;
+using TAS.Data.Dtos.Domains;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.Dtos.Responses;
 using TAS.Data.EF;
 using TAS.Data.Entities;
+using TAS.Data.S3Object;
 using TAS.Infrastructure.Helpers;
 
 namespace TAS.Application.Services
@@ -20,29 +17,56 @@ namespace TAS.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<QuestionService> _logger;
+        private readonly IS3StorageService _s3StorageService;
 
-        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper)
+        public QuestionService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<QuestionService> logger, IS3StorageService s3StorageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
+            _s3StorageService = s3StorageService;
         }
 
         public async Task<bool> AddQuestion(CreateQuestionRequestDto request)
         {
-            //try
-            //{
-            //    if (request != null)
-            //    {
-            //        var question =  _mapper.Map<Question>(request);
-            //        var result =  _unitOfWork.QuestionRepository.CreateQuestion(question,question.QuestionNavigation);
-            //        return result;
-            //    }
-            //    return false;
-            //}catch(Exception e)
-            //{
-            //    _logger.LogError(e.Message);    
-            //    return false;
-            //}
+            try
+            {
+                Question question = new Question();
+                if (request != null)
+                {
+                    if (request.Image != null)
+                    {
+                        S3RequestData s3RequestData = new S3RequestData
+                        {
+                            BucketName = "tas",
+                            InputStream = request.Image.OpenReadStream(),
+                            Name = request.Image.FileName,
+                        };
+                        await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                        question.Image = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
+                    }
+                    List<QuestionAnswerDto> list = new List<QuestionAnswerDto>();
+                    if (request.QuestionAnswers != null)
+                    {
+                        list = JsonConvert.DeserializeObject<List<QuestionAnswerDto>>(request.QuestionAnswers);
+                    }
+                    int partId = _unitOfWork.QuestionRepository.GetPartIdByTestId(request.TestId);
+                    question.PartId = partId;
+                    question.Description = request.Description;
+                    var listquestionAnswer = _mapper.Map<List<QuestionAnswer>>(list);
+                    question.QuestionAnswers = listquestionAnswer;
+                    await _unitOfWork.QuestionRepository.AddAsync(question).ConfigureAwait(false);
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return false;
+            }
             throw new NotImplementedException();
         }
 
@@ -106,60 +130,41 @@ namespace TAS.Application.Services
             }
         }
 
+
         public async Task<List<GetQuestionByCourseIdResponseDto>> GetQuestionByCourseId(int courseId)
         {
             List<GetQuestionByCourseIdResponseDto> result = new List<GetQuestionByCourseIdResponseDto>();
             try
             {
-                //var listTopicId = _unitOfWork.CourseRepository.GetListTopicIdByCourseId(courseId).ToList();
-                //foreach (var item in listTopicId)
-                //{
-                //    var ListtestId = _unitOfWork.TestRepository.GetTestIdByTopicId(item);
-                //    foreach (var testid in ListtestId)
-                //    {
-                //        GetQuestionByCourseIdResponseDto question = new GetQuestionByCourseIdResponseDto();
-                //        question.TestId = testid;
-                //        var part = _unitOfWork.TestRepository.GetPartByTestId(testid).FirstOrDefault();
-                //        if (part != null)
-                //        {
-                //            question.Url = part.Url;
-                //        }
-                //        var listQuestion = await _unitOfWork.QuestionRepository.GetQuestionByTestId(testid).ToListAsync().ConfigureAwait(false);
-                //        foreach (var ques in listQuestion)
-                //        {
-                //            GetQuestionByTestIdResponseDto question1 = new GetQuestionByTestIdResponseDto();
-                //            question1.QuestionId = ques.QuestionId;
-                //            question1.Description = ques.Description;
-                //            question1.Image = ques.Image;
-                //            QuestionAnswer questionAnswer = questionAnswerById(ques.QuestionId).Result;
-                //            if (questionAnswer != null)
-                //            {
-                //                if (questionAnswer.ResultA != null)
-                //                {
-                //                    question1.ResultA = questionAnswer.ResultA!;
-                //                }
-                //                if (questionAnswer.ResultB != null)
-                //                {
-                //                    question1.ResultB = questionAnswer.ResultB!;
-                //                }
-                //                if (questionAnswer.ResultC != null)
-                //                {
-                //                    question1.ResultC = questionAnswer.ResultC!;
-                //                }
-                //                if (questionAnswer.ResultD != null)
-                //                {
-                //                    question1.ResultD = questionAnswer.ResultD!;
-                //                }
-                //                if (questionAnswer.CorrectResult != null)
-                //                {
-                //                    question1.CorrectResult = questionAnswer.CorrectResult!;
-                //                }
-                //            }
-                //            question.Questions.Add(question1);
-                //        }   
-                //    result.Add(question);
-                //    }
-                //}
+
+                var listTopicId = _unitOfWork.CourseRepository.GetListTopicIdByCourseId(courseId).ToList();
+                foreach (var item in listTopicId)
+                {
+                    var ListtestId = _unitOfWork.TestRepository.GetTestIdByTopicId(item);
+                    foreach (var testid in ListtestId)
+                    {
+                        GetQuestionByCourseIdResponseDto question = new GetQuestionByCourseIdResponseDto();
+                        question.TestId = testid;
+                        var part = _unitOfWork.TestRepository.GetPartByTestId(testid).FirstOrDefault();
+                        if (part.Url != null)
+                        {
+                            question.Url = part.Url;
+                        }
+                        var listQuestion = await _unitOfWork.QuestionRepository.GetQuestionByTestId(testid).ToListAsync().ConfigureAwait(false);
+                        foreach (var ques in listQuestion)
+                        {
+                            GetQuestionByTestIdResponseDto question1 = new GetQuestionByTestIdResponseDto();
+                            question1.QuestionId = ques.QuestionId;
+                            question1.Description = ques.Description;
+                            question1.Image = ques.Image;
+                            List<QuestionAnswer> questionAnswer = _unitOfWork.QuestionRepository.GetlistQuestionAnswerByQuesId(ques.QuestionId);
+                            var quesmap = _mapper.Map<List<GetQuestionAnswerDto>>(questionAnswer);
+                            question1.QuestionAnswers = quesmap;
+                            question.Questions.Add(question1);
+                        }
+                        result.Add(question);
+                    }
+                }
                 return result;
 
             }
@@ -264,16 +269,37 @@ namespace TAS.Application.Services
             {
                 if (request != null)
                 {
-                    var result = _unitOfWork.QuestionRepository.UpdateQuestion(request);
-                    return result;
+                    var question = await _unitOfWork.QuestionRepository.GetQuestionById(request.QuestionId).FirstOrDefaultAsync().ConfigureAwait(false);
+                    if (request.Image != null)
+                    {
+                        S3RequestData s3RequestData = new S3RequestData
+                        {
+                            BucketName = "tas",
+                            InputStream = request.Image.OpenReadStream(),
+                            Name = request.Image.FileName,
+                        };
+                        await _s3StorageService.UploadFileAsync(s3RequestData).ConfigureAwait(false);
+                        question.Image = _s3StorageService.GetFileUrlDontExpires(s3RequestData);
+                    }
+                    question.Description = request.Description;
+                    List<GetQuestionAnswerDto> answerDtos = JsonConvert.DeserializeObject<List<GetQuestionAnswerDto>>(request.QuestionAnswers);
+                    var listquestionAnswer = _mapper.Map<List<QuestionAnswer>>(answerDtos);
+                    foreach (var item in listquestionAnswer)
+                    {
+                        item.QuestionId = request.QuestionId;
+                    }
+                    _unitOfWork.QuestionRepository.UpdateQuestionAnswer(listquestionAnswer);
+                    //question.QuestionAnswers = listquestionAnswer;
+                    var result = _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    return true;
                 }
                 return false;
             }
             catch (Exception e)
             {
+                return false;
                 throw new Exception(e.Message);
             }
-            return false;
         }
     }
 }

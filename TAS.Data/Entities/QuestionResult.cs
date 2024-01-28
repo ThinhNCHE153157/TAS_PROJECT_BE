@@ -5,7 +5,7 @@ namespace TAS.Data.Entities
 {
     public partial class QuestionResult
     {
-        public int? TestResultId { get; set; }
+        public int TestResultId { get; set; }
         public int QuestionResultId { get; set; }
         public string? Description { get; set; }
         public int? QuestionId { get; set; }

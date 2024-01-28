@@ -69,7 +69,11 @@ namespace TAS.API.Controllers
 
         [HttpPut]
         //[Authorize]
-        public async Task<IActionResult> UpdateQuestion([FromBody] UpdateQuestionRequestDto request)
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UpdateQuestion([FromForm] UpdateQuestionRequestDto request)
         {
             var result = await _questionService.UpdateQuestion(request);
             return Ok(result);
@@ -83,8 +87,12 @@ namespace TAS.API.Controllers
         }
 
         [HttpPost]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
         //[Authorize]
-        public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionRequestDto request)
+        public async Task<IActionResult> CreateQuestion([FromForm] CreateQuestionRequestDto request)
         {
             if (request != null)
             {

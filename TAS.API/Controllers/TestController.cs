@@ -62,6 +62,19 @@ namespace TAS.API.Controllers
             return Ok(result);
         }
 
+        [HttpPut]
+        //[Authorize]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UpdateTestForCourse([FromForm] UpdateTestForCourseRequestDto request)
+        {
+            var result = await _testService.UpdateTestForCourse(request);
+            return Ok(result);
+        }
+
+
         [HttpGet]
         //[Authorize]
         public async Task<IActionResult> getListTestFree()
@@ -100,5 +113,15 @@ namespace TAS.API.Controllers
             var result = await _testService.GetTestResult(accountId).ConfigureAwait(false);
             return Ok(result);
         }
+
+        [HttpPut]
+        //[Authorize]
+        public async Task<IActionResult> DeleteTest([FromQuery] int testId)
+        {
+            var result = await _testService.DeleteTest(testId).ConfigureAwait(false);
+            return Ok(result);
+        }
+
+
     }
 }

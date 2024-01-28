@@ -41,7 +41,7 @@ namespace TAS.Application.Services
                     image = _s3StorageService.GetFileUrl(s3RequestData);
                 }
                 var course = _mapper.Map<Course>(request);
-                course.Status = (int)CourseStatus.Rejected;
+                course.Status = (int)CourseStatus.Draft;
                 course.Image = image;
                 await _unitOfWork.CourseRepository.AddAsync(course).ConfigureAwait(false);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);

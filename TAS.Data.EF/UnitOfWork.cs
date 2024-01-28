@@ -1,4 +1,5 @@
-﻿using TAS.Data.EF.Repositories;
+﻿using Microsoft.AspNetCore.Http;
+using TAS.Data.EF.Repositories;
 using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
 
@@ -9,6 +10,8 @@ namespace TAS.Data.EF
         private bool disposed = false;
 
         private readonly TASContext _context;
+        private readonly IHttpContextAccessor _accessor;
+
 
         private IAccountRepository _accountRepository;
         private ICourseRepository _courseRepository;
@@ -18,9 +21,11 @@ namespace TAS.Data.EF
         private ITopicRepository _topicRepository;
         private IVideoRepository _videoRepository;
         private IOrderRepository _orderRepository;
+        private IFlashcardRepository _flashcardRepository;
 
-        public UnitOfWork(TASContext context)
+        public UnitOfWork(TASContext context, IHttpContextAccessor accessor)
         {
+            _accessor = accessor;
             _context = context;
         }
 
@@ -120,6 +125,18 @@ namespace TAS.Data.EF
                 return _orderRepository;
             }
         }
+
+        public IFlashcardRepository FlashcardRepository
+        {
+            get
+            {
+                if (this._flashcardRepository is null)
+                {
+                    this._flashcardRepository = new FlashcardRepository(_context,_accessor);
+                }
+                return _flashcardRepository;
+            }
+        }   
 
         
 

@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using TAS.Data.Dtos.Requests;
 using TAS.Data.EF.Repositories.Interfaces;
 using TAS.Data.Entities;
+using TAS.Infrastructure.Constants;
 
 namespace TAS.Data.EF.Repositories
 {
@@ -23,29 +25,23 @@ namespace TAS.Data.EF.Repositories
 
         public IQueryable<Question> GetQuestionById(int questionId)
         {
-            return _context.Questions.Where(x => x.QuestionId == questionId);
+            return _context.Questions.Include(x => x.QuestionAnswers).Where(x => x.QuestionId == questionId & x.IsDeleted == Common.IsNotDelete);
         }
 
         public IQueryable<Question> GetQuestionByPartId(int id)
         {
-            return _context.Questions.Include(x => x.Part).Where(x => x.Part.TestId == id);
+            return _context.Questions.Include(x => x.Part).Where(x => x.Part.TestId == id && x.IsDeleted == Common.IsNotDelete);
         }
 
         public bool UpdateQuestion(UpdateQuestionRequestDto request)
         {
-            //var question = GetQuestionById(request.QuestionId).FirstOrDefault();
-            //var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == request.QuestionId).FirstOrDefault();
-            //if (question != null && questionAnswer != null)
+            var question = _context.Questions.Include(x => x.QuestionAnswers).Where(x => x.QuestionId == request.QuestionId).FirstOrDefault();
+            ////var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == request.QuestionId).FirstOrDefault();
+            //if (question != null)
             //{
             //    question.Description = request.Description;
             //    question.Image = request.Image;
-            //    question.Type = request.Type;
-            //    question.Note = request.Note;
-            //    questionAnswer.ResultA = request.QuestionNavigation.ResultA;
-            //    questionAnswer.ResultB = request.QuestionNavigation.ResultB;
-            //    questionAnswer.ResultC = request.QuestionNavigation.ResultC;
-            //    questionAnswer.ResultD = request.QuestionNavigation.ResultD;
-            //    questionAnswer.CorrectResult = request.QuestionNavigation.CorrectResult;
+
             //    _context.SaveChanges();
             //    return true;
             //}
@@ -55,11 +51,12 @@ namespace TAS.Data.EF.Repositories
         public bool DeleteQuestion(int questionId)
         {
             var question = GetQuestionById(questionId).FirstOrDefault();
-            var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == questionId).FirstOrDefault();
-            if (question != null && questionAnswer != null)
+            //var questionAnswer = _context.QuestionAnswers.Where(x => x.QuestionId == questionId).FirstOrDefault();
+            if (question != null)
             {
-                _context.Questions.Remove(question);
-                _context.QuestionAnswers.Remove(questionAnswer);
+                question.IsDeleted = true;
+                //_context.Questions.Remove(question);
+                //_context.QuestionAnswers.Remove(questionAnswer);
                 _context.SaveChanges();
                 return true;
             }
@@ -150,6 +147,74 @@ namespace TAS.Data.EF.Repositories
         public int GetPartIdByTestId(int testId)
         {
             return _context.Set<Part>().Where(x => x.TestId == testId).FirstOrDefault().PartId;
+        }
+
+        public List<QuestionAnswer> GetlistQuestionAnswerByQuesId(int id)
+        {
+            try
+            {
+                return _context.QuestionAnswers.Where(x => x.QuestionId == id).ToList();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public bool DeleteQuestionAnswer(int questionId)
+        {
+            var listquestion = _context.QuestionAnswers.Where(x => x.QuestionId == questionId);
+            if (listquestion != null)
+            {
+                _context.QuestionAnswers.RemoveRange(listquestion);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool UpdateQuestionAnswer1(QuestionAnswer questionAnswer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateQuestionAnswer(List<QuestionAnswer> questionAnswer)
+        {
+            try
+            {
+                foreach (var item in questionAnswer)
+                {
+                    if (item.QuestionAnswerId < 0)
+                    {
+                        item.QuestionAnswerId = 0;
+                        _context.QuestionAnswers.Add(item);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        var qa = _context.QuestionAnswers.Where(x => x.QuestionAnswerId == item.QuestionAnswerId).FirstOrDefault();
+                        if (qa != null)
+                        {
+                            qa.Answer = item.Answer;
+                            qa.Iscorrect = item.Iscorrect;
+                            _context.QuestionAnswers.Update(qa);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+                throw new Exception(e.Message);
+            }
+
+        }
+
+        public TestResult GetTestResultByTestResultId(int testResultId)
+        {
+            return _context.TestResults.Where(x => x.TestResultId == testResultId).FirstOrDefault();
         }
     }
 }

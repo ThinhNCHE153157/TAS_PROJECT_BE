@@ -30,7 +30,18 @@ namespace TAS.Application.AutoMapper
             CreateMap<AddVideoOfTopicRequestDto, Video>();
             CreateMap<AddVideoToTopicRequestDto, Video>();
             CreateMap<UpdateVideoRequestDto, Video>();
-            CreateMap<SaveTestResultRequestDto, TestResult>();
+            CreateMap<SaveTestResultRequestDto, TestResult>()
+                .ForMember(d => d.TestId, opt => opt.MapFrom(src => src.TestId))
+                .ForMember(d => d.AccountId, opt => opt.MapFrom(src => src.AccountId))
+                .ForMember(d => d.TestFinish, opt => opt.MapFrom(src => src.TestFinish))
+                .ForMember(d => d.TestScore, opt => opt.MapFrom(src => src.TestScore))
+                .ForMember(d => d.TestNumberCorrect, opt => opt.MapFrom(src => Int32.Parse(src.TestNumberCorrect)));
+            CreateMap<FlashCardRequestDto, Flashcard>();
+            CreateMap<AddItemCardRequestDto,ItemCard>();
+            CreateMap<PartTestDto, Part>();
+            CreateMap<GetQuestionAnswerDto, QuestionAnswer>();
+            CreateMap<AddFlashCardItemRequestDto, ItemCard>();
+            CreateMap<AddEnterpriseRequestDto, Enterprise>();
         }
     }
 }

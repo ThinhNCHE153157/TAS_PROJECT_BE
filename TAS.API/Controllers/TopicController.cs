@@ -25,6 +25,12 @@ namespace TAS.API.Controllers
             var result = await _topicService.addTopic(request);
             return Ok(result);
         }
+        [HttpPost]
+        public async Task<IActionResult> AddListTopic([FromBody] List<AddTopicRequestDto> request)
+        {
+            var result = await _topicService.addListTopic(request);
+            return Ok(result);
+        }
 
         [HttpGet]
         //[Authorize]
