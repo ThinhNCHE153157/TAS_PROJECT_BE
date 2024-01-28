@@ -312,7 +312,11 @@ namespace TAS.Application.Services
                 var testResultId = _unitOfWork.TestRepository.GetTestResultId(request.TestId, request.AccountId);
                 foreach (var item in request.ListAnswer)
                 {
-                    QuestionResultDto questionResult = new QuestionResultDto(testResultId, request.TestNumberCorrect, item.QuestionId.ToString(), item.UserAnswer);
+                    QuestionResultDto questionResult = new QuestionResultDto();
+
+                    questionResult.TestResultId = testResultId;
+                    questionResult.Description = item.UserAnswer;
+                    questionResult.QuestionId = item.QuestionId;
                     var answer = _mapper.Map<QuestionResult>(questionResult);
                     _unitOfWork.QuestionRepository.AddQuestionResult(answer);
                 }
